@@ -14,7 +14,15 @@ const LearningScreen = ({ navigation, route }) => {
                 <Button title='B. Correct Answer 2'></Button>
                 <Button title='C. Answer 3'></Button>
                 <Button title='D. Answer 4'></Button>
-
+            <TouchableOpacity style={[styles.button, {
+                position: 'absolute',
+                bottom: 20
+            }]}
+                onPress={() => {
+                    navigation.navigate('Home', { settings: route.params.settings });
+                }}>
+                <Text style={{ fontSize: 30 }}>Home</Text>
+            </TouchableOpacity>
             </View>
         </View>
     );

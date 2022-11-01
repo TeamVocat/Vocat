@@ -35,6 +35,7 @@ const PlanScreen = ({ props, navigation, route }) => {
 
             <Text style={styles.buttonLabel}>New Words Each Day:</Text>
             <TextInput
+                style={styles.input}
                 {...props} // Inherit any props passed to it; e.g., multiline, numberOfLines below
                 editable
                 value={newWords}
@@ -44,6 +45,7 @@ const PlanScreen = ({ props, navigation, route }) => {
 
             <Text style={styles.buttonLabel}>Review Amount for Tomorrow:</Text>
             <TextInput
+                style={styles.input}
                 {...props} // Inherit any props passed to it; e.g., multiline, numberOfLines below
                 value={oldWords}
                 maxLength={5}
@@ -83,14 +85,13 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         flexWrap:'wrap'
     },
-    bigButton: {
-        backgroundColor: '#CCD5AE',
-        borderRadius: 30,
-        padding: 5,
-        alignItems: 'center',
-        width: 250,
-        marginBottom: 10,
-    },
+    input: {
+        backgroundColor: 'white',
+        width: 60,
+        margin: 12,
+        borderWidth: 1,
+        paddingTop: 10
+     },
     buttonText: {
         fontSize: 30
     },
@@ -114,12 +115,6 @@ const styles = StyleSheet.create({
     message: {
         marginTop: '30%',
         marginBottom: 20,
-    },
-    content: {
-        flex: 1,
-        flexDirection: 'column',
-        alignContent: 'center',
-        alignItems: 'center'
     }
 });
 
