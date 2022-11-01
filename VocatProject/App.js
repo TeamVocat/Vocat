@@ -6,10 +6,9 @@
  * @flow strict-local
  */
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import type { Node } from 'react';
-import { TouchableOpacity, DeviceEventEmitter, StyleSheet, Button, SafeAreaView, Text, Alert, useColorScheme, View, } from 'react-native';
-import Slider from '@react-native-community/slider';
+import { useColorScheme, } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();

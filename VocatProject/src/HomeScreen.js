@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import type { Node } from 'react';
-import { TouchableOpacity, DeviceEventEmitter, StyleSheet, Button, Text, Alert, useColorScheme, View, } from 'react-native';
+import { Image, TouchableOpacity, DeviceEventEmitter, StyleSheet, Button, Text, Alert, useColorScheme, View, } from 'react-native';
+import catPile from './components/cat_pile.png';
 
 
 const HomeScreen = ({ navigation, route }) => {
@@ -40,6 +40,10 @@ const HomeScreen = ({ navigation, route }) => {
             </View>
             <View id="center_content" style={[styles.content]}>
                 <Text style={[styles.message, { fontSize: settings.textSize }]}> Welcome, USER!</Text>
+                <Image source={catPile} style={{
+                    width: 300,
+                    height: 300
+                }}></Image>
                 <TouchableOpacity style={[styles.button, {
                     position: 'static',
                     marginBottom: 20,
@@ -99,7 +103,6 @@ const styles = StyleSheet.create({
     },
     message: {
         marginTop: '30%',
-        marginBottom: 20,
     },
     content: {
         flex: 1,

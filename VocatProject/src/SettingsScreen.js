@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import type { Node } from 'react';
 import Slider from '@react-native-community/slider';
 import { TouchableOpacity, DeviceEventEmitter, StyleSheet, Button, Text, Alert, useColorScheme, View, } from 'react-native';
 
@@ -18,7 +17,7 @@ const SettingsScreen = ({ props, navigation, route }) => {
             <Text style={style(route.params.settings)}>Text fontSize: {finalSize}</Text>
             <Slider
                 id='fontSizeSlider'
-                minimumValue={10}
+                minimumValue={15}
                 maximumValue={50}
                 step={1}
                 value={finalSize}
