@@ -60,7 +60,7 @@ const HomeScreen = ({ navigation, route }) => {
                     fontSize: settings.textSize
                 }]}
                     onPress={() => {
-                        navigation.navigate('Home', { settings: settings });
+                        navigation.navigate('Plan', { settings: settings });
                     }}>
                     <Text style={styles.buttonText}>Progress</Text>
                 </TouchableOpacity>
