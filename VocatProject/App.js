@@ -19,8 +19,8 @@ const Stack = createNativeStackNavigator();
  */
 import HomeScreen from './src/HomeScreen.js';
 import SettingsScreen from './src/SettingsScreen.js';
-import SettingsScreen from './src/SettingScreen';
 import PlanScreen from './src/PlanScreen.js';
+import LearningScreen from './src/LearningScreen.js';
 
 
 /**
