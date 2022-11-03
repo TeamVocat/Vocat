@@ -60,7 +60,7 @@ const HomeScreen = ({ navigation, route }) => {
                     fontSize: settings.textSize
                 }]}
                     onPress={() => {
-                        navigation.navigate('Plan', { settings: settings });
+                        navigation.navigate('Progress', { settings: settings });
                     }}>
                     <Text style={styles.buttonText}>Progress</Text>
                 </TouchableOpacity>
@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation, route }) => {
                     fontSize: settings.textSize
                 }]}
                     onPress={() => {
-                        navigation.navigate('Home', { settings: settings });
+                        navigation.navigate('Cats', { settings: settings });
                     }}>
                     <Text style={styles.buttonText}>My Cats</Text>
                 </TouchableOpacity>
