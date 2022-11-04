@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Slider from '@react-native-community/slider';
-import { TouchableOpacity, DeviceEventEmitter, StyleSheet, Button, Text, Alert, useColorScheme, View, TextInput } from 'react-native';
+import { Dimensions, TouchableOpacity, DeviceEventEmitter, StyleSheet, Button, Text, Alert, useColorScheme, View, TextInput } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { LineChart } from "react-native-chart-kit";
+import Svg,{ Circle, Ellipse, G, LinearGradient, RadialGradient, Line, Path, Polygon, Polyline, Rect, Symbol, Use, Defs, Stop } from 'react-native-svg';
 
 
 const PlanScreen = ({ props, navigation, route }) => {
@@ -12,44 +13,51 @@ const PlanScreen = ({ props, navigation, route }) => {
     //let reviewWords = 30;
     const [newWords, numNewWords] = React.useState('20');
     const [oldWords, numOldWords] = React.useState('30');
+    const chartConfig = {
+      backgroundGradientFrom: '#FEFAE0',
+      backgroundGradientTo: '#FEFAE0',
+      color: (opacity = 1) => 'black',
+      strokeWidth: 2, // optional, default 3
+      barPercentage: 0.5
+    };
+    const screenWidth = Dimensions.get("window").width;
+    const chartData = {
+      labels: ["11/1", "11/2", "11/3", "11/4", "11/5", "11/6"],
+      datasets: [
+        {
+          data: [20, 45, 55, 80, 99, 130],
+          color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+          strokeWidth: 2 // optional
+        }
+      ],
+      legend: ["Words Learned"] // optional
+    };
+    const wordsLearned = 130;
+    const wordsNotLearned = 870;
 
     const [selectedValue, setSelectedValue] = useState("java");
     return (
         <View style={styles.settingsContainer}>
             <TouchableOpacity style={styles.button}
                 onPress={() => {
-                    navigation.navigate('Progress', { settings: route.params.settings });
+                    navigation.navigate('Plan', { settings: route.params.settings });
                 }}>
-                <Text style={{ fontSize: 30 }}>Study Progress</Text>
+                <Text style={{ fontSize: 30 }}>Study Plan</Text>
             </TouchableOpacity>
-            <Text style={styles.buttonLabel}>Current Book: </Text>
-            <Picker
-                selectedValue={selectedValue}
-                style={{ height: 50, width: 150 }}
-                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-                style={styles.picker}
-            >
-                 <Picker.Item label="Book1" value="Book1" />
-                 <Picker.Item label="Book2" value="Book2" />
-            </Picker>
 
-            <Text style={styles.buttonLabel}>New Words Each Day:</Text>
-            <TextInput
-                style={styles.input}
-                {...props} // Inherit any props passed to it; e.g., multiline, numberOfLines below
-                editable
-                value={newWords}
-                onChangeText= {numNewWords}
-                maxLength={5}
+            <LineChart
+              data={chartData}
+              width={screenWidth}
+              height={220}
+              chartConfig={chartConfig}
             />
 
-            <Text style={styles.buttonLabel}>Review Amount for Tomorrow:</Text>
-            <TextInput
-                style={styles.input}
-                {...props} // Inherit any props passed to it; e.g., multiline, numberOfLines below
-                value={oldWords}
-                maxLength={5}
-            />
+            <Text style={styles.buttonLabel}>Number of words learned:</Text>
+            <Text style={styles.buttonLabel}>{wordsLearned}</Text>
+
+            <Text style={styles.buttonLabel}>Number of words to be learned:</Text>
+            <Text style={styles.buttonLabel}>{wordsNotLearned}</Text>
+
             <TouchableOpacity style={[styles.button, {
                 position: 'absolute',
                 bottom: 20
