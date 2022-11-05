@@ -20,9 +20,9 @@ const Stack = createNativeStackNavigator();
 import HomeScreen from './src/HomeScreen.js';
 import SettingsScreen from './src/SettingsScreen.js';
 import LearningScreen from './src/LearningScreen.js';
+import LearnNewScreen from './src/LearnNewScreen.js';
 import PlanScreen from './src/PlanScreen.js';
 import ProgressScreen from './src/ProgressScreen.js';
-import CatsScreen from './src/CatsScreen.js';
 
 
 /**
@@ -43,7 +43,7 @@ const App: () => Node = () => {
         <Stack.Screen name="Plan" component={PlanScreen} />
         <Stack.Screen name="Learning" component={LearningScreen} />
         <Stack.Screen name="Progress" component={ProgressScreen} />
-        <Stack.Screen name="Cats" component={CatsScreen} />
+        <Stack.Screen name="LearnNew" component={LearnNewScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
