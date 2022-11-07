@@ -10,9 +10,11 @@ import {
   Alert,
   useColorScheme,
   View,
+  ScrollView,
 } from "react-native";
 import { Row, Rows, Table, TableWrapper } from "react-native-table-component";
 import catPile from "./../assets/cat_pile.png";
+import { Shadow } from "react-native-shadow-2";
 
 const CatHouseScreen = ({ navigation, route }) => {
   const [settings, setSettings] = useState({ textSize: 30 });
@@ -22,61 +24,104 @@ const CatHouseScreen = ({ navigation, route }) => {
       ["1", "2", "3"],
       ["a", "b", "c"],
       ["1", "2", "3"],
+      ["a", "b", "c"],
     ],
   };
 
   return (
     <View style={styles.catsContainer}>
       <View id="header" style={styles.header}>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              right: 15,
-              top: 15,
-            },
-          ]}
-          onPress={() => {
-            navigation.navigate("Settings", { settings: settings });
+        <Shadow
+          distance={5}
+          startColor={"#E6E5DAED"}
+          endColor={"#FEFAE090"}
+          paintInside={true}
+          containerViewStyle={{ margin: 100 }}
+          safeRender={true}
+          style={{
+            borderTopStartRadius: 5,
+            borderRadius: 2,
           }}
+          offset={[2, 2]}
         >
-          <Text style={{ fontSize: 30 }}>Store</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button]}
+            onPress={() => {
+              navigation.navigate("Settings", { settings: settings });
+            }}
+          >
+            <Text style={{ fontSize: 30 }}>Store</Text>
+          </TouchableOpacity>
+        </Shadow>
       </View>
       <View id="content" style={[styles.content]}>
-        <Image
-          source={catPile}
-          style={{
-            width: 200,
-            height: 200,
-          }}
-        ></Image>
+        <View
+          id="cats"
+          style={{ flex: 4, alignItems: "center", justifyContent: "center" }}
+        >
+          <Image
+            source={catPile}
+            style={{
+              width: 300,
+            }}
+            resizeMode="contain"
+          ></Image>
+        </View>
         <View style={styles.tableContainer}>
-          <Table borderStyle={{ borderWidth: 2, borderColor: "#c8e1ff" }}>
+          <Table borderStyle={{ borderWidth: 0, borderColor: "#C1C0B9" }}>
             <Row
               data={state.tableHead}
               style={styles.tableHead}
               textStyle={styles.tableText}
+              flexArr={[1, 2]}
             />
-            <Rows data={state.tableData} textStyle={styles.tableText} />
+            <ScrollView style={{ height: 180 }}>
+              <Table borderStyle={{ borderWidth: 5, borderColor: "#D3D3D3" }}>
+                {state.tableData.map((rowData, index) => (
+                  <Row
+                    key={index}
+                    data={rowData}
+                    style={[
+                      styles.tableRows,
+                      index % 2 && { backgroundColor: "#EBEDDF" },
+                    ]}
+                    textStyle={styles.tableText}
+                  />
+                ))}
+              </Table>
+            </ScrollView>
           </Table>
         </View>
       </View>
       <View id="footer" style={[styles.footer]}>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              position: "absolute",
-              bottom: 20,
-            },
-          ]}
-          onPress={() => {
-            navigation.navigate("Home", { settings: route.params.settings });
+        <Shadow
+          distance={7}
+          tartColor={"#E6E5DA40"}
+          endColor={"#DCDCDC05"}
+          paintInside={true}
+          containerViewStyle={{ margin: 100 }}
+          safeRender={true}
+          style={{
+            borderTopStartRadius: 5,
+            borderRadius: 2,
           }}
         >
-          <Text style={{ fontSize: 30 }}>Home</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                flexDirection: "row",
+                alignContent: "center",
+                alignItems: "center",
+              },
+            ]}
+            onPress={() => {
+              navigation.navigate("Home", { settings: route.params.settings });
+            }}
+          >
+            <Text style={{ fontSize: 30 }}>Home</Text>
+          </TouchableOpacity>
+        </Shadow>
       </View>
     </View>
   );
@@ -93,35 +138,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   header: {
-    width: "100%",
+    width: "90%",
+    marginTop: 10,
     backgroundColor: "#FEFAE0",
     flexDirection: "row",
-    position: "absolute",
-    top: 0,
     flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
   },
   footer: {
     width: "100%",
-    backgroundColor: "#FEFAE0",
-    flexDirection: "column",
-    alignContent: "center",
+    backgroundColor: "#DCDCDC",
+    flexDirection: "row",
+    alignContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
     flex: 1,
   },
   content: {
     width: "100%",
     height: "50%",
-    top: "10%",
     flexDirection: "column",
     alignContent: "center",
     alignItems: "center",
-    flex: 5,
+    flex: 8,
   },
   button: {
+    paddingHorizontal: 25,
+    paddingVertical: 10,
+    borderRadius: 15,
+    alignSelf: "flex-start",
+    textAlign: "center",
     backgroundColor: "#CCD5AE",
-    borderRadius: 20,
-    padding: 10,
-    position: "absolute",
   },
   headerButtonText: {
     fontSize: 20,
@@ -130,19 +178,23 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   tableContainer: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
+    width: "100%",
+    height: "100%",
+    flex: 3,
+    paddingTop: 20,
+    backgroundColor: "#DCDCDC",
   },
   tableHead: {
-    height: 50,
-    width: 300,
-    fontSize: 10,
-    backgroundColor: "#f1f8ff",
+    height: 40,
+    backgroundColor: "#DCDCDC",
+  },
+  tableRows: {
+    backgroundColor: "#DFE0D5",
   },
   tableText: {
     height: 50,
-    fontSize: 10,
+    fontSize: 20,
+    textAlign: "center",
   },
 });
 
