@@ -16,12 +16,14 @@ const Stack = createNativeStackNavigator();
 /**
  * Components
  */
+
 import HomeScreen from "./src/HomeScreen.js";
 import SettingsScreen from "./src/SettingsScreen.js";
 import LearningScreen from "./src/LearningScreen.js";
 import PlanScreen from "./src/PlanScreen.js";
 import ProgressScreen from "./src/ProgressScreen.js";
 import CatHouseScreen from "./src/CatHouseScreen.js";
+
 
 /**
  * App.js will be used for navigating between pages
@@ -42,6 +44,7 @@ const App: () => Node = () => {
         <Stack.Screen name="Learning" component={LearningScreen} />
         <Stack.Screen name="Progress" component={ProgressScreen} />
         <Stack.Screen name="CatHouse" component={CatHouseScreen} />
+        <Stack.Screen name="LearnNew" component={LearnNewScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
