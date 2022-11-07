@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Image, TouchableOpacity, DeviceEventEmitter, StyleSheet, Button, Text, Alert, useColorScheme, View, } from 'react-native';
-import catPile from './components/cat_pile.png';
-
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  TouchableOpacity,
+  DeviceEventEmitter,
+  StyleSheet,
+  Button,
+  Text,
+  Alert,
+  useColorScheme,
+  View,
+} from "react-native";
 
 const LearningScreen = ({ navigation, route }) => {
-    const [settings, setSettings] = useState({ textSize: 30 });
+  const [settings, setSettings] = useState({ textSize: 30 });
 
     return (
         <View style={styles.homeContainer}>
