@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Slider from "@react-native-community/slider";
 import {
   Image,
   TouchableOpacity,
@@ -19,7 +18,7 @@ import { Shadow } from "react-native-shadow-2";
 const CatHouseScreen = ({ navigation, route }) => {
   const [settings, setSettings] = useState({ textSize: 30 });
   const state = {
-    tableHead: ["Food", "Toys"],
+    tableHead: ["Food", "Toys & Decorations"],
     tableData: [
       ["1", "2", "3"],
       ["a", "b", "c"],
@@ -42,12 +41,18 @@ const CatHouseScreen = ({ navigation, route }) => {
             borderTopStartRadius: 5,
             borderRadius: 2,
           }}
-          offset={[2, 2]}
+          offset={[-10, 13]}
         >
           <TouchableOpacity
-            style={[styles.button]}
+            style={[
+              styles.button,
+              {
+                top: 10,
+                right: 15,
+              },
+            ]}
             onPress={() => {
-              navigation.navigate("Settings", { settings: settings });
+              navigation.navigate("Store", { settings: settings });
             }}
           >
             <Text style={{ fontSize: 30 }}>Store</Text>
@@ -138,13 +143,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   header: {
-    width: "90%",
-    marginTop: 10,
+    width: "100%",
     backgroundColor: "#FEFAE0",
     flexDirection: "row",
     flex: 1,
     justifyContent: "flex-end",
-    alignItems: "flex-end",
+    alignItems: "center",
   },
   footer: {
     width: "100%",
@@ -165,7 +169,7 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingHorizontal: 25,
-    paddingVertical: 10,
+    paddingVertical: 7,
     borderRadius: 15,
     alignSelf: "flex-start",
     textAlign: "center",
