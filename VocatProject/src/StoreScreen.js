@@ -71,6 +71,36 @@ const StoreScreen = ({ navigation, route }) => {
           </Table>
         </ScrollView>
       </View>
+      <View id="footer" style={[styles.footer]}>
+        <Shadow
+          distance={7}
+          tartColor={"#E6E5DA40"}
+          endColor={"#DCDCDC05"}
+          paintInside={true}
+          containerViewStyle={{ margin: 100 }}
+          safeRender={true}
+          style={{
+            borderTopStartRadius: 5,
+            borderRadius: 2,
+          }}
+        >
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                flexDirection: "row",
+                alignContent: "center",
+                alignItems: "center",
+              },
+            ]}
+            onPress={() => {
+              navigation.navigate("Home", { settings: route.params.settings });
+            }}
+          >
+            <Text style={{ fontSize: 30 }}>Home</Text>
+          </TouchableOpacity>
+        </Shadow>
+      </View>
     </View>
   );
 };
