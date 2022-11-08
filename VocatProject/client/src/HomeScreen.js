@@ -10,7 +10,7 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import catPile from "./../assets/cat_pile.png";
+import catPile from "./components/cat_pile.png";
 
 const HomeScreen = ({ navigation, route }) => {
   const [settings, setSettings] = useState({ textSize: 30 });

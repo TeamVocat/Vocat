@@ -13,7 +13,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Row, Rows, Table, TableWrapper } from "react-native-table-component";
-import catPile from "./../assets/cat_pile.png";
+import catPile from "./components/cat_pile.png";
 import { Shadow } from "react-native-shadow-2";
 
 const StoreScreen = ({ navigation, route }) => {

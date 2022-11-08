@@ -12,31 +12,34 @@ import {
   Pressable,
 } from "react-native";
 
+//const Answers = ['Answer 1','Answer 2','Answer 3','Answer 4'];
+import {currentWord, Answers} from './Data.js';
+
 const LearningScreen = ({ navigation, route }) => {
   const [settings, setSettings] = useState({ textSize: 30 });
 
     return (
         <View style={styles.homeContainer}>
             <View id="center_content" style={[styles.content]}>
-                <Text style={[styles.message, { fontSize: settings.textSize }]}> Vocab Word</Text>
+                <Text style={[styles.message, { fontSize: settings.textSize }]}>{currentWord}</Text>
                 <Pressable style={styles.choices}>
                     <Text style={styles.subtext}>
-                    A. Answer 1
+                    A. {Answers[0]}
                     </Text>
                 </Pressable>
                 <Pressable style={styles.choices}>
                     <Text style={styles.subtext}>
-                    B. (Correct) Answer 2
+                    B. {Answers[1]}
                     </Text>
                 </Pressable>
                 <Pressable style={styles.choices}>
                     <Text style={styles.subtext}>
-                    C. Answer 3
+                    C. {Answers[2]}
                     </Text>
                 </Pressable>
                 <Pressable style={styles.choices}>
                     <Text style={styles.subtext}>
-                    D. Answer 4
+                    D. {Answers[3]}
                     </Text>
                 </Pressable>
             <TouchableOpacity style={[styles.button, {
