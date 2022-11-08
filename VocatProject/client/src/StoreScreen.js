@@ -47,81 +47,38 @@ const StoreScreen = ({navigation, route}) => {
       <View id="contents" style={styles.contents}>
         <ScrollView style={{height: 100}}>
           <View id="Foodtitle">
-            <Text style={styles.titleText}>FOODS</Text>
+            <Text style={styles.titleText}>Foods</Text>
           </View>
           <View id="Foods" style={styles.imgContainer}>
-            <View key={1} style={styles.imgItemWrap}>
-              <Image
-                source={Images.foods.food1}
-                style={{
-                  height: 110,
-                  width: 110,
-                }}
-                resizeMode="contain"></Image>
-              <Text style={styles.text}>{Images.foodtitles.food1}</Text>
-            </View>
-            <View key={2} style={styles.imgItemWrap}>
-              <Image
-                source={Images.foods.food2}
-                style={{
-                  height: 110,
-                  width: 110,
-                }}
-                resizeMode="contain"></Image>
-              <Text style={styles.text}>{Images.foodtitles.food2}</Text>
-            </View>
-            <View key={3} style={styles.imgItemWrap}>
-              <Image
-                source={Images.foods.food3}
-                style={{
-                  height: 110,
-                  width: 110,
-                }}
-                resizeMode="contain"></Image>
-              <Text style={styles.text}>{Images.foodtitles.food3}</Text>
-            </View>
-            <View key={4} style={styles.imgItemWrap}>
-              <Image
-                source={Images.foods.food4}
-                style={{
-                  height: 110,
-                  width: 110,
-                }}
-                resizeMode="contain"></Image>
-              <Text style={styles.text}>{Images.foodtitles.food4}</Text>
-            </View>
-            <View key={5} style={styles.imgItemWrap}>
-              <Image
-                source={Images.foods.food5}
-                style={{
-                  height: 110,
-                  width: 110,
-                }}
-                resizeMode="contain"></Image>
-              <Text style={styles.text}>{Images.foodtitles.food5}</Text>
-            </View>
-            <View key={6} style={styles.imgItemWrap}>
-              <Image
-                source={Images.foods.food6}
-                style={{
-                  height: 110,
-                  width: 110,
-                }}
-                resizeMode="contain"></Image>
-              <Text style={styles.text}>{Images.foodtitles.food6}</Text>
-            </View>
-            {foods.map((x, i) => {
+            {foods.map((x, i) => (
               <View key={i} style={styles.imgItemWrap}>
                 <Image
-                  source={Images.foods.x}
+                  source={Images.foods[x]}
                   style={{
-                    height: 130,
-                    width: 130,
+                    height: 110,
+                    width: 110,
                   }}
                   resizeMode="contain"></Image>
-                <Text style={styles.text}>{x}</Text>
-              </View>;
-            })}
+                <Text style={styles.text}>{Images.foodtitles[x]}</Text>
+              </View>
+            ))}
+          </View>
+          <View id="Toytitle">
+            <Text style={styles.titleText}>Toys</Text>
+          </View>
+          <View id="Foods" style={styles.imgContainer}>
+            {foods.map((x, i) => (
+              <View key={i} style={styles.imgItemWrap}>
+                <Image
+                  source={Images.foods[x]}
+                  style={{
+                    height: 110,
+                    width: 110,
+                  }}
+                  resizeMode="contain"></Image>
+                <Text style={styles.text}>{Images.foodtitles[x]}</Text>
+              </View>
+            ))}
           </View>
         </ScrollView>
       </View>
@@ -190,7 +147,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   titleText: {
-    fontSize: 30,
+    fontSize: 40,
     fontStyle: 'bold',
     textAlign: 'center',
   },
