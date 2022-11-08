@@ -11,4 +11,12 @@ export default {
     food5: require('./foods/food5.png'),
     food6: require('./foods/food6.png'),
   },
+  foodtitles: {
+    food1: 'Sushi Set',
+    food2: 'Hamburger',
+    food3: 'Soup Bowl',
+    food4: 'Soup',
+    food5: 'Lunch Set',
+    food6: 'Fish Dish',
+  },
 };

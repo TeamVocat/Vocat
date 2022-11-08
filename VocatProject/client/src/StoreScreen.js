@@ -34,13 +34,13 @@ const StoreScreen = ({navigation, route}) => {
             borderTopStartRadius: 5,
             borderRadius: 2,
           }}
-          offset={[-2, 7]}>
+          offset={[-5, 7]}>
           <TouchableOpacity
-            style={[styles.button, {left: -5, top: 5}]}
+            style={[styles.button, {left: -8, top: 5}]}
             onPress={() => {
               navigation.navigate('CatHouse', {settings: settings});
             }}>
-            <Text style={{fontSize: 30}}>Back</Text>
+            <Text style={{fontSize: 30}}>{'👈Back'}</Text>
           </TouchableOpacity>
         </Shadow>
       </View>
@@ -58,7 +58,7 @@ const StoreScreen = ({navigation, route}) => {
                   width: 110,
                 }}
                 resizeMode="contain"></Image>
-              <Text style={styles.text}>Soup</Text>
+              <Text style={styles.text}>{Images.foodtitles.food1}</Text>
             </View>
             <View key={2} style={styles.imgItemWrap}>
               <Image
@@ -68,7 +68,7 @@ const StoreScreen = ({navigation, route}) => {
                   width: 110,
                 }}
                 resizeMode="contain"></Image>
-              <Text style={styles.text}>Soup</Text>
+              <Text style={styles.text}>{Images.foodtitles.food2}</Text>
             </View>
             <View key={3} style={styles.imgItemWrap}>
               <Image
@@ -78,7 +78,37 @@ const StoreScreen = ({navigation, route}) => {
                   width: 110,
                 }}
                 resizeMode="contain"></Image>
-              <Text style={styles.text}>Soup</Text>
+              <Text style={styles.text}>{Images.foodtitles.food3}</Text>
+            </View>
+            <View key={4} style={styles.imgItemWrap}>
+              <Image
+                source={Images.foods.food4}
+                style={{
+                  height: 110,
+                  width: 110,
+                }}
+                resizeMode="contain"></Image>
+              <Text style={styles.text}>{Images.foodtitles.food4}</Text>
+            </View>
+            <View key={5} style={styles.imgItemWrap}>
+              <Image
+                source={Images.foods.food5}
+                style={{
+                  height: 110,
+                  width: 110,
+                }}
+                resizeMode="contain"></Image>
+              <Text style={styles.text}>{Images.foodtitles.food5}</Text>
+            </View>
+            <View key={6} style={styles.imgItemWrap}>
+              <Image
+                source={Images.foods.food6}
+                style={{
+                  height: 110,
+                  width: 110,
+                }}
+                resizeMode="contain"></Image>
+              <Text style={styles.text}>{Images.foodtitles.food6}</Text>
             </View>
             {foods.map((x, i) => {
               <View key={i} style={styles.imgItemWrap}>
@@ -116,7 +146,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   contents: {
     width: '100%',
