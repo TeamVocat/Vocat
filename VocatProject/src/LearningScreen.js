@@ -9,6 +9,7 @@ import {
   Alert,
   useColorScheme,
   View,
+  Pressable,
 } from "react-native";
 
 const LearningScreen = ({ navigation, route }) => {
