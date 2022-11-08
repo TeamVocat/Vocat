@@ -121,7 +121,7 @@ const CatHouseScreen = ({ navigation, route }) => {
               },
             ]}
             onPress={() => {
-              navigation.navigate("Home", { settings: route.params.settings });
+              navigation.navigate("Store", { settings: route.params.settings });
             }}
           >
             <Text style={{ fontSize: 30 }}>Home</Text>
