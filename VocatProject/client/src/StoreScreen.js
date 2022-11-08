@@ -19,30 +19,30 @@ import {Shadow} from 'react-native-shadow-2';
 const StoreScreen = ({navigation, route}) => {
   const [settings, setSettings] = useState({textSize: 30});
   const foods = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
+  const toys = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
+  const coins = 1150;
 
   return (
     <View style={styles.storeContainer}>
       <View id="header" style={styles.header}>
-        <Shadow
-          distance={5}
-          startColor={'#E6E5DAED'}
-          endColor={'#FEFAE090'}
-          paintInside={true}
-          containerViewStyle={{margin: 100}}
-          safeRender={true}
-          style={{
-            borderTopStartRadius: 5,
-            borderRadius: 2,
-          }}
-          offset={[-5, 7]}>
-          <TouchableOpacity
-            style={[styles.button, {left: -8, top: 5}]}
-            onPress={() => {
-              navigation.navigate('CatHouse', {settings: settings});
-            }}>
-            <Text style={{fontSize: 30}}>{'👈Back'}</Text>
-          </TouchableOpacity>
-        </Shadow>
+        <TouchableOpacity
+          style={[styles.button, {left: -25, top: -10, margin: 10}]}
+          onPress={() => {
+            navigation.navigate('CatHouse', {settings: settings});
+          }}>
+          <Text style={{fontSize: 30}}>{'👈Back'}</Text>
+        </TouchableOpacity>
+
+        <View id="coins" style={[styles.coinsContainer, {left: 60, top: 5}]}>
+          <Image
+            source={Images.general.catcoin}
+            style={{
+              height: 50,
+              width: 50,
+            }}
+            resizeMode="contain"></Image>
+          <Text style={{fontSize: 30, margin: 5}}>{coins}</Text>
+        </View>
       </View>
       <View id="contents" style={styles.contents}>
         <ScrollView style={{height: 100}}>
@@ -66,8 +66,8 @@ const StoreScreen = ({navigation, route}) => {
           <View id="Toytitle">
             <Text style={styles.titleText}>Toys</Text>
           </View>
-          <View id="Foods" style={styles.imgContainer}>
-            {foods.map((x, i) => (
+          <View id="Toys" style={styles.imgContainer}>
+            {toys.map((x, i) => (
               <View key={i} style={styles.imgItemWrap}>
                 <Image
                   source={Images.foods[x]}
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 5,
     borderRadius: 15,
-    alignSelf: 'flex-start',
+    alignSelf: 'center',
     textAlign: 'center',
     backgroundColor: '#CCD5AE',
   },
@@ -128,6 +128,17 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 30,
+  },
+  coinsContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 200,
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    textAlign: 'center',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#DCDCDC',
   },
   imgContainer: {
     display: 'flex',

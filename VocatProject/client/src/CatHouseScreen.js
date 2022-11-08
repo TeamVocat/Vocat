@@ -35,7 +35,6 @@ const CatHouseScreen = ({navigation, route}) => {
           startColor={'#E6E5DAED'}
           endColor={'#FEFAE090'}
           paintInside={true}
-          containerViewStyle={{margin: 100}}
           safeRender={true}
           style={{
             borderTopStartRadius: 5,
@@ -43,13 +42,7 @@ const CatHouseScreen = ({navigation, route}) => {
           }}
           offset={[-10, 13]}>
           <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                top: 10,
-                right: 15,
-              },
-            ]}
+            style={[styles.button, {top: 10, right: 15}]}
             onPress={() => {
               navigation.navigate('Store', {settings: settings});
             }}>
@@ -116,7 +109,7 @@ const CatHouseScreen = ({navigation, route}) => {
               },
             ]}
             onPress={() => {
-              navigation.navigate('Store', {settings: route.params.settings});
+              navigation.navigate('Home', {settings: route.params.settings});
             }}>
             <Text style={{fontSize: 30}}>Home</Text>
           </TouchableOpacity>
