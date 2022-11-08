@@ -14,8 +14,9 @@
     "@react-native-community/slider": "^4.3.2",
     "@react-native-picker/picker": "^2.4.8",
     "@react-navigation/native-stack": "^6.9.1",
+    "link": "^1.5.1",
     "react": "18.1.0",
-    "react-native": "0.70.4",
+    "react-native": "^0.70.4",
     "react-native-chart-kit": "^6.12.0",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-material-dropdown": "^0.11.1",
@@ -24,6 +25,7 @@
     "react-native-screens": "^3.18.2",
     "react-native-shadow-2": "^7.0.6",
     "react-native-svg": "^13.5.0",
+    "react-native-svg-transformer": "^1.0.0",
     "react-native-table-component": "^1.2.2"
   },
   "devDependencies": {
