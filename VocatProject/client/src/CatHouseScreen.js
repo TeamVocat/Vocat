@@ -25,6 +25,12 @@ const CatHouseScreen = ({navigation, route}) => {
       ['1', '2', '3'],
       ['a', 'b', 'c'],
     ],
+    tableData2: [
+      ['a', 'b', 'c'],
+      ['1', '2', '3'],
+      ['a', 'b', 'c'],
+      ['1', '2', '3'],
+    ],
   };
 
   return (
@@ -133,9 +139,9 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#FEFAE0',
     flexDirection: 'row',
-    flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
+    flex: 1,
   },
   footer: {
     width: '100%',

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   TouchableOpacity,
@@ -9,14 +9,14 @@ import {
   Alert,
   useColorScheme,
   View,
-} from "react-native";
-import catPile from "./../assets/cat_pile.png";
+} from 'react-native';
+import {Images} from '../assets/';
 
-const HomeScreen = ({ navigation, route }) => {
-  const [settings, setSettings] = useState({ textSize: 30 });
+const HomeScreen = ({navigation, route}) => {
+  const [settings, setSettings] = useState({textSize: 30});
 
   useEffect(() => {
-    DeviceEventEmitter.addListener("event.changeSettings", (eventData) => {
+    DeviceEventEmitter.addListener('event.changeSettings', eventData => {
       setSettings(eventData);
     });
     window.onpageshow = function (event) {
@@ -37,8 +37,7 @@ const HomeScreen = ({ navigation, route }) => {
               top: 5,
               borderRadius: 40,
             },
-          ]}
-        >
+          ]}>
           <Text style={styles.headerButtonText}>?</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -50,67 +49,62 @@ const HomeScreen = ({ navigation, route }) => {
             },
           ]}
           onPress={() => {
-            navigation.navigate("Settings", { settings: settings });
-          }}
-        >
+            navigation.navigate('Settings', {settings: settings});
+          }}>
           <Text style={styles.headerButtonText}>Settings</Text>
         </TouchableOpacity>
       </View>
       <View id="center_content" style={[styles.content]}>
-        <Text style={[styles.message, { fontSize: settings.textSize }]}>
-          {" "}
+        <Text style={[styles.message, {fontSize: settings.textSize}]}>
+          {' '}
           Welcome, USER!
         </Text>
         <Image
-          source={catPile}
+          source={Images.general.catpile}
           style={{
             width: 300,
             height: 300,
-          }}
-        ></Image>
+          }}></Image>
         <TouchableOpacity
           style={[
             styles.button,
             {
-              position: "static",
+              position: 'static',
               marginBottom: 20,
               fontSize: settings.textSize,
             },
           ]}
           onPress={() => {
-            navigation.navigate("Learning", { settings: settings });
-          }}
-        >
+            navigation.navigate('Learning', {settings: settings});
+          }}>
           <Text style={styles.buttonText}>Review</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.button,
             {
-              position: "static",
+              position: 'static',
               marginBottom: 20,
               fontSize: settings.textSize,
             },
           ]}
           onPress={() => {
-            navigation.navigate("Progress", { settings: settings });
-          }}
-        >
+            navigation.navigate('Progress', {settings: settings});
+          }}>
           <Text style={styles.buttonText}>Progress</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.button,
             {
-              position: "static",
+              position: 'static',
               marginBottom: 20,
               fontSize: settings.textSize,
             },
           ]}
           onPress={() => {
-            navigation.navigate("CatHouse", { settings: settings });
-          }}
-        >
+            navigation.navigate('CatHouse', {settings: settings});
+          }}>
           <Text style={styles.buttonText}>My Cats</Text>
         </TouchableOpacity>
       </View>
@@ -120,16 +114,16 @@ const HomeScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   homeContainer: {
-    backgroundColor: "#FEFAE0",
-    width: "100%",
-    height: "100%",
+    backgroundColor: '#FEFAE0',
+    width: '100%',
+    height: '100%',
     flex: 1,
   },
   button: {
-    backgroundColor: "#CCD5AE",
+    backgroundColor: '#CCD5AE',
     borderRadius: 10,
     padding: 5,
-    position: "absolute",
+    position: 'absolute',
   },
   headerButtonText: {
     fontSize: 20,
@@ -138,16 +132,16 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   headerContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   message: {
-    marginTop: "30%",
+    marginTop: '30%',
   },
   content: {
     flex: 1,
-    flexDirection: "column",
-    alignContent: "center",
-    alignItems: "center",
+    flexDirection: 'column',
+    alignContent: 'center',
+    alignItems: 'center',
   },
 });
 
