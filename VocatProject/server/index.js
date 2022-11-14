@@ -1,11 +1,15 @@
 require("dotenv").config({ silent: true });
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+
+import authRoutes from "./routes/auth";
 
 const morgan = require("morgan");
 
 const app = express();
+
+const port = process.env.PORT || 8000
 
 mongoose
     .connect(process.env.DATABASE)
@@ -13,10 +17,10 @@ mongoose
     .catch((err) => console.error(`Failed to connect to MongoDB: ${err}`));
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(morgan("dev"));
 
-app.use("/client", express.static("client"));
+app.use("/api", authRoutes);
 
-app.listen(8000, () => console.log("Server running on port 8000"));
+app.listen(port, () => console.log("Server running on port 8000"));

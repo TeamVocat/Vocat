@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {
-  Image,
-  TouchableOpacity,
-  DeviceEventEmitter,
-  StyleSheet,
-  Button,
-  Text,
-  Alert,
-  useColorScheme,
-  View,
-} from "react-native";
+import { Image, TouchableOpacity, DeviceEventEmitter, StyleSheet, Button, Text, Alert, useColorScheme, View, } from "react-native";
 import catPile from "./../assets/cat_pile.png";
+import axios from 'react-native-axios';
+import { useIsFocused } from "@react-navigation/native";
+import { REACT_APP_SERVER_HOSTNAME } from "@env";
 
-const HomeScreen = ({ navigation, route }) => {
+const HomeScreen = (props) => {
+  // const isFocused = useIsFocused();
+
   const [settings, setSettings] = useState({ textSize: 30 });
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     DeviceEventEmitter.addListener("event.changeSettings", (eventData) => {
@@ -24,6 +20,17 @@ const HomeScreen = ({ navigation, route }) => {
         window.location.reload();
       }
     };
+    async function fetchMessage() {
+      console.log(`Fetching Message from ${REACT_APP_SERVER_HOSTNAME}/api/home...`);
+      try {
+        const message = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/home`);
+        console.log(message.data);
+        setMessage(message.data.message);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchMessage();
   }, []);
 
   return (
@@ -50,7 +57,7 @@ const HomeScreen = ({ navigation, route }) => {
             },
           ]}
           onPress={() => {
-            navigation.navigate("Settings", { settings: settings });
+            props.navigation.navigate("Settings", { settings: settings });
           }}
         >
           <Text style={styles.headerButtonText}>Settings</Text>
@@ -58,8 +65,7 @@ const HomeScreen = ({ navigation, route }) => {
       </View>
       <View id="center_content" style={[styles.content]}>
         <Text style={[styles.message, { fontSize: settings.textSize }]}>
-          {" "}
-          Welcome, USER!
+          {message}
         </Text>
         <Image
           source={catPile}
@@ -78,7 +84,7 @@ const HomeScreen = ({ navigation, route }) => {
             },
           ]}
           onPress={() => {
-            navigation.navigate("Learning", { settings: settings });
+            props.navigation.navigate("Learning", { settings: settings });
           }}
         >
           <Text style={styles.buttonText}>Review</Text>
@@ -93,7 +99,7 @@ const HomeScreen = ({ navigation, route }) => {
             },
           ]}
           onPress={() => {
-            navigation.navigate("Progress", { settings: settings });
+            props.navigation.navigate("Progress", { settings: settings });
           }}
         >
           <Text style={styles.buttonText}>Progress</Text>
@@ -108,7 +114,7 @@ const HomeScreen = ({ navigation, route }) => {
             },
           ]}
           onPress={() => {
-            navigation.navigate("CatHouse", { settings: settings });
+            props.navigation.navigate("CatHouse", { settings: settings });
           }}
         >
           <Text style={styles.buttonText}>My Cats</Text>
