@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
+mongoose.pluralize(null);
 
 const vocabWordSchema = new Schema({
     word: {
@@ -10,16 +11,20 @@ const vocabWordSchema = new Schema({
         type: String,
         required: true,
     },
-    pronunciation: {
+    part_of_speech: {
+        type: String,
+        required: true,
+    },
+    example: {
         type: String,
         required: true,
     }
 })
 
 // create mongoose Model
-const VocabWord = mongoose.model("VocabWord", vocabWordSchema)
+const EnglishVocabWord = mongoose.model("englishvocab", vocabWordSchema)
 
 // export the model so we can import it in app.js
 module.exports = {
-    VocabWord,
+    EnglishVocabWord,
 }
