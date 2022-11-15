@@ -50,7 +50,19 @@ const CatHouseScreen = ({navigation, route}) => {
       </Pressable>
     );
   };
-
+  const showItem = () => {
+    if (catState === 'lying') {
+      return (
+        <Image
+          source={Images.foods.food2}
+          style={{
+            height: 110,
+            width: 110,
+          }}
+          resizeMode="contain"></Image>
+      );
+    }
+  };
   const [ItemState, setItemState] = useState('foods');
   const foods = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
   const toys = ['food4', 'food5', 'food6', 'food1', 'food2', 'food3'];
@@ -126,6 +138,9 @@ const CatHouseScreen = ({navigation, route}) => {
           id="cats"
           style={{flex: 4, alignItems: 'center', justifyContent: 'center'}}>
           {showCat()}
+        </View>
+        <View id="item" style={{position: 'absolute', top: 200}}>
+          {showItem()}
         </View>
         <View id="controls" style={{flex: 0.8, flexDirection: 'row'}}>
           <TouchableOpacity style={[styles.controlBotton]} onPress={sleepClick}>
