@@ -37,8 +37,8 @@ const StoreScreen = ({navigation, route}) => {
           <Image
             source={Images.general.catcoin}
             style={{
-              height: 50,
-              width: 50,
+              height: 55,
+              width: 55,
             }}
             resizeMode="contain"></Image>
           <Text style={{fontSize: 30, margin: 5}}>{coins}</Text>

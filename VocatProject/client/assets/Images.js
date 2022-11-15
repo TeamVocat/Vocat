@@ -2,7 +2,7 @@ export default {
   general: {
     catpile: require('./cat_pile.png'),
     catcake: require('./cat_cakes.png'),
-    catcoin: require('./Coin.png'),
+    catcoin: require('./Coin2.png'),
   },
   foods: {
     food1: require('./foods/food1.png'),
@@ -19,5 +19,10 @@ export default {
     food4: 'Soup',
     food5: 'Lunch Set',
     food6: 'Fish Dish',
+  },
+  actions: {
+    drinking: require('./actions/drinking.png'),
+    lying: require('./actions/flatcat.png'),
+    sleeping: require('./actions/sleepingcat.png'),
   },
 };
