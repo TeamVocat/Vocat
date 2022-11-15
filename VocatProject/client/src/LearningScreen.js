@@ -18,25 +18,29 @@ const LearningScreen = ({ navigation, route }) => {
     return (
         <View style={styles.homeContainer}>
             <View id="center_content" style={[styles.content]}>
-                <Text style={[styles.message, { fontSize: settings.textSize }]}> Vocab Word</Text>
+                <Text style={[styles.message, { fontSize: settings.textSize }]}> Augment (verb)</Text>
                 <Pressable style={styles.choices}>
                     <Text style={styles.subtext}>
-                    A. Answer 1
+                    <Text style={styles.choicesLetter}>A.</Text>
+                     make small.
                     </Text>
                 </Pressable>
                 <Pressable style={styles.choices}>
                     <Text style={styles.subtext}>
-                    B. (Correct) Answer 2
+                    <Text style={styles.choicesLetter}>B.</Text>
+                     enlarge or increase; improve.
                     </Text>
                 </Pressable>
                 <Pressable style={styles.choices}>
                     <Text style={styles.subtext}>
-                    C. Answer 3
+                    <Text style={styles.choicesLetter}>C.</Text>
+                     to make an error.
                     </Text>
                 </Pressable>
                 <Pressable style={styles.choices}>
                     <Text style={styles.subtext}>
-                    D. Answer 4
+                    <Text style={styles.choicesLetter}>D.</Text>
+                     taking part in immoral and unethical plots.
                     </Text>
                 </Pressable>
             <TouchableOpacity style={[styles.button, {
@@ -79,7 +83,8 @@ const styles = StyleSheet.create({
         marginTop: '30%',
     },
     subtext: {
-        fontSize: 20
+        fontSize: 20,
+        textAlign: 'center',
     },
     content: {
         flex: 1,
@@ -88,10 +93,17 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }, 
     choices: {
-        backgroundColor: '#CCD5AE',
+        borderWidth: 2,
+        borderColor: '#CCCCCC',
         borderRadius: 10,
-        padding: 10,
+        paddingRight: 5,
         margin: 10,
+    },
+    choicesLetter: {
+        fontSize: 26,
+        backgroundColor: '#CCD5AE',
+        borderRadius: 25,
+        marginRight: 10,
     }
 });
 
