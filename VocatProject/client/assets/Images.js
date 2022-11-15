@@ -20,4 +20,9 @@ export default {
     food5: 'Lunch Set',
     food6: 'Fish Dish',
   },
+  actions: {
+    drinking: require('./actions/drinking.png'),
+    lying: require('./actions/flatcat.png'),
+    sleeping: require('./actions/sleepingcat.png'),
+  },
 };
