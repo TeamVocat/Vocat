@@ -43,6 +43,7 @@ const CatHouseScreen = ({navigation, route}) => {
         <Image
           source={Images.actions[catState]}
           style={{
+            height: 300,
             width: 300,
           }}
           resizeMode="contain"></Image>
