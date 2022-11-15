@@ -20,7 +20,7 @@ const LearningScreen = ({ navigation, route }) => {
 
     useEffect(() => {
         async function fetchMessage() {
-            console.log(`Fetching Message from ${REACT_APP_SERVER_HOSTNAME}/api/newVocab...`);
+            console.log(`Fetching Vocab Word from ${REACT_APP_SERVER_HOSTNAME}/api/newVocab...`);
             try {
                 let tempVocabArr = [];
                 for (let index = 0; index < 4; index++) {
