@@ -2,7 +2,7 @@ export default {
   general: {
     catpile: require('./cat_pile.png'),
     catcake: require('./cat_cakes.png'),
-    catcoin: require('./Coin.png'),
+    catcoin: require('./Coin2.png'),
   },
   foods: {
     food1: require('./foods/food1.png'),
