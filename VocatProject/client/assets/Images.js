@@ -21,8 +21,8 @@ export default {
     food6: 'Fish Dish',
   },
   actions: {
-    drinking: require('./actions/drinking.png'),
-    lying: require('./actions/flatcat.png'),
-    sleeping: require('./actions/sleepingcat.png'),
+    drinking: require('./drinking.png'),
+    lying: require('./flatcat.png'),
+    sleeping: require('./sleepingcat.png'),
   },
 };
