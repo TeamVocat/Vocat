@@ -14,21 +14,20 @@ import {
 import axios from 'react-native-axios';
 import { REACT_APP_SERVER_HOSTNAME } from "@env";
 import {screens} from './functions/Words.js';
-import {review, learn, grab, UserWord, UserWordBank, store, retrieve} from './functions/Functions.js';
+import {review, learnNew, grab, store, retrieve} from './Functions.js';
 
 const LearningScreen = ({ navigation, route }) => {
-    let userWordBank = new UserWordBank();
 
     const [settings, setSettings] = useState({ textSize: 20 });
     const [vocabWordsArr, setVocabWordsArr] = useState([1, 2, 3, 4]);
-    let i = 0;
+    const [answersArr, setAnswersArr] = useState([1, 2, 3, 4]);
 
     useEffect(() => {
         async function fetchMessage() {
-            console.log(`Fetching Vocab Word from ${REACT_APP_SERVER_HOSTNAME}/api/newVocab...`);
             try {
-              const newArray = await learn([]);
-                setVocabWordsArr(newArray);
+              const newArray = await learnNew([]);
+              setVocabWordsArr(newArray);
+              setAnswersArr(newArray[0].answers);
             } catch (error) {
                 console.log(error);
             }
@@ -40,28 +39,28 @@ const LearningScreen = ({ navigation, route }) => {
         <View style={styles.homeContainer}>
             <View id="center_content" style={[styles.content]}>
                 <Text style={[styles.message, { fontSize: settings.textSize }]}>
-                    Part of speech: {vocabWordsArr[0].definition} {"\n"}
-                    Definition: {vocabWordsArr[0].part_of_speech} {"\n"}
+                    Definition: {vocabWordsArr[0].definition} {"\n"}
+                    Part Of Speech: {vocabWordsArr[0].part_of_speech} {"\n"}
                     Example: {"\"" + vocabWordsArr[0].example + "\""}
                 </Text>
                 <Pressable style={styles.choices}>
                     <Text style={styles.subtext}>
-                        A. {vocabWordsArr[0].word}
+                        A. {answersArr[0].word}
                     </Text>
                 </Pressable>
                 <Pressable style={styles.choices}>
                     <Text style={styles.subtext}>
-                        B. {vocabWordsArr[0].word}
+                        B. {answersArr[1].word}
                     </Text>
                 </Pressable>
                 <Pressable style={styles.choices}>
                     <Text style={styles.subtext}>
-                        C. {vocabWordsArr[0].word}
+                        C. {answersArr[2].word}
                     </Text>
                 </Pressable>
                 <Pressable style={styles.choices}>
                     <Text style={styles.subtext}>
-                        D. {vocabWordsArr[0].word}
+                        D. {answersArr[3].word}
                     </Text>
                 </Pressable>
 
@@ -73,6 +72,7 @@ const LearningScreen = ({ navigation, route }) => {
                       if (vocabWordsArr.length > 1){
                         let newArr = vocabWordsArr.slice(1);
                         setVocabWordsArr(newArr);
+                        setAnswersArr(newArr[0].answers);
                       }
                       else{
                         console.log('done');
