@@ -13,21 +13,19 @@ import {
 } from "react-native";
 import axios from 'react-native-axios';
 import { REACT_APP_SERVER_HOSTNAME } from "@env";
-import {screens} from './functions/Words.js';
-import {review, learnNew, grab, store, retrieve} from './Functions.js';
+import { screens } from './functions/Words.js';
+import { review, learnNew, grab, store, retrieve } from './Functions.js';
 
 const LearningScreen = ({ navigation, route }) => {
-
-    const [settings, setSettings] = useState({ textSize: 20 });
     const [vocabWordsArr, setVocabWordsArr] = useState([1, 2, 3, 4]);
     const [answersArr, setAnswersArr] = useState([1, 2, 3, 4]);
 
     useEffect(() => {
         async function fetchMessage() {
             try {
-              const newArray = await learnNew([]);
-              setVocabWordsArr(newArray);
-              setAnswersArr(newArray[0].answers);
+                const newArray = await learnNew([]);
+                setVocabWordsArr(newArray);
+                setAnswersArr(newArray[0].answers);
             } catch (error) {
                 console.log(error);
             }
@@ -38,7 +36,7 @@ const LearningScreen = ({ navigation, route }) => {
     return (
         <View style={styles.homeContainer}>
             <View id="center_content" style={[styles.content]}>
-                <Text style={[styles.message, { fontSize: settings.textSize }]}>
+                <Text style={[styles.message, { fontSize: route.params.settings.textSize }]}>
                     Definition: {vocabWordsArr[0].definition} {"\n"}
                     Part Of Speech: {vocabWordsArr[0].part_of_speech} {"\n"}
                     Example: {"\"" + vocabWordsArr[0].example + "\""}
@@ -69,14 +67,14 @@ const LearningScreen = ({ navigation, route }) => {
                     top: '5%'
                 }]}
                     onPress={() => {
-                      if (vocabWordsArr.length > 1){
-                        let newArr = vocabWordsArr.slice(1);
-                        setVocabWordsArr(newArr);
-                        setAnswersArr(newArr[0].answers);
-                      }
-                      else{
-                        console.log('done');
-                      }
+                        if (vocabWordsArr.length > 1) {
+                            let newArr = vocabWordsArr.slice(1);
+                            setVocabWordsArr(newArr);
+                            setAnswersArr(newArr[0].answers);
+                        }
+                        else {
+                            console.log('done');
+                        }
                     }}>
                     <Text style={{ fontSize: 30 }}>Next</Text>
                 </TouchableOpacity>
