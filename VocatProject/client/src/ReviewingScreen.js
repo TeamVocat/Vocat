@@ -13,20 +13,19 @@ import {
 } from "react-native";
 import axios from 'react-native-axios';
 import { REACT_APP_SERVER_HOSTNAME } from "@env";
-import {screens} from './functions/Words.js';
-import {review, UserWordBank, learnNew, grab, store, retrieve} from './Functions.js';
+import { screens } from './functions/Words.js';
+import { review, UserWordBank, learnNew, grab, store, retrieve } from './Functions.js';
 
 const LearningScreen = ({ navigation, route }) => {
-
-    const [settings, setSettings] = useState({ textSize: 20 });
     const [vocabWordsArr, setVocabWordsArr] = useState([1, 2, 3, 4]);
-    //const learnedArr;
+    const [answersArr, setAnswersArr] = useState([1, 2, 3, 4]);
 
     useEffect(() => {
         async function fetchMessage() {
             try {
-              const newArray = await learnNew([]);
-              setVocabWordsArr(newArray);
+                const newArray = await review();
+                setVocabWordsArr(newArray);
+                setAnswersArr(newArray[0].answers);
             } catch (error) {
                 console.log(error);
             }
@@ -37,25 +36,44 @@ const LearningScreen = ({ navigation, route }) => {
     return (
         <View style={styles.homeContainer}>
             <View id="center_content" style={[styles.content]}>
-                <Text style={[styles.message, { fontSize: settings.textSize }]}>
-                Word: {vocabWordsArr[0].word} {"\n"}
-                    Definition: {vocabWordsArr[0].definition} {"\n"}
-                    Part Of Speech: {vocabWordsArr[0].part_of_speech} {"\n"}
-                    Example: {"\"" + vocabWordsArr[0].example + "\""}
+                <Text style={[styles.message, { fontSize: route.params.settings.textSize }]}>
+                    {vocabWordsArr[0].definition} {"\n"}
                 </Text>
+                <Pressable style={styles.choices}>
+                    <Text style={styles.subtext}>
+                        A. {answersArr[0].word}
+                    </Text>
+                </Pressable>
+                <Pressable style={styles.choices}>
+                    <Text style={styles.subtext}>
+                        B. {answersArr[1].word}
+                    </Text>
+                </Pressable>
+                <Pressable style={styles.choices}>
+                    <Text style={styles.subtext}>
+                        C. {answersArr[2].word}
+                    </Text>
+                </Pressable>
+                <Pressable style={styles.choices}>
+                    <Text style={styles.subtext}>
+                        D. {answersArr[3].word}
+                    </Text>
+                </Pressable>
 
                 <TouchableOpacity style={[styles.button, {
                     position: 'relative',
                     top: '5%'
                 }]}
                     onPress={() => {
-                      if (vocabWordsArr.length > 1){
-                        let newArr = vocabWordsArr.slice(1);
-                        setVocabWordsArr(newArr);
-                      }
-                      else{
-                        //await store(new UserWordBank());
-                      }
+                        if (vocabWordsArr.length > 1) {
+                            let newArr = vocabWordsArr.slice(1);
+                            console.log(newArr);
+                            setVocabWordsArr(newArr);
+                            setAnswersArr(newArr[0].answers);
+                        }
+                        else {
+                            console.log('done');
+                        }
                     }}>
                     <Text style={{ fontSize: 30 }}>Next</Text>
                 </TouchableOpacity>
