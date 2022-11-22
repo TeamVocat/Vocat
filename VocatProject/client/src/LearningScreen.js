@@ -17,6 +17,8 @@ import {screens} from './functions/Words.js';
 import {review, UserWordBank, learnNew, grab, store, retrieve} from './Functions.js';
 
 const LearningScreen = ({ navigation, route }) => {
+
+    const [settings, setSettings] = useState({ textSize: 20 });
     const [vocabWordsArr, setVocabWordsArr] = useState([1, 2, 3, 4]);
     //const learnedArr;
 
