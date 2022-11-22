@@ -1,5 +1,5 @@
-const mongoose = require("mongoose")
-const Schema = mongoose.Schema
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 mongoose.pluralize(null);
 
 const vocabWordSchema = new Schema({

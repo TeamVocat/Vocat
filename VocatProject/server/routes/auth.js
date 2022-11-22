@@ -3,10 +3,14 @@ var mongoose = require('mongoose');
 const router = express.Router();
 const { EnglishVocabWord } = require("../models/VocabWord");
 
+// controllers
+const { signup, signin } = require("../controllers/auth");
+
 router.get("/home", (req, res) => {
     try {
+        let message = "Welcome, ";
         res.json({
-            message: "Welcome, User!",
+            message: message,
             status: "Success"
         });
     } catch (error) {
@@ -43,5 +47,8 @@ router.get("/newVocab", async (req, res) => {
         })
     }
 })
+
+router.post("/signup", signup);
+router.post("/signin", signin);
 
 export default router;

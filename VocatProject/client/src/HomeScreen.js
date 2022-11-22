@@ -8,6 +8,7 @@ import { REACT_APP_SERVER_HOSTNAME } from "@env";
 const HomeScreen = (props) => {
   // const isFocused = useIsFocused();
 
+  const [user, setUser] = useState({ username: "User" });
   const [settings, setSettings] = useState({ textSize: 30 });
   const [message, setMessage] = useState("");
 
@@ -15,6 +16,10 @@ const HomeScreen = (props) => {
     DeviceEventEmitter.addListener("event.changeSettings", (eventData) => {
       setSettings(eventData);
     });
+    DeviceEventEmitter.addListener("event.changeUser", (eventData) => {
+      setUser(eventData);
+    });
+    console.log(user);
     window.onpageshow = function (event) {
       if (event.persisted) {
         window.location.reload();
@@ -64,8 +69,36 @@ const HomeScreen = (props) => {
         </TouchableOpacity>
       </View>
       <View id="center_content" style={[styles.content]}>
+        <TouchableOpacity
+          style={[styles.button,]}
+          onPress={() => {
+            props.navigation.navigate("Signup", { settings: settings });
+          }}
+        >
+          <Text style={styles.headerButtonText}>Signup</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, {
+            top: 40,
+          }]}
+          onPress={() => {
+            props.navigation.navigate("Signin", { settings: settings, user: user });
+          }}
+        >
+          <Text style={styles.headerButtonText}>Signin</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, {
+            top: 80,
+          }]}
+          onPress={() => {
+            setUser({ username: "User" });
+          }}
+        >
+          <Text style={styles.headerButtonText}>Signout</Text>
+        </TouchableOpacity>
         <Text style={[styles.message, { fontSize: settings.textSize }]}>
-          {message}
+          {message + user.username + "!"}
         </Text>
         <Image
           source={catPile}
