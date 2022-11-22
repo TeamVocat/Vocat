@@ -1,16 +1,15 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
-mongoose.pluralize(null);
 
 const userSchema = new Schema({
     username: {
         type: String,
         required: true,
     },
-    password: {
-        type: String,
-        required: true,
-    },
+    // profileImage: {
+    //   type: Number,
+    //
+    // },
     email: {
         type: String,
         required: true,
@@ -23,9 +22,13 @@ const userSchema = new Schema({
         type: String,
         required: false,
     },
-    wordsLearned: {
-        type: String,
-        required: false,
+    themeColor: {
+      type: Number,
+      required: false,
+    },
+    coins: {
+      type: Number,
+      required: true,
     }
 })
 
