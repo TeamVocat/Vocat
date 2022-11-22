@@ -87,6 +87,21 @@ const HomeScreen = (props) => {
             props.navigation.navigate("Learning", { settings: settings });
           }}
         >
+          <Text style={styles.buttonText}>Learn New</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            {
+              position: "static",
+              marginBottom: 20,
+              fontSize: settings.textSize,
+            },
+          ]}
+          onPress={() => {
+            props.navigation.navigate("Reviewing", { settings: settings });
+          }}
+        >
           <Text style={styles.buttonText}>Review</Text>
         </TouchableOpacity>
         <TouchableOpacity
