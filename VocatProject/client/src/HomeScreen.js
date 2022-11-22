@@ -29,7 +29,6 @@ const HomeScreen = props => {
     DeviceEventEmitter.addListener("event.changeUser", (eventData) => {
       setUser(eventData);
     });
-    console.log(user);
     window.onpageshow = function (event) {
       if (event.persisted) {
         window.location.reload();
@@ -132,20 +131,36 @@ const HomeScreen = props => {
             width: 300,
             height: 300,
           }}></Image>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              position: 'static',
-              marginBottom: 20,
-              fontSize: settings.textSize,
-            },
-          ]}
-          onPress={() => {
-            props.navigation.navigate('Learning', {settings: settings});
-          }}>
-          <Text style={styles.buttonText}>Review</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                position: "static",
+                marginBottom: 20,
+                fontSize: settings.textSize,
+              },
+            ]}
+            onPress={() => {
+              props.navigation.navigate("Learning", { settings: settings });
+            }}
+          >
+            <Text style={styles.buttonText}>Learn New</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                position: "static",
+                marginBottom: 20,
+                fontSize: settings.textSize,
+              },
+            ]}
+            onPress={() => {
+              props.navigation.navigate("Reviewing", { settings: settings });
+            }}
+          >
+            <Text style={styles.buttonText}>Review</Text>
+          </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.button,
