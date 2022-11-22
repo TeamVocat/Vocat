@@ -28,6 +28,7 @@ router.get("/newVocab", async (req, res) => {
                 EnglishVocabWord.findOne().skip(random).exec(
                     function (err, result) {
                         // Tada! random word
+                        console.log(result);
                         res.json({
                             word: result,
                             status: "Success"
