@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
 import axios from 'react-native-axios';
-import { REACT_APP_SERVER_HOSTNAME } from "@env";
+import {REACT_APP_SERVER_HOSTNAME} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let userCoins = 0;
@@ -11,15 +10,14 @@ function review(wordbank) {
 
   //review while not all words today are finished
   while (reviewToday.length > 0) {
-    let currentWord = reviewToday.shift();
+  let currentWord = reviewToday.shift();
 
     //the review
 
     //decide to put back or review again
     if (!currentWord.doneToday) {
       reviewToday.push(currentWord);
-    }
-    else {
+    } else {
       //put back if done
       wordbank.add(currentWord);
       userCoins++;
@@ -57,21 +55,29 @@ async function generateAnswers(word) {
   return answers;
 }
 
-async function grab(/*word,*/) {  //from db into user wordbank
+async function grab(/*word,*/) {
+  //from db into user wordbank
   const result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`);
-  const newWord = new UserWord(result.data.word.word, result.data.word.definition, result.data.word.part_of_speech, result.data.word.example);
+  const newWord = new UserWord(
+    result.data.word.word,
+    result.data.word.definition,
+    result.data.word.part_of_speech,
+    result.data.word.example,
+  );
   return newWord;
-};
+}
 
 class Answer {
-  constructor(word, correct) {  //create when user learns this word
+  constructor(word, correct) {
+    //create when user learns this word
     this.word = word;
     this.correct = correct;
   }
 }
 
 class UserWord {
-  constructor(word, definition, part_of_speech, example) {  //create when user learns this word
+  constructor(word, definition, part_of_speech, example) {
+    //create when user learns this word
     this.word = word;
     this.definition = definition;
     this.part_of_speech = part_of_speech;
@@ -80,16 +86,16 @@ class UserWord {
     this.doneToday = false;
     this.answers = [];
   }
+
   review(correct) {  //boolean value
     if (correct) {
       this.cooldown = 14;
       this.cooldownToday = true;
       userCoins++;
-    }
-    else {
+    } else {
       this.cooldown = 3;
     }
-    return this;  //returns the word to be put back in queue
+    return this; //returns the word to be put back in queue
   }
 }
 
@@ -116,8 +122,7 @@ class UserWordBank {
   add(word) {
     if (this.wordbank.length == 0) {
       this.wordbank.push(word);
-    }
-    else {
+    } else {
       for (let i = 0; i < this.wordbank.length; i++) {
         if (this.wordbank[i].cooldown > word.cooldown) {
           this.wordbank.splice(i, 0, word);
@@ -147,7 +152,7 @@ class UserWordBank {
 async function store(wordbank) {
   try {
     const jsonValue = JSON.stringify(wordbank);
-    await AsyncStorage.setItem('wordbank', jsonValue)
+    await AsyncStorage.setItem('wordbank', jsonValue);
   } catch (e) {
     // saving error
     console.log(e);

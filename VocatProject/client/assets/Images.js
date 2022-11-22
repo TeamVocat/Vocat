@@ -1,5 +1,6 @@
 export default {
   general: {
+    logo: require('./logo-Placeholder.png'),
     catpile: require('./cat_pile.png'),
     catcake: require('./cat_cakes.png'),
     catcoin: require('./Coin2.png'),
