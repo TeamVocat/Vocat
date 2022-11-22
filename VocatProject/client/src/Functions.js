@@ -10,7 +10,7 @@ function review(wordbank) {
 
   //review while not all words today are finished
   while (reviewToday.length > 0) {
-    const currentWord = reviewToday.shift();
+  let currentWord = reviewToday.shift();
 
     //the review
 
@@ -86,8 +86,8 @@ class UserWord {
     this.doneToday = false;
     this.answers = [];
   }
-  review(correct) {
-    //boolean value
+
+  review(correct) {  //boolean value
     if (correct) {
       this.cooldown = 14;
       this.cooldownToday = true;
@@ -170,4 +170,4 @@ async function retrieve() {
   }
 }
 
-export {review, learnNew, grab, userCoins, retrieve};
+export { review, learnNew, grab, userCoins, retrieve };

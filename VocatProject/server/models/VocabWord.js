@@ -1,5 +1,5 @@
-const mongoose = require("mongoose")
-const Schema = mongoose.Schema
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 mongoose.pluralize(null);
 
 const vocabWordSchema = new Schema({
@@ -18,6 +18,11 @@ const vocabWordSchema = new Schema({
     example: {
         type: String,
         required: true,
+    },
+    learnedUsers: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "User",
+        required: false,
     }
 })
 

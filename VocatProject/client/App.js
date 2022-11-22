@@ -26,6 +26,9 @@ import ProgressScreen from './src/ProgressScreen.js';
 import CatHouseScreen from './src/CatHouseScreen.js';
 import StoreScreen from './src/StoreScreen.js';
 import LogInScreen from './src/LogInScreen.js';
+import Signup from "./src/SignUp";
+import Signin from "./src/SignIn";
+
 
 /**
  * App.js will be used for navigating between pages
@@ -49,6 +52,8 @@ const App: () => Node = () => {
         <Stack.Screen name="LearnNew" component={LearnNewScreen} />
         <Stack.Screen name="Store" component={StoreScreen} />
         <Stack.Screen name="LogIn" component={LogInScreen} />
+        <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Signin" component={Signin} />
       </Stack.Navigator>
     </NavigationContainer>
   );
