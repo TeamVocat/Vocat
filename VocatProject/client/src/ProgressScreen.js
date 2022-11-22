@@ -4,6 +4,9 @@ import { Picker } from '@react-native-picker/picker';
 import { LineChart } from "react-native-chart-kit";
 import Svg, { Circle, Ellipse, G, LinearGradient, RadialGradient, Line, Path, Polygon, Polyline, Rect, Symbol, Use, Defs, Stop } from 'react-native-svg';
 
+const date = "11/1";
+const wordsLearned = 130;
+const wordsNotLearned = 870;
 
 const ProgressScreen = ({ props, navigation, route }) => {
     const [finalSize, setFinalSize] = useState(route.params.settings.textSize);
@@ -32,8 +35,6 @@ const ProgressScreen = ({ props, navigation, route }) => {
         ],
         legend: ["Words Learned"] // optional
     };
-    const wordsLearned = 130;
-    const wordsNotLearned = 870;
 
     const [selectedValue, setSelectedValue] = useState("java");
     return (
