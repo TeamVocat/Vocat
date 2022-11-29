@@ -3,14 +3,12 @@ import { Dimensions, TouchableOpacity, DeviceEventEmitter, StyleSheet, Button, T
 import { Picker } from '@react-native-picker/picker';
 import { LineChart } from "react-native-chart-kit";
 import Svg, { Circle, Ellipse, G, LinearGradient, RadialGradient, Line, Path, Polygon, Polyline, Rect, Symbol, Use, Defs, Stop } from 'react-native-svg';
-import { retrieveProgress } from './Functions.js';
+import { retrieveProgress, retrieveDate } from './Functions.js';
 
-const date = "11/1";
-const wordsNotLearned = 870;
 
 const ProgressScreen = ({ props, navigation, route }) => {
-    const [labels, setLabels] = useState(['11.1','11.2','11.3','11.4','11.5']);
     const [progresses, setProgresses] = useState([1,2,3,4,5]);
+    const [dates, setDates] = useState([1,2,3,4,5]);
 
     useEffect(() => {
         async function fetchMessage() {
@@ -18,6 +16,9 @@ const ProgressScreen = ({ props, navigation, route }) => {
               let progressArray = await retrieveProgress();
               progressArray = progressArray.slice(progressArray.length-6);
               setProgresses(progressArray);
+              let datesArray = await retrieveDate();
+              datesArray = datesArray.slice(datesArray.length-6);
+              setDates(datesArray);
             } catch (error) {
                 console.log(error);
             }
@@ -39,7 +40,7 @@ const ProgressScreen = ({ props, navigation, route }) => {
     };
     const screenWidth = Dimensions.get("window").width;
     const chartData = {
-        labels: labels,
+        labels: dates,
         datasets: [
             {
                 data: progresses,
@@ -52,12 +53,6 @@ const ProgressScreen = ({ props, navigation, route }) => {
 
     return (
         <View style={styles.settingsContainer}>
-            <TouchableOpacity style={styles.button}
-                onPress={() => {
-                    navigation.navigate('Plan', { settings: route.params.settings });
-                }}>
-                <Text style={{ fontSize: 30 }}>Study Plan</Text>
-            </TouchableOpacity>
 
             <LineChart
                 data={chartData}
@@ -70,7 +65,7 @@ const ProgressScreen = ({ props, navigation, route }) => {
             <Text style={styles.buttonLabel}>{progresses[progresses.length-1]}</Text>
 
             <Text style={styles.buttonLabel}>Number of words to be learned:</Text>
-            <Text style={styles.buttonLabel}>{wordsNotLearned}</Text>
+            <Text style={styles.buttonLabel}>{1000-progresses[progresses.length-1]}</Text>
         </View >
     );
 };

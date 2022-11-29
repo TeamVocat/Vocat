@@ -30,9 +30,21 @@ async function learnNew(newWords){
     newWords.push(newWord);
   }
   await store(new UserWordBank(newWords));
+  //store progress
   let progress = await retrieveProgress();
-  progress.push(progress[progress.length-1]+newWords.length);
-  await storeProgress(progress);
+  let dates = await retrieveDate();
+  const today = new Date();
+  const date = parseInt(today. getMonth() + 1) + '/' + today.getDate();
+  if (dates == null || progress == null){
+    progress = [newWords.length];
+    dates = [];
+    dates.push(`${date}`);
+  }
+  else {
+    progress.push(progress[progress.length-1]+newWords.length);
+    dates.push(date);
+  }
+  await storeProgress(dates,progress);
   return newWords;
 }
 
@@ -142,11 +154,13 @@ async function store(wordbank) {
   }
 }
 
-async function storeProgress(progress) {
+async function storeProgress(date,progress) {
   console.log('storing progress');
   try {
-    const jsonValue = JSON.stringify(progress);
-    await AsyncStorage.setItem('progress', jsonValue)
+    const storeDate = JSON.stringify(date);
+    await AsyncStorage.setItem('date', storeDate)
+    const storeProgress = JSON.stringify(progress);
+    await AsyncStorage.setItem('progress', storeProgress)
   } catch (e) {
     // saving error
     console.log(e);
@@ -175,4 +189,15 @@ async function retrieveProgress() {
   }
 }
 
-export {review, learnNew, grab, userCoins, retrieve, UserWordBank, getStyle, retrieveProgress};
+async function retrieveDate() {
+  try {
+    const jsonValue = await AsyncStorage.getItem('date');
+    //console.log(jsonValue);
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch(e) {
+    // error reading value
+    console.log(e);
+  }
+}
+
+export {review, learnNew, grab, userCoins, retrieve, UserWordBank, getStyle, retrieveProgress, retrieveDate};
