@@ -29,6 +29,7 @@ import LogInScreen from './src/LogInScreen.js';
 import SignUpScreen from './src/SignUpScreen.js';
 import Signup from './src/SignUp';
 import Signin from './src/SignIn';
+import User from './src/UserScreen';
 
 /**
  * App.js will be used for navigating between pages
@@ -55,6 +56,7 @@ const App: () => Node = () => {
         <Stack.Screen name="Register" component={SignUpScreen} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Signin" component={Signin} />
+        <Stack.Screen name="User" component={User} />
       </Stack.Navigator>
     </NavigationContainer>
   );

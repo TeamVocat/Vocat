@@ -127,7 +127,7 @@ const HomeScreen = props => {
             },
           ]}
           onPress={() => {
-            props.navigation.navigate('Progress', {settings: settings});
+            props.navigation.navigate('User', {settings: settings});
           }}>
           <Text style={styles.buttonText}>Progress</Text>
         </TouchableOpacity>
