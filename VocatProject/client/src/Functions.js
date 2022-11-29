@@ -11,12 +11,14 @@ async function review(){
   //get words that finished
   const reviewToday = [];
   let i = 0;
-  while (/*wordbank.wordbank[0].cooldown <= 0*/i < 5){
-    const newWord = wordbank.wordbank[i];
+  while (wordbank.wordbank[0].cooldown <= 0){
+    const newWord = wordbank.wordbank[0];
     newWord.answers = await generateAnswers(newWord.word);
     reviewToday.push(newWord);
-    //wordbank.wordbank = wordbank.wordbank.slice(1);
-    i++;
+    wordbank.wordbank = wordbank.wordbank.slice(1);
+    if (wordbank.wordbank.length <= 0){
+      break;
+    }
   }
   return reviewToday;
 }
@@ -43,6 +45,21 @@ async function generateAnswers(word){
   const correctIndex = Math.floor(Math.random() * 4);
   answers[correctIndex] = new Answer(word,true);
   return answers;
+}
+
+function getStyle(button,state,answer){
+  if (state == button){
+    return "#bfbfbf";
+  }
+  else if (state == button + 4){
+    return answer.correct ? "#c7fcb8" : "#ff5252";
+  }
+  else if (state > 3 && answer.correct){
+    return "#c7fcb8";
+  }
+  else {
+    return "#f0f0f0";
+  }
 }
 
 async function grab(/*word,*/){  //from db into user wordbank
@@ -115,7 +132,7 @@ async function store(wordbank) {
   console.log('storing');
   try {
     const jsonValue = JSON.stringify(wordbank);
-    await AsyncStorage.setItem('wordbank', jsonValue)
+    await AsyncStorage.mergeItem('wordbank', jsonValue)
   } catch (e) {
     // saving error
     console.log(e);
@@ -133,4 +150,4 @@ async function retrieve() {
   }
 }
 
-export {review, learnNew, grab, userCoins, retrieve, UserWordBank};
+export {review, learnNew, grab, userCoins, retrieve, UserWordBank, getStyle};
