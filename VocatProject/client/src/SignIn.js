@@ -12,15 +12,20 @@ const SignIn = ({ navigation, route }) => {
             alert("All fields are required");
             return;
         }
-        const statusJSON = await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/signin`, { email, password });
-        console.log(statusJSON.data);
-        if (statusJSON.data.error) {
-            alert(statusJSON.data.error);
-        } else {
-            let temp = route.params.user;
-            temp.username = statusJSON.data.user.username;
-            DeviceEventEmitter.emit("event.changeUser", temp);
-            alert("Signin Successful!");
+        try {
+            const statusJSON = await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/signin`, { email, password });
+            console.log(statusJSON.data);
+            if (statusJSON.data.error) {
+                alert(statusJSON.data.error);
+            } else {
+                let temp = route.params.user;
+                temp.username = statusJSON.data.user.username;
+                await DeviceEventEmitter.emit("event.changeUser", temp);
+                alert("Signin Successful!");
+                navigation.navigate('Home');
+            }
+        } catch (error) {
+            alert(error);
         }
     };
     return (
