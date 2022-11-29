@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import Slider from '@react-native-community/slider';
 import {
+  Animated,
+  Keyboard,
   Image,
   TouchableOpacity,
   DeviceEventEmitter,
@@ -13,42 +15,118 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import {Row, Rows, Table, TableWrapper} from 'react-native-table-component';
+import Svg, {Path} from 'react-native-svg';
+import {Iconoir, User, Lock} from 'iconoir-react-native';
+
 import {Images} from '../assets/';
-import {Shadow} from 'react-native-shadow-2';
 
 const LogInScreen = ({navigation, route}) => {
-  const [settings, setSettings] = useState({textSize: 30});
-  const [text, onChangeText] = React.useState('');
-
   const cyan = '#2a9d8f';
+  const [settings, setSettings] = useState({textSize: 30});
+  const [userText, setUserText] = React.useState('');
+  const [passText, setpassText] = React.useState('');
+  //const [userFocused, setUserFocused] = useState(false);
+  //const [passFocused, setPassFocused] = useState(false);
+
+  //const [logoSize, setLogoSize] = React.useState(120);
+  const [textLocHeight, setTextLocHeight] = React.useState(10);
+  const IMAGE_HEIGHT_SMALL = 40;
+  const IMAGE_HEIGHT_LARGE = 120;
+
+  //   Keyboard.addListener('keyboardWillShow', event => {
+  //     Animated.timing(imageHeight, {
+  //       duration: event.duration,
+  //       toValue: IMAGE_HEIGHT_SMALL,
+  //     }).start();
+  //   });
+  //   Keyboard.addListener('keyboardWillHide', event => {
+  //     Animated.timing(imageHeight, {
+  //       duration: event.duration,
+  //       toValue: IMAGE_HEIGHT_LARGE,
+  //     }).start();
+  //   });
+  let logoSize = new Animated.Value(IMAGE_HEIGHT_LARGE);
+
+  useEffect(() => {
+    const show1 = Keyboard.addListener('keyboardWillShow', event => {
+      Animated.timing(logoSize, {
+        duration: event.duration,
+        toValue: IMAGE_HEIGHT_SMALL,
+      }).start();
+      //setTextLocHeight(-20);
+    });
+    const show2 = Keyboard.addListener('keyboardDidShow', event => {
+      setTextLocHeight(-10);
+    });
+    const hide1 = Keyboard.addListener('keyboardWillHide', event => {
+      Animated.timing(logoSize, {
+        duration: event.duration,
+        toValue: IMAGE_HEIGHT_LARGE,
+      }).start();
+      setTextLocHeight(10);
+    });
+    const hide2 = Keyboard.addListener('keyboardDidHide', event => {
+      //setTextLocHeight(10);
+    });
+
+    return () => {
+      show1.remove();
+      show2.remove();
+      hide1.remove();
+      hide2.remove();
+    };
+  }, []);
 
   return (
     <View style={styles.logInContainer}>
       <View class="header" style={[styles.header, {flex: 1.2}]}>
         <View class="logo_login" style={{flex: 3}}>
-          <Image
+          <Animated.Image
             source={Images.general.logo}
             style={{
-              height: 110,
-              width: 110,
+              height: logoSize,
+              width: logoSize,
             }}
-            resizeMode="contain"></Image>
+          />
         </View>
-        <View class="title_login" style={{flex: 2, padding: 10}}>
+
+        <View class="title_login" style={{flex: 2}}>
           <Text
             style={{
-              flex: 1.5,
+              top: textLocHeight,
+              flex: 1.3,
               textAlign: 'center',
-              fontSize: 30,
+              fontSize: 35,
               color: 'black',
+              position: 'relative',
             }}>
             Vocat
           </Text>
-          <Text
-            style={{flex: 1, textAlign: 'center', fontSize: 20, color: cyan}}>
-            Log In
-          </Text>
+          <View
+            style={{
+              margin: 0,
+              width: 300,
+              flex: 1,
+              textAlign: 'center',
+              fontSize: 18,
+              color: cyan,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <View style={{flex: 1, height: 1, backgroundColor: cyan}} />
+            <View>
+              <Text
+                style={{
+                  width: 80,
+                  fontSize: 18,
+                  textAlign: 'center',
+                  color: cyan,
+                }}>
+                Log In
+              </Text>
+            </View>
+            <View style={{flex: 1, height: 1, backgroundColor: cyan}} />
+          </View>
         </View>
       </View>
 
@@ -60,30 +138,57 @@ const LogInScreen = ({navigation, route}) => {
             flexDirection: 'column',
             width: '100%',
             alignItems: 'center',
+            position: 'relative',
           }}>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
-            placeholder="username"
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
-            placeholder="password"
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              right: 12,
+            }}>
+            <User
+              color="#AAAAAA"
+              height={25}
+              width={25}
+              style={{position: 'relative', left: 45, top: 23, zIndex: 10}}
+            />
+            <TextInput
+              style={[styles.input]}
+              onChangeText={setUserText}
+              value={userText}
+              placeholder="username"
+            />
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              right: 12,
+            }}>
+            <Lock
+              color="#AAAAAA"
+              height={25}
+              width={25}
+              style={{position: 'relative', left: 45, top: 23, zIndex: 10}}
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={setpassText}
+              secureTextEntry={true}
+              value={passText}
+              placeholder="password"
+            />
+          </View>
         </View>
         <View
           class="submit"
           style={{
-            flex: 4,
+            flex: 2,
             flexDirection: 'column',
             width: '100%',
             alignItems: 'center',
             justifyContent: 'flex-start',
           }}>
-          <TouchableOpacity style={[styles.button, {width: '80%', height: 50}]}>
+          <TouchableOpacity style={[styles.button, {width: 300, height: 50}]}>
             <Text
               style={{
                 textAlign: 'center',
@@ -93,6 +198,14 @@ const LogInScreen = ({navigation, route}) => {
               Log In
             </Text>
           </TouchableOpacity>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 13,
+              color: 'black',
+            }}>
+            Don't have an account? Sign up here.
+          </Text>
         </View>
       </View>
     </View>
@@ -120,15 +233,31 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     alignContent: 'center',
   },
   input: {
-    width: '80%',
+    width: 300,
     borderWidth: 1,
+    borderRadius: 10,
     padding: 10,
     alignItems: 'center',
+    height: 50,
     margin: 10,
+    marginBottom: 15,
+    paddingLeft: 40,
+    alignSelf: 'center',
+    borderColor: '#AAAAAA',
+    color: '#AAAAAA',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    backgroundColor: 'white',
   },
   button: {
     padding: 10,
@@ -136,6 +265,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
     backgroundColor: '#2a9d8f',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
 });
 
