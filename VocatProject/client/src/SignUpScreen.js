@@ -16,15 +16,17 @@ import {
   TextInput,
 } from 'react-native';
 import Svg, {Path} from 'react-native-svg';
-import {Iconoir, User, Lock} from 'iconoir-react-native';
+import {Iconoir, User, Lock, Mail} from 'iconoir-react-native';
 
-import {Images} from '../assets/';
+import {Images} from '../assets';
 
-const LogInScreen = ({navigation, route}) => {
+const SignUpScreen = ({navigation, route}) => {
   const cyan = '#2a9d8f';
   const [settings, setSettings] = useState({textSize: 30});
   const [userText, setUserText] = React.useState('');
   const [passText, setpassText] = React.useState('');
+  const [emailText, setEmailText] = React.useState('');
+
   //const [userFocused, setUserFocused] = useState(false);
   //const [passFocused, setPassFocused] = useState(false);
 
@@ -79,8 +81,8 @@ const LogInScreen = ({navigation, route}) => {
 
   return (
     <View style={styles.logInContainer}>
-      <View class="header" style={[styles.header, {flex: 1.2}]}>
-        <View class="logo_login" style={{flex: 3}}>
+      <View class="header" style={[styles.header, {flex: 1}]}>
+        <View class="logo_login" style={{flex: 1.8}}>
           <Animated.Image
             source={Images.general.logo}
             style={{
@@ -90,11 +92,11 @@ const LogInScreen = ({navigation, route}) => {
           />
         </View>
 
-        <View class="title_login" style={{flex: 2}}>
+        <View class="title_signup" style={{flex: 2}}>
           <Text
             style={{
               top: textLocHeight,
-              flex: 1.3,
+              flex: 1.5,
               textAlign: 'center',
               fontSize: 35,
               color: 'black',
@@ -117,13 +119,13 @@ const LogInScreen = ({navigation, route}) => {
             <View>
               <Text
                 style={{
-                  width: 80,
+                  width: 90,
                   fontSize: 18,
                   textAlign: 'center',
                   color: cyan,
                   top: -2,
                 }}>
-                Log In
+                Sign Up
               </Text>
             </View>
             <View style={{flex: 1, height: 1, backgroundColor: cyan}} />
@@ -150,7 +152,7 @@ const LogInScreen = ({navigation, route}) => {
               color="#AAAAAA"
               height={25}
               width={25}
-              style={{position: 'relative', left: 45, top: 23, zIndex: 10}}
+              style={{position: 'relative', left: 44, top: 23, zIndex: 10}}
             />
             <TextInput
               style={[styles.input]}
@@ -165,11 +167,30 @@ const LogInScreen = ({navigation, route}) => {
               flexDirection: 'row',
               right: 12,
             }}>
+            <Mail
+              color="#AAAAAA"
+              height={22}
+              width={25}
+              style={{position: 'relative', left: 44, top: 25, zIndex: 10}}
+            />
+            <TextInput
+              style={[styles.input]}
+              onChangeText={setEmailText}
+              value={emailText}
+              placeholder="email"
+            />
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              right: 12,
+            }}>
             <Lock
               color="#AAAAAA"
               height={25}
               width={25}
-              style={{position: 'relative', left: 45, top: 23, zIndex: 10}}
+              style={{position: 'relative', left: 44, top: 23, zIndex: 10}}
             />
             <TextInput
               style={styles.input}
@@ -183,7 +204,7 @@ const LogInScreen = ({navigation, route}) => {
         <View
           class="submit"
           style={{
-            flex: 2,
+            flex: 1,
             flexDirection: 'column',
             width: '100%',
             alignItems: 'center',
@@ -196,7 +217,7 @@ const LogInScreen = ({navigation, route}) => {
                 fontSize: 20,
                 color: 'white',
               }}>
-              Log In
+              Register
             </Text>
           </TouchableOpacity>
           <Text
@@ -205,14 +226,14 @@ const LogInScreen = ({navigation, route}) => {
               fontSize: 13,
               color: 'black',
             }}>
-            Don't have an account?
+            Already have an account?
           </Text>
           <Text
             style={{textAlign: 'center', fontSize: 13, color: cyan}}
             onPress={() =>
-              navigation.navigate('Register', {settings: route.params.settings})
+              navigation.navigate('LogIn', {settings: route.params.settings})
             }>
-            Sign up here.
+            Sign in here.
           </Text>
         </View>
       </View>
@@ -252,7 +273,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     margin: 10,
-    marginBottom: 15,
     paddingLeft: 40,
     alignSelf: 'center',
     borderColor: '#AAAAAA',
@@ -285,4 +305,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogInScreen;
+export default SignUpScreen;

@@ -18,15 +18,15 @@ import { REACT_APP_SERVER_HOSTNAME } from '@env';
 const HomeScreen = props => {
   // const isFocused = useIsFocused();
 
-  const [user, setUser] = useState({ username: "User" });
-  const [settings, setSettings] = useState({ textSize: 30 });
-  const [message, setMessage] = useState("");
+  const [user, setUser] = useState({username: 'User'});
+  const [settings, setSettings] = useState({textSize: 30});
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     DeviceEventEmitter.addListener('event.changeSettings', eventData => {
       setSettings(eventData);
     });
-    DeviceEventEmitter.addListener("event.changeUser", (eventData) => {
+    DeviceEventEmitter.addListener('event.changeUser', eventData => {
       setUser(eventData);
     });
     window.onpageshow = function (event) {
@@ -70,7 +70,7 @@ const HomeScreen = props => {
           onPress={() => {
             props.navigation.navigate('LogIn', { settings: settings });
           }}>
-          <Text style={styles.headerButtonText}>LogIn</Text>
+          <Text style={styles.headerButtonText}>Log In/Sign Up</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -129,6 +129,7 @@ const HomeScreen = props => {
         </TouchableOpacity>
         <Text style={[styles.message, { fontSize: settings.textSize }]}>
           {message + user.username + "!"}
+
         </Text>
         <Image
           source={catPile}
