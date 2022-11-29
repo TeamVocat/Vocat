@@ -30,6 +30,9 @@ async function learnNew(newWords){
     newWords.push(newWord);
   }
   await store(new UserWordBank(newWords));
+  let progress = await retrieveProgress();
+  progress.push(progress[progress.length-1]+newWords.length);
+  await storeProgress(progress);
   return newWords;
 }
 
@@ -129,10 +132,21 @@ class UserWordBank{
 }
 
 async function store(wordbank) {
-  console.log('storing');
+  console.log('storing wordbank');
   try {
     const jsonValue = JSON.stringify(wordbank);
     await AsyncStorage.mergeItem('wordbank', jsonValue)
+  } catch (e) {
+    // saving error
+    console.log(e);
+  }
+}
+
+async function storeProgress(progress) {
+  console.log('storing progress');
+  try {
+    const jsonValue = JSON.stringify(progress);
+    await AsyncStorage.setItem('progress', jsonValue)
   } catch (e) {
     // saving error
     console.log(e);
@@ -150,4 +164,15 @@ async function retrieve() {
   }
 }
 
-export {review, learnNew, grab, userCoins, retrieve, UserWordBank, getStyle};
+async function retrieveProgress() {
+  try {
+    const jsonValue = await AsyncStorage.getItem('progress');
+    //console.log(jsonValue);
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch(e) {
+    // error reading value
+    console.log(e);
+  }
+}
+
+export {review, learnNew, grab, userCoins, retrieve, UserWordBank, getStyle, retrieveProgress};
