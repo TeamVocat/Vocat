@@ -1,130 +1,127 @@
+import React, { useEffect, useState } from "react";
 import axios from 'react-native-axios';
-import {REACT_APP_SERVER_HOSTNAME} from '@env';
+import { REACT_APP_SERVER_HOSTNAME } from "@env";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let userCoins = 0;
 
-function review(wordbank) {
-  //get words that finished cd
-  const reviewToday = wordbank.getReview();
-
-  //review while not all words today are finished
-  while (reviewToday.length > 0) {
-  let currentWord = reviewToday.shift();
-
-    //the review
-
-    //decide to put back or review again
-    if (!currentWord.doneToday) {
-      reviewToday.push(currentWord);
-    } else {
-      //put back if done
-      wordbank.add(currentWord);
-      userCoins++;
+async function review(){
+  //get UserWordBank
+  const wordbank = await retrieve();
+  //get words that finished
+  const reviewToday = [];
+  let i = 0;
+  while (wordbank.wordbank[0].cooldown <= 0){
+    const newWord = wordbank.wordbank[0];
+    newWord.answers = await generateAnswers(newWord.word);
+    reviewToday.push(newWord);
+    wordbank.wordbank = wordbank.wordbank.slice(1);
+    if (wordbank.wordbank.length <= 0){
+      break;
     }
   }
+  return reviewToday;
 }
 
-// async function learn(newWords){ //input an object
-//   for (let i = 0; i < 5; i++){
-//     const newWord = await grab(/*word,*/);
-//     newWords['word'+i] = newWord;
-//   }
-// }
-
-async function learnNew(newWords) {
-  for (let i = 0; i < 5; i++) {
+async function learnNew(newWords){
+  for (let i = 0; i < 5; i++){
     const newWord = await grab(/*word,*/);
     newWord.answers = await generateAnswers(newWord.word);
     newWords.push(newWord);
   }
+  await store(new UserWordBank(newWords));
+  let progress = await retrieveProgress();
+  progress.push(progress[progress.length-1]+newWords.length);
+  await storeProgress(progress);
   return newWords;
 }
 
-async function generateAnswers(word) {
+async function generateAnswers(word){
   const answers = [];
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 4; i++){
     let result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`);
-    while (result.data.word.word == word) {
+    while (result.data.word.word == word){
       result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`);
     }
-    answers.push(new Answer(result.data.word.word, false));
+    answers.push(new Answer(result.data.word.word,false));
   }
   const correctIndex = Math.floor(Math.random() * 4);
-  answers[correctIndex] = new Answer(word, true);
+  answers[correctIndex] = new Answer(word,true);
   return answers;
 }
 
-async function grab(/*word,*/) {
-  //from db into user wordbank
-  const result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`);
-  const newWord = new UserWord(
-    result.data.word.word,
-    result.data.word.definition,
-    result.data.word.part_of_speech,
-    result.data.word.example,
-  );
-  return newWord;
+function getStyle(button,state,answer){
+  if (state == button){
+    return "#bfbfbf";
+  }
+  else if (state == button + 4){
+    return answer.correct ? "#c7fcb8" : "#ff5252";
+  }
+  else if (state > 3 && answer.correct){
+    return "#c7fcb8";
+  }
+  else {
+    return "#f0f0f0";
+  }
 }
 
-class Answer {
-  constructor(word, correct) {
-    //create when user learns this word
+async function grab(/*word,*/){  //from db into user wordbank
+  const result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`);
+  const newWord = new UserWord(result.data.word.word,result.data.word.definition,result.data.word.part_of_speech,result.data.word.example);
+  return newWord;
+  };
+
+class Answer{
+  constructor(word, correct){  //create when user learns this word
     this.word = word;
     this.correct = correct;
   }
 }
 
-class UserWord {
-  constructor(word, definition, part_of_speech, example) {
-    //create when user learns this word
+class UserWord{
+  constructor(word, definition,part_of_speech,example){  //create when user learns this word
     this.word = word;
     this.definition = definition;
     this.part_of_speech = part_of_speech;
     this.example = example;
-    this.cooldown = 1;
+    this.cooldown = 0;
     this.doneToday = false;
     this.answers = [];
   }
-
-  review(correct) {  //boolean value
-    if (correct) {
+  review(correct){  //boolean value
+    if (correct){
       this.cooldown = 14;
       this.cooldownToday = true;
-      userCoins++;
-    } else {
+      userCoins ++;
+    }
+    else{
       this.cooldown = 3;
     }
-    return this; //returns the word to be put back in queue
+    return this;  //returns the word to be put back in queue
   }
 }
 
-class UserWordBank {
-  constructor() {
-    this.wordbank = [];
+class UserWordBank{
+
+  constructor(wordbank){
+    this.wordbank = wordbank;
     this.reviewToday = [];
   }
 
-  getReview() {
-    while (this.wordbank[0].cooldown <= 0) {
-      this.reviewToday.push(this.wordbank.shift());
-    }
-    return this.reviewToday;
-  }
-
-  updateCD() {
-    for (let i = 0; i < this.wordbank.length; i++) {
-      this.wordbank[i].cooldown--;
+  updateCD(){
+    for (let i = 0; i < this.wordbank.length; i++){
+      this.wordbank[i].cooldown --;
     }
   }
 
   //insert a userWord once the user learns it (priority queue according to cd)
-  add(word) {
-    if (this.wordbank.length == 0) {
+  add(word){
+    if (this.wordbank.length == 0){
       this.wordbank.push(word);
-    } else {
-      for (let i = 0; i < this.wordbank.length; i++) {
-        if (this.wordbank[i].cooldown > word.cooldown) {
+    }
+    else{
+      for (let i = 0; i < this.wordbank.length; i++){
+        if (this.wordbank[i].cooldown > word.cooldown ){
           this.wordbank.splice(i, 0, word);
           return;
         }
@@ -132,27 +129,24 @@ class UserWordBank {
       this.wordbank.push(word);
     }
   }
-
-  // addToday(word){
-  //   let lo = 0;
-  //   let hi = this.wordbank.length-1;
-  //   while (this.wordbank[mid].cooldownToday != word.cooldownToday && lo < hi){
-  //     let mid = lo+hi/2;
-  //     if (this.wordbank[mid].cooldownToday < word.cooldownToday ){
-  //       lo = mid + 1;
-  //     }
-  //     else if (this.wordbank[mid].cooldownToday > word.cooldownToday){
-  //       hi = mid - 1;
-  //     }
-  //   }
-  //   this.wordbank.splice(mid, 0, word);
-  // }
 }
 
 async function store(wordbank) {
+  console.log('storing wordbank');
   try {
     const jsonValue = JSON.stringify(wordbank);
-    await AsyncStorage.setItem('wordbank', jsonValue);
+    await AsyncStorage.mergeItem('wordbank', jsonValue)
+  } catch (e) {
+    // saving error
+    console.log(e);
+  }
+}
+
+async function storeProgress(progress) {
+  console.log('storing progress');
+  try {
+    const jsonValue = JSON.stringify(progress);
+    await AsyncStorage.setItem('progress', jsonValue)
   } catch (e) {
     // saving error
     console.log(e);
@@ -162,12 +156,23 @@ async function store(wordbank) {
 async function retrieve() {
   try {
     const jsonValue = await AsyncStorage.getItem('wordbank');
-    console.log(jsonValue);
+    //console.log(jsonValue);
     return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
+  } catch(e) {
     // error reading value
     console.log(e);
   }
 }
 
-export { review, learnNew, grab, userCoins, retrieve };
+async function retrieveProgress() {
+  try {
+    const jsonValue = await AsyncStorage.getItem('progress');
+    //console.log(jsonValue);
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch(e) {
+    // error reading value
+    console.log(e);
+  }
+}
+
+export {review, learnNew, grab, userCoins, retrieve, UserWordBank, getStyle, retrieveProgress};
