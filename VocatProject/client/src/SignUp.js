@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { REACT_APP_SERVER_HOSTNAME } from "@env";
 import axios from 'react-native-axios';
 
-const SignUp = () => {
+const SignUp = ({ navigation, route }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -13,8 +13,14 @@ const SignUp = () => {
             alert("All fields are required");
             return;
         }
-        await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/signup`, { name, email, password });
-        alert("Sign Up Successful");
+        const res = await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/signup`, { name, email, password });
+        if (res.data.error) {
+            alert(res.data.error);
+        } else {
+            alert("Sign Up Successful");
+            console.log(route.params.user);
+            navigation.navigate('Signin', { settings: route.params.settings, user: route.params.user });
+        }
     };
     return (
         <View style={styles.homeContainer}>
