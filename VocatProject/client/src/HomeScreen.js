@@ -9,31 +9,33 @@ import {
   Alert,
   useColorScheme,
   View,
+  ScrollView,
 } from 'react-native';
 import catPile from './../assets/cat_pile.png';
 import axios from 'react-native-axios';
-import { useIsFocused } from '@react-navigation/native';
 import { REACT_APP_SERVER_HOSTNAME } from '@env';
 
 const HomeScreen = props => {
   // const isFocused = useIsFocused();
-
-  const [user, setUser] = useState({ username: 'User' });
+  const [user, setUser] = useState({});
   const [settings, setSettings] = useState({ textSize: 30 });
   const [message, setMessage] = useState('');
-
+  window.onpageshow = function (event) {
+    if (event.persisted) {
+      window.location.reload();
+    }
+  };
   useEffect(() => {
     DeviceEventEmitter.addListener('event.changeSettings', eventData => {
       setSettings(eventData);
     });
-    DeviceEventEmitter.addListener('event.changeUser', eventData => {
-      setUser(eventData);
-    });
-    window.onpageshow = function (event) {
-      if (event.persisted) {
-        window.location.reload();
-      }
-    };
+    // DeviceEventEmitter.addListener('event.changeUser', eventData => {
+    //   setUser(eventData);
+    // });
+    let user = localStorage.getItem("user");
+    if (user) {
+      setUser(user);
+    }
     async function fetchMessage() {
       console.log(
         `Fetching Message from ${REACT_APP_SERVER_HOSTNAME}/api/home...`,
@@ -51,150 +53,152 @@ const HomeScreen = props => {
     fetchMessage();
 
     const unsubscribe = props.navigation.addListener('focus', () => {
-      // alert('Refreshed');
+      alert('Refreshed');
     });
     return unsubscribe;
   }, [props.navigation]);
 
   return (
     <View style={styles.homeContainer}>
-      <View id="header" style={styles.headerContainer}>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              top: 5,
-              borderRadius: 40,
-            },
-          ]}
-          onPress={() => {
-            props.navigation.navigate('LogIn', { settings: settings });
-          }}>
-          <Text style={styles.headerButtonText}>Log In/Sign Up</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              right: 90,
-              top: 5,
-              borderRadius: 40,
-            },
-          ]}>
-          <Text style={styles.headerButtonText}>?</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              right: 5,
-              top: 5,
-            },
-          ]}
-          onPress={() => {
-            props.navigation.navigate('Settings', { settings: settings });
-          }}>
-          <Text style={styles.headerButtonText}>Settings</Text>
-        </TouchableOpacity>
-      </View>
-      <View id="center_content" style={[styles.content]}>
+      <ScrollView>
+        <View id="header" style={styles.headerContainer}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                top: 5,
+                borderRadius: 40,
+              },
+            ]}
+            onPress={() => {
+              props.navigation.navigate('LogIn', { settings: settings });
+            }}>
+            <Text style={styles.headerButtonText}>Log In/Sign Up</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                right: 90,
+                top: 5,
+                borderRadius: 40,
+              },
+            ]}>
+            <Text style={styles.headerButtonText}>?</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                right: 5,
+                top: 5,
+              },
+            ]}
+            onPress={() => {
+              props.navigation.navigate('Settings', { settings: settings });
+            }}>
+            <Text style={styles.headerButtonText}>Settings</Text>
+          </TouchableOpacity>
+        </View>
+        <View id="center_content" style={[styles.content]}>
 
-        <TouchableOpacity
-          style={[styles.button,]}
-          onPress={() => {
-            props.navigation.navigate("Signup", { settings: settings, user: user });
-          }}
-        >
-          <Text style={styles.headerButtonText}>Signup</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, {
-            top: 40,
-          }]}
-          onPress={() => {
-            props.navigation.navigate("Signin", { settings: settings, user: user });
-          }}
-        >
-          <Text style={styles.headerButtonText}>Signin</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, {
-            top: 80,
-          }]}
-          onPress={() => {
-            setUser({ username: "User" });
-          }}
-        >
-          <Text style={styles.headerButtonText}>Signout</Text>
-        </TouchableOpacity>
-        <Text style={[styles.message, { fontSize: settings.textSize }]}>
-          {message + user.username + "!"}
-        </Text>
-        <Image
-          source={catPile}
-          style={{
-            width: 300,
-            height: 300,
-          }}></Image>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              position: "static",
-              marginBottom: 20,
-              fontSize: settings.textSize,
-            },
-          ]}
-          onPress={() => {
-            props.navigation.navigate("Learning", { settings: settings });
-          }}
-        >
-          <Text style={styles.buttonText}>Learn New</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              position: "static",
-              marginBottom: 20,
-              fontSize: settings.textSize,
-            },
-          ]}
-          onPress={() => {
-            props.navigation.navigate("Reviewing", { settings: settings });
-          }}
-        >
-          <Text style={styles.buttonText}>Review</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              position: 'static',
-              marginBottom: 20,
-              fontSize: settings.textSize,
-            },
-          ]}
-          onPress={() => {
-            props.navigation.navigate('Progress', { settings: settings });
-          }}>
-          <Text style={styles.buttonText}>Progress</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              position: 'static',
-              marginBottom: 20,
-              fontSize: settings.textSize,
-            },
-          ]}
-          onPress={() => {
-            props.navigation.navigate('CatHouse', { settings: settings });
-          }}>
-          <Text style={styles.buttonText}>My Cats</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            style={[styles.button,]}
+            onPress={() => {
+              props.navigation.navigate("Signup", { settings: settings, user: user });
+            }}
+          >
+            <Text style={styles.headerButtonText}>Signup</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, {
+              top: 40,
+            }]}
+            onPress={() => {
+              props.navigation.navigate("Signin", { settings: settings, user: user });
+            }}
+          >
+            <Text style={styles.headerButtonText}>Signin</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, {
+              top: 80,
+            }]}
+            onPress={() => {
+              setUser({ username: "User" });
+            }}
+          >
+            <Text style={styles.headerButtonText}>Signout</Text>
+          </TouchableOpacity>
+          <Text style={[styles.message, { fontSize: settings.textSize }]}>
+            {(user.username != '') ? (message + ", " + user.username + "!") : (message + "!")}
+          </Text>
+          <Image
+            source={catPile}
+            style={{
+              width: 300,
+              height: 300,
+            }}></Image>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                position: "static",
+                marginBottom: 20,
+                fontSize: settings.textSize,
+              },
+            ]}
+            onPress={() => {
+              props.navigation.navigate("Learning", { settings: settings });
+            }}
+          >
+            <Text style={styles.buttonText}>Learn New</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                position: "static",
+                marginBottom: 20,
+                fontSize: settings.textSize,
+              },
+            ]}
+            onPress={() => {
+              props.navigation.navigate("Reviewing", { settings: settings });
+            }}
+          >
+            <Text style={styles.buttonText}>Review</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                position: 'static',
+                marginBottom: 20,
+                fontSize: settings.textSize,
+              },
+            ]}
+            onPress={() => {
+              props.navigation.navigate('Progress', { settings: settings });
+            }}>
+            <Text style={styles.buttonText}>Progress</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                position: 'static',
+                marginBottom: 20,
+                fontSize: settings.textSize,
+              },
+            ]}
+            onPress={() => {
+              props.navigation.navigate('CatHouse', { settings: settings });
+            }}>
+            <Text style={styles.buttonText}>My Cats</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 };

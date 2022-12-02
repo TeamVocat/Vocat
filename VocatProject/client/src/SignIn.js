@@ -20,7 +20,8 @@ const SignIn = ({ navigation, route }) => {
             } else {
                 let temp = route.params.user;
                 temp.username = statusJSON.data.user.username;
-                await DeviceEventEmitter.emit("event.changeUser", temp);
+                // await DeviceEventEmitter.emit("event.changeUser", temp);
+                localStorage.setItem("user", statusJSON.data.user);
                 alert("Signin Successful!");
                 navigation.navigate('Home');
             }
