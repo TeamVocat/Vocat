@@ -30,8 +30,8 @@ const LogInScreen = ({navigation, route}) => {
 
   //const [logoSize, setLogoSize] = React.useState(120);
   const [textLocHeight, setTextLocHeight] = React.useState(10);
-  const IMAGE_HEIGHT_SMALL = 40;
-  const IMAGE_HEIGHT_LARGE = 120;
+  const IMAGE_HEIGHT_SMALL = 130;
+  const IMAGE_HEIGHT_LARGE = 200;
 
   //   Keyboard.addListener('keyboardWillShow', event => {
   //     Animated.timing(imageHeight, {
@@ -49,13 +49,13 @@ const LogInScreen = ({navigation, route}) => {
 
   useEffect(() => {
     const show1 = Keyboard.addListener('keyboardWillShow', event => {
+      //setTextLocHeight(-20);
+    });
+    const show2 = Keyboard.addListener('keyboardDidShow', event => {
       Animated.timing(logoSize, {
         duration: event.duration,
         toValue: IMAGE_HEIGHT_SMALL,
       }).start();
-      //setTextLocHeight(-20);
-    });
-    const show2 = Keyboard.addListener('keyboardDidShow', event => {
       setTextLocHeight(-10);
     });
     const hide1 = Keyboard.addListener('keyboardWillHide', event => {
@@ -66,6 +66,10 @@ const LogInScreen = ({navigation, route}) => {
       setTextLocHeight(10);
     });
     const hide2 = Keyboard.addListener('keyboardDidHide', event => {
+      Animated.timing(logoSize, {
+        duration: event.duration,
+        toValue: IMAGE_HEIGHT_LARGE,
+      }).start();
       //setTextLocHeight(10);
     });
 
@@ -79,29 +83,19 @@ const LogInScreen = ({navigation, route}) => {
 
   return (
     <View style={styles.logInContainer}>
-      <View class="header" style={[styles.header, {flex: 1.2}]}>
+      <View class="header" style={[styles.header, {flex: 1.4}]}>
         <View class="logo_login" style={{flex: 3}}>
           <Animated.Image
-            source={Images.general.logo}
+            source={Images.logos.logo_titled_transparent}
             style={{
+              top: 10,
               height: logoSize,
               width: logoSize,
             }}
           />
         </View>
 
-        <View class="title_login" style={{flex: 2}}>
-          <Text
-            style={{
-              top: textLocHeight,
-              flex: 1.3,
-              textAlign: 'center',
-              fontSize: 35,
-              color: 'black',
-              position: 'relative',
-            }}>
-            Vocat
-          </Text>
+        <View class="title_login" style={{flex: 1.8}}>
           <View
             style={{
               margin: 0,
