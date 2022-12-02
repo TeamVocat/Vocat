@@ -1,9 +1,15 @@
 export default {
   general: {
-    logo: require('./logo-Placeholder.png'),
     catpile: require('./cat_pile.png'),
     catcake: require('./cat_cakes.png'),
     catcoin: require('./Coin2.png'),
+  },
+  logos: {
+    logo_transparent: require('./logo/vocat_logo_transparent.png'),
+    logo_white: require('./logo/vocat_logo_white_background.png'),
+    logo_titled_transparent: require('./logo/vocat_logo_with_title_transparent.png'),
+    logo_titled_white: require('./logo/vocat_logo_with_title.png'),
+    placeholder: require('./logo/logo_placeholder.png'),
   },
   foods: {
     food1: require('./foods/food1.png'),

@@ -32,8 +32,8 @@ const SignUpScreen = ({navigation, route}) => {
 
   //const [logoSize, setLogoSize] = React.useState(120);
   const [textLocHeight, setTextLocHeight] = React.useState(10);
-  const IMAGE_HEIGHT_SMALL = 40;
-  const IMAGE_HEIGHT_LARGE = 120;
+  const IMAGE_HEIGHT_SMALL = 110;
+  const IMAGE_HEIGHT_LARGE = 200;
 
   //   Keyboard.addListener('keyboardWillShow', event => {
   //     Animated.timing(imageHeight, {
@@ -51,23 +51,27 @@ const SignUpScreen = ({navigation, route}) => {
 
   useEffect(() => {
     const show1 = Keyboard.addListener('keyboardWillShow', event => {
+      //   Animated.timing(logoSize, {
+      //     duration: event.duration,
+      //     toValue: IMAGE_HEIGHT_SMALL,
+      //   }).start();
+      //setTextLocHeight(-20);
+    });
+    const show2 = Keyboard.addListener('keyboardDidShow', event => {
       Animated.timing(logoSize, {
         duration: event.duration,
         toValue: IMAGE_HEIGHT_SMALL,
       }).start();
-      //setTextLocHeight(-20);
-    });
-    const show2 = Keyboard.addListener('keyboardDidShow', event => {
       setTextLocHeight(-10);
     });
     const hide1 = Keyboard.addListener('keyboardWillHide', event => {
+      setTextLocHeight(10);
+    });
+    const hide2 = Keyboard.addListener('keyboardDidHide', event => {
       Animated.timing(logoSize, {
         duration: event.duration,
         toValue: IMAGE_HEIGHT_LARGE,
       }).start();
-      setTextLocHeight(10);
-    });
-    const hide2 = Keyboard.addListener('keyboardDidHide', event => {
       //setTextLocHeight(10);
     });
 
@@ -82,9 +86,9 @@ const SignUpScreen = ({navigation, route}) => {
   return (
     <View style={styles.logInContainer}>
       <View class="header" style={[styles.header, {flex: 1}]}>
-        <View class="logo_login" style={{flex: 1.8}}>
+        <View class="logo_login" style={{flex: 3.5}}>
           <Animated.Image
-            source={Images.general.logo}
+            source={Images.logos.logo_titled_transparent}
             style={{
               height: logoSize,
               width: logoSize,
@@ -92,18 +96,7 @@ const SignUpScreen = ({navigation, route}) => {
           />
         </View>
 
-        <View class="title_signup" style={{flex: 2}}>
-          <Text
-            style={{
-              top: textLocHeight,
-              flex: 1.5,
-              textAlign: 'center',
-              fontSize: 35,
-              color: 'black',
-              position: 'relative',
-            }}>
-            Vocat
-          </Text>
+        <View class="title_signup" style={{flex: 1}}>
           <View
             style={{
               margin: 0,
