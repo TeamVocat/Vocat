@@ -3,8 +3,9 @@ import React, { useState } from 'react'
 // import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { REACT_APP_SERVER_HOSTNAME } from "@env";
 import axios from 'react-native-axios';
+import { getUserLocal, storeUserLocal } from './Functions.js';
 
-const SignIn = ({ navigation, route }) => {
+const SignIn = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const handleSubmit = async () => {
@@ -18,9 +19,9 @@ const SignIn = ({ navigation, route }) => {
             if (statusJSON.data.error) {
                 alert(statusJSON.data.error);
             } else {
-                let temp = route.params.user;
+                let temp = await getUserLocal();
                 temp.username = statusJSON.data.user.username;
-                await DeviceEventEmitter.emit("event.changeUser", temp);
+                await storeUserLocal(statusJSON.data.user);
                 alert("Signin Successful!");
                 navigation.navigate('Home');
             }
@@ -54,7 +55,7 @@ const SignIn = ({ navigation, route }) => {
                 left: '40%'
             }]}
                 onPress={() => {
-                    navigation.navigate('Home', { settings: route.params.settings });
+                    navigation.navigate('Home');
                 }}>
                 <Text style={{ fontSize: 30 }}>Home</Text>
             </TouchableOpacity>

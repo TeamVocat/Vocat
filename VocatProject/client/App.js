@@ -7,10 +7,10 @@
  */
 
 import React from 'react';
-import type {Node} from 'react';
-import {useColorScheme} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import type { Node } from 'react';
+import { useColorScheme } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 
 /**
@@ -29,6 +29,7 @@ import LogInScreen from './src/LogInScreen.js';
 import SignUpScreen from './src/SignUpScreen.js';
 import Signup from './src/SignUp';
 import Signin from './src/SignIn';
+import Reviewing from './src/ReviewingScreen';
 
 /**
  * App.js will be used for navigating between pages
@@ -52,9 +53,10 @@ const App: () => Node = () => {
         <Stack.Screen name="LearnNew" component={LearnNewScreen} />
         <Stack.Screen name="Store" component={StoreScreen} />
         <Stack.Screen name="LogIn" component={LogInScreen} />
-        <Stack.Screen name="Register" component={SignUpScreen} />
+        {/* <Stack.Screen name="Register" component={SignUpScreen} /> */}
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Signin" component={Signin} />
+        <Stack.Screen name="Reviewing" component={Reviewing} />
       </Stack.Navigator>
     </NavigationContainer>
   );

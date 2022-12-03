@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { REACT_APP_SERVER_HOSTNAME } from "@env";
 import axios from 'react-native-axios';
 
-const SignUp = ({ navigation, route }) => {
+const SignUp = ({ navigation }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -18,8 +18,7 @@ const SignUp = ({ navigation, route }) => {
             alert(res.data.error);
         } else {
             alert("Sign Up Successful");
-            console.log(route.params.user);
-            navigation.navigate('Signin', { settings: route.params.settings, user: route.params.user });
+            navigation.navigate('Signin');
         }
     };
     return (

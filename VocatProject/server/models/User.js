@@ -23,9 +23,38 @@ const userSchema = new Schema({
         type: String,
         required: false,
     },
-    wordsLearned: {
+    wordBank: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "VocabWord",
+        required: false,
+    },
+    lastLogInDate: {
         type: String,
         required: false,
+    },
+    studiedWordsNum: {
+        type: Number,
+        required: false,
+    },
+    coinNum: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
+    foods: {
+        type: [Number],
+        required: true,
+        default: [0, 0, 0, 0, 0, 0]
+    },
+    toys: {
+        type: [Number],
+        required: true,
+        default: [0, 0, 0, 0, 0, 0]
+    },
+    wordsPerDay: {
+        type: Number,
+        required: true,
+        default: 5,
     }
 })
 

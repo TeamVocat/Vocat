@@ -18,11 +18,6 @@ const vocabWordSchema = new Schema({
     example: {
         type: String,
         required: true,
-    },
-    learnedUsers: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "User",
-        required: false,
     }
 })
 

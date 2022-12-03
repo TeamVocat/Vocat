@@ -8,7 +8,7 @@ const { signup, signin } = require("../controllers/auth");
 
 router.get("/home", (req, res) => {
     try {
-        let message = "Welcome, ";
+        let message = "Welcome";
         res.json({
             message: message,
             status: "Success"

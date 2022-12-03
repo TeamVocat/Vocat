@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Slider from '@react-native-community/slider';
 import {
   Animated,
@@ -15,14 +15,14 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import Svg, {Path} from 'react-native-svg';
-import {Iconoir, User, Lock, Mail} from 'iconoir-react-native';
+import Svg, { Path } from 'react-native-svg';
+// import {Iconoir, User, Lock, Mail} from 'iconoir-react-native';
 
-import {Images} from '../assets';
+import { Images } from '../assets';
 
-const SignUpScreen = ({navigation, route}) => {
+const SignUpScreen = ({ navigation, route }) => {
   const cyan = '#2a9d8f';
-  const [settings, setSettings] = useState({textSize: 30});
+  const [settings, setSettings] = useState({ textSize: 30 });
   const [userText, setUserText] = React.useState('');
   const [passText, setpassText] = React.useState('');
   const [emailText, setEmailText] = React.useState('');
@@ -85,8 +85,8 @@ const SignUpScreen = ({navigation, route}) => {
 
   return (
     <View style={styles.logInContainer}>
-      <View class="header" style={[styles.header, {flex: 1}]}>
-        <View class="logo_login" style={{flex: 3.5}}>
+      <View class="header" style={[styles.header, { flex: 1 }]}>
+        <View class="logo_login" style={{ flex: 3.5 }}>
           <Animated.Image
             source={Images.logos.logo_titled_transparent}
             style={{
@@ -96,7 +96,7 @@ const SignUpScreen = ({navigation, route}) => {
           />
         </View>
 
-        <View class="title_signup" style={{flex: 1}}>
+        <View class="title_signup" style={{ flex: 1 }}>
           <View
             style={{
               margin: 0,
@@ -108,7 +108,7 @@ const SignUpScreen = ({navigation, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            <View style={{flex: 1, height: 1, backgroundColor: cyan}} />
+            <View style={{ flex: 1, height: 1, backgroundColor: cyan }} />
             <View>
               <Text
                 style={{
@@ -121,12 +121,12 @@ const SignUpScreen = ({navigation, route}) => {
                 Sign Up
               </Text>
             </View>
-            <View style={{flex: 1, height: 1, backgroundColor: cyan}} />
+            <View style={{ flex: 1, height: 1, backgroundColor: cyan }} />
           </View>
         </View>
       </View>
 
-      <View class="contents" style={[styles.contents, {flex: 2}]}>
+      <View class="contents" style={[styles.contents, { flex: 2 }]}>
         <View
           class="inputfields"
           style={{
@@ -145,7 +145,7 @@ const SignUpScreen = ({navigation, route}) => {
               color="#AAAAAA"
               height={25}
               width={25}
-              style={{position: 'relative', left: 44, top: 23, zIndex: 10}}
+              style={{ position: 'relative', left: 44, top: 23, zIndex: 10 }}
             />
             <TextInput
               style={[styles.input]}
@@ -164,7 +164,7 @@ const SignUpScreen = ({navigation, route}) => {
               color="#AAAAAA"
               height={22}
               width={25}
-              style={{position: 'relative', left: 44, top: 25, zIndex: 10}}
+              style={{ position: 'relative', left: 44, top: 25, zIndex: 10 }}
             />
             <TextInput
               style={[styles.input]}
@@ -183,7 +183,7 @@ const SignUpScreen = ({navigation, route}) => {
               color="#AAAAAA"
               height={25}
               width={25}
-              style={{position: 'relative', left: 44, top: 23, zIndex: 10}}
+              style={{ position: 'relative', left: 44, top: 23, zIndex: 10 }}
             />
             <TextInput
               style={styles.input}
@@ -203,7 +203,7 @@ const SignUpScreen = ({navigation, route}) => {
             alignItems: 'center',
             justifyContent: 'flex-start',
           }}>
-          <TouchableOpacity style={[styles.button, {width: 300, height: 50}]}>
+          <TouchableOpacity style={[styles.button, { width: 300, height: 50 }]}>
             <Text
               style={{
                 textAlign: 'center',
@@ -222,9 +222,9 @@ const SignUpScreen = ({navigation, route}) => {
             Already have an account?
           </Text>
           <Text
-            style={{textAlign: 'center', fontSize: 13, color: cyan}}
+            style={{ textAlign: 'center', fontSize: 13, color: cyan }}
             onPress={() =>
-              navigation.navigate('LogIn', {settings: route.params.settings})
+              navigation.navigate('LogIn', { settings: route.params.settings })
             }>
             Sign in here.
           </Text>
