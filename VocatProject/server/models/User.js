@@ -51,7 +51,11 @@ const userSchema = new Schema({
         required: true,
         default: [0, 0, 0, 0, 0, 0]
     },
-
+    wordsPerDay: {
+        type: Number,
+        required: true,
+        default: 5,
+    }
 })
 
 // create mongoose Model

@@ -1,20 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import Slider from '@react-native-community/slider';
-import { TouchableOpacity, DeviceEventEmitter, StyleSheet, Button, Text, Alert, useColorScheme, View, } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, } from 'react-native';
+import { storeSettings, getSettings } from './Functions.js';
 
+const SettingsScreen = ({ navigation }) => {
+    const [finalSize, setFinalSize] = useState();
+    const [settings, setSettings] = useState({});
 
-const SettingsScreen = ({ props, navigation, route }) => {
-    const [finalSize, setFinalSize] = useState(route.params.settings.textSize);
+    useEffect(() => {
+        fetchSettings();
+    }, []);
+
+    const handleSync = async () => {
+        setSettings({
+            ...settings,
+            textSize: finalSize,
+        });
+        await storeSettings(settings);
+    };
+
+    const fetchSettings = async () => {
+        console.log(
+            `Fetching Settings from local storage...`,
+        );
+        try {
+            let temp_settings = await getSettings();
+            if (temp_settings) {
+                // console.log("new settings:", temp_settings);
+                setSettings(temp_settings);
+                setFinalSize(temp_settings.textSize);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     function style(options) {
         return {
             fontSize: options.textSize
         }
-    }
+    };
 
     return (
         <View style={styles.settingsContainer}>
-            <Text style={style(route.params.settings)}>Text fontSize: {finalSize}</Text>
+            <Text style={style(settings)}>Text fontSize: {finalSize}</Text>
             <Slider
                 id='fontSizeSlider'
                 minimumValue={15}
@@ -25,22 +54,18 @@ const SettingsScreen = ({ props, navigation, route }) => {
                 style={styles.slider}
             />
             <TouchableOpacity style={[styles.button]}
-                onPress={() => {
-                    let temp = route.params.settings;
-                    temp.textSize = finalSize;
-                    DeviceEventEmitter.emit("event.changeSettings", temp);
-                }}>
+                onPress={handleSync}>
                 <Text style={{ fontSize: 20 }}>Done</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.bigButton]}
                 onPress={() => {
-                    navigation.navigate('Home', { settings: route.params.settings });
+                    navigation.navigate('Home');
                 }}>
                 <Text style={[styles.buttonText]}>Help</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.bigButton]}
                 onPress={() => {
-                    navigation.navigate('Home', { settings: route.params.settings });
+                    navigation.navigate('Home');
                 }}>
                 <Text style={[styles.buttonText]}>Feedback</Text>
             </TouchableOpacity>
@@ -49,7 +74,7 @@ const SettingsScreen = ({ props, navigation, route }) => {
                 bottom: 20
             }]}
                 onPress={() => {
-                    navigation.navigate('Home', { settings: route.params.settings });
+                    navigation.navigate('Home');
                 }}>
                 <Text style={{ fontSize: 30 }}>Home</Text>
             </TouchableOpacity>

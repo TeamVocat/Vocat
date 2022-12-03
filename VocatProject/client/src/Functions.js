@@ -179,4 +179,52 @@ async function retrieveProgress() {
   }
 }
 
-export { review, learnNew, grab, userCoins, retrieve, UserWordBank, getStyle, retrieveProgress };
+async function storeUserLocal(user) {
+  try {
+    const jsonValue = JSON.stringify(user);
+    await AsyncStorage.setItem('user', jsonValue);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function getUserLocal() {
+  try {
+    const jsonValue = await AsyncStorage.getItem('user');
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function clearUserLocal() {
+  try {
+    const jsonValue = JSON.stringify({});
+    await AsyncStorage.setItem('user', jsonValue);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function storeSettings(settings) {
+  try {
+    const jsonValue = JSON.stringify(settings);
+    await AsyncStorage.setItem('settings', jsonValue);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function getSettings() {
+  try {
+    const jsonValue = await AsyncStorage.getItem('settings');
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export {
+  storeSettings, getSettings, storeUserLocal, getUserLocal, clearUserLocal,
+  review, learnNew, grab, userCoins, retrieve, UserWordBank, getStyle, retrieveProgress
+};

@@ -14,49 +14,56 @@ import {
 import catPile from './../assets/cat_pile.png';
 import axios from 'react-native-axios';
 import { REACT_APP_SERVER_HOSTNAME } from '@env';
+import { storeSettings, getSettings, getUserLocal } from './Functions.js';
 
 const HomeScreen = props => {
   // const isFocused = useIsFocused();
   const [user, setUser] = useState({});
-  const [settings, setSettings] = useState({ textSize: 30 });
+  const [settings, setSettings] = useState({ textSize: 30, wordList: "English" });
   const [message, setMessage] = useState('');
-  window.onpageshow = function (event) {
-    if (event.persisted) {
-      window.location.reload();
-    }
-  };
-  useEffect(() => {
-    DeviceEventEmitter.addListener('event.changeSettings', eventData => {
-      setSettings(eventData);
-    });
-    // DeviceEventEmitter.addListener('event.changeUser', eventData => {
-    //   setUser(eventData);
-    // });
-    let user = localStorage.getItem("user");
-    if (user) {
-      setUser(user);
-    }
-    async function fetchMessage() {
-      console.log(
-        `Fetching Message from ${REACT_APP_SERVER_HOSTNAME}/api/home...`,
-      );
-      try {
-        const message = await axios.get(
-          `${REACT_APP_SERVER_HOSTNAME}/api/home`,
-        );
-        console.log(message.data);
-        setMessage(message.data.message);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchMessage();
 
+  useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', () => {
-      alert('Refreshed');
+      fetchSettingsUser();
+      fetchMessage();
+      // alert('Refreshed');
     });
     return unsubscribe;
   }, [props.navigation]);
+
+  const fetchSettingsUser = async () => {
+    console.log(
+      `Fetching Settings and User from local storage...`,
+    );
+    try {
+      let temp_settings = await getSettings();
+      if (temp_settings) {
+        console.log("new settings:", temp_settings);
+        setSettings(temp_settings);
+      }
+      let temp_user = await getUserLocal();
+      if (temp_user) {
+        console.log("new user:", temp_user);
+        setUser(temp_user);
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchMessage = async () => {
+    console.log(
+      `Fetching Message from ${REACT_APP_SERVER_HOSTNAME}/api/home...`,
+    );
+    try {
+      const message = await axios.get(
+        `${REACT_APP_SERVER_HOSTNAME}/api/home`,
+      );
+      setMessage(message.data.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={styles.homeContainer}>
@@ -95,7 +102,7 @@ const HomeScreen = props => {
               },
             ]}
             onPress={() => {
-              props.navigation.navigate('Settings', { settings: settings });
+              props.navigation.navigate('Settings');
             }}>
             <Text style={styles.headerButtonText}>Settings</Text>
           </TouchableOpacity>
@@ -105,7 +112,7 @@ const HomeScreen = props => {
           <TouchableOpacity
             style={[styles.button,]}
             onPress={() => {
-              props.navigation.navigate("Signup", { settings: settings, user: user });
+              props.navigation.navigate("Signup");
             }}
           >
             <Text style={styles.headerButtonText}>Signup</Text>
@@ -115,7 +122,7 @@ const HomeScreen = props => {
               top: 40,
             }]}
             onPress={() => {
-              props.navigation.navigate("Signin", { settings: settings, user: user });
+              props.navigation.navigate("Signin");
             }}
           >
             <Text style={styles.headerButtonText}>Signin</Text>
@@ -131,7 +138,7 @@ const HomeScreen = props => {
             <Text style={styles.headerButtonText}>Signout</Text>
           </TouchableOpacity>
           <Text style={[styles.message, { fontSize: settings.textSize }]}>
-            {(user.username != '') ? (message + ", " + user.username + "!") : (message + "!")}
+            {(user.username) ? (message + ", " + user.username + "!") : (message + "!")}
           </Text>
           <Image
             source={catPile}
