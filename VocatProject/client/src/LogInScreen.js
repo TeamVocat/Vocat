@@ -55,6 +55,7 @@ const LogInScreen = ({navigation, route}) => {
       Animated.timing(logoSize, {
         duration: event.duration,
         toValue: IMAGE_HEIGHT_SMALL,
+        useNativeDriver: false,
       }).start();
       setTextLocHeight(-10);
     });
@@ -62,6 +63,7 @@ const LogInScreen = ({navigation, route}) => {
       Animated.timing(logoSize, {
         duration: event.duration,
         toValue: IMAGE_HEIGHT_LARGE,
+        useNativeDriver: false,
       }).start();
       setTextLocHeight(10);
     });
@@ -69,6 +71,7 @@ const LogInScreen = ({navigation, route}) => {
       Animated.timing(logoSize, {
         duration: event.duration,
         toValue: IMAGE_HEIGHT_LARGE,
+        useNativeDriver: false,
       }).start();
       //setTextLocHeight(10);
     });

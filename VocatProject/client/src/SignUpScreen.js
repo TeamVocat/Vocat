@@ -61,16 +61,23 @@ const SignUpScreen = ({ navigation, route }) => {
       Animated.timing(logoSize, {
         duration: event.duration,
         toValue: IMAGE_HEIGHT_SMALL,
+        useNativeDriver: false,
       }).start();
       setTextLocHeight(-10);
     });
     const hide1 = Keyboard.addListener('keyboardWillHide', event => {
+      Animated.timing(logoSize, {
+        duration: event.duration,
+        toValue: IMAGE_HEIGHT_LARGE,
+        useNativeDriver: false,
+      }).start();
       setTextLocHeight(10);
     });
     const hide2 = Keyboard.addListener('keyboardDidHide', event => {
       Animated.timing(logoSize, {
         duration: event.duration,
         toValue: IMAGE_HEIGHT_LARGE,
+        useNativeDriver: false,
       }).start();
       //setTextLocHeight(10);
     });
