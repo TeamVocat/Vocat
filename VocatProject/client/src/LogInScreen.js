@@ -112,7 +112,7 @@ const LogInScreen = ({ navigation, route }) => {
         toValue: IMAGE_HEIGHT_LARGE,
         useNativeDriver: false,
       }).start();
-      setTextLocHeight(10);
+      // setTextLocHeight(10);
     });
 
     return () => {
