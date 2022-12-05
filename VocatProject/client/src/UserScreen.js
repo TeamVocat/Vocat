@@ -167,8 +167,8 @@ const UserScreen = ({navigation, route}) => {
         <Image
           source={Images.logos.profile_background}
           style={{
-            height: 100,
-            width: 100,
+            height: 90,
+            width: 90,
           }}
           resizeMode="contain"
         />
