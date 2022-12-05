@@ -15,7 +15,7 @@ import {
 import axios from 'react-native-axios';
 import { REACT_APP_SERVER_HOSTNAME } from "@env";
 import {screens} from './functions/Words.js';
-import {learnNew, getUserLocal, storeUserLocal} from './Functions.js';
+import {learnNew, getUserLocal, storeUserLocal, addWordtoBank} from './Functions.js';
 
 const LearningScreen = ({ navigation, route }) => {
 
@@ -31,6 +31,9 @@ const LearningScreen = ({ navigation, route }) => {
               const date = new Date().toDateString();
               let newArray;
               user = await getUserLocal();
+              user.wordsToday = await learnNew();
+              user.reviewToday = [];
+              await storeUserLocal(user);
               if (user.wordsToday == null){ //has not learned today
                 console.log('has not learned today, innitialize wordsToday');
                 //grab new words
@@ -75,23 +78,26 @@ const LearningScreen = ({ navigation, route }) => {
             </View>
             <TouchableOpacity style={ styles.nextButton }
                 onPress={async () => {
-                  //update user.wordsToday, progress number
-                  if (vocabWordsArr.length > 1){
-                    let newArr = vocabWordsArr.slice(1);
-                    setVocabWordsArr(newArr);
-                    user = await getUserLocal();
-                    user.wordsToday = newArr;
-                    console.log(user.wordsToday);
-                    user.wordBankProgress ++;
-                    await storeUserLocal(user);
-                  }
-                  else{
-                    user = await getUserLocal();
-                    //show done page
-                    setDoneLearning(true);
-                    user.wordBankProgress ++;
-                    user.wordsToday = 'done';
-                    await storeUserLocal(user);
+                  if (!doneLearning){
+                    //update user.wordsToday, progress number
+                    if (vocabWordsArr.length > 1){
+                      user = await getUserLocal();
+                      user.wordsToday = newArr;
+                      user.wordBankProgress ++;
+                      await addWordtoBank(vocabWordsArr[0],user);
+                      let newArr = vocabWordsArr.slice(1);
+                      setVocabWordsArr(newArr);
+                      await storeUserLocal(user);
+                    }
+                    else{
+                      user = await getUserLocal();
+                      //show done page
+                      setDoneLearning(true);
+                      user.wordBankProgress ++;
+                      user.wordsToday = 'done';
+                      await addWordtoBank(vocabWordsArr[0],user);
+                      await storeUserLocal(user);
+                    }
                   }
                 }}>
                 <Text style={ styles.nextButtonText }>Next</Text>

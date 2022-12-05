@@ -3,25 +3,25 @@ import axios from 'react-native-axios';
 import { REACT_APP_SERVER_HOSTNAME } from "@env";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-async function review() {
-  //get UserWordBank
-  const user = await getUserLocal();
-  let wordbank = user.wordbank;
+async function review(user) {
   //get words that finished
-  const reviewToday = [];
-  while (wordbank[0].cooldown <= 0) {
-    const newWord = wordbank[0];
-    newWord.answers = await generateAnswers(newWord.word);
-    reviewToday.push(newWord);
-    wordbank = wordbank.slice(1);
-    if (wordbank.length <= 0) {
-      break;
+  user.reviewToday = [];
+  if (user.wordbank.length > 0){
+    while (user.wordbank[0].cooldown <= 0) {
+      console.log(`should review ${user.wordbank[0].word}, whose cd is ${user.wordbank[0].cooldown}`);
+      const newWord = user.wordbank[0];
+      newWord.answers = await generateAnswers(newWord.word);
+      user.reviewToday.push(newWord);
+      user.wordbank = user.wordbank.slice(1);
+      if (user.wordbank.length <= 0) {
+        break;
+      }
     }
   }
-  return reviewToday;
 }
 
 async function generateAnswers(word) {
+  console.log('called');
   const answers = [];
   for (let i = 0; i < 4; i++) {
     let result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`);
@@ -30,8 +30,8 @@ async function generateAnswers(word) {
     }
     answers.push(new Answer(result.data.word.word, false));
   }
-  const correctIndex = Math.floor(Math.random() * 4);
-  answers[correctIndex] = new Answer(word, true);
+  const currectIndex = Math.floor(Math.random() * 4);
+  answers[currectIndex] = new Answer(word, true);
   return answers;
 }
 
@@ -77,14 +77,11 @@ class UserWord {
     this.part_of_speech = part_of_speech;
     this.example = example;
     this.cooldown = 0;
-    this.doneToday = false;
     this.answers = [];
   }
   review(correct) {  //boolean value
     if (correct) {
       this.cooldown = 14;
-      this.cooldownToday = true;
-      userCoins++;
     }
     else {
       this.cooldown = 3;
@@ -93,26 +90,23 @@ class UserWord {
   }
 }
 
-async function addWordstoBank(words) {
-  let user = await getUserLocal();
-  if (user.wordbank == undefined || user.wordbank.length <= 0){
+async function addWordtoBank(word,user) {
+  if (!user.wordbank[0]){
     console.log('initializing wordbank');
-    user.wordbank = words;
+    user.wordbank = [word];
   }
   else{
     let bank = user.wordbank;
-    for (let i = 0; i < words.length; i++){
-        for (let j = 0; j < bank.length; j++) {
-          if (bank[j].cooldown > words[i].cooldown) {
-            bank.splice(j, 0, words[i]);
-            return;
-          }
-        }
-        bank.push(words[i]);
+    for (let j = 0; j < bank.length; j++) {
+      if (bank[j].cooldown > word.cooldown) {
+        bank.splice(j, 0, word);
+        return;
+      }
     }
+    bank.push(word);
     user.wordbank = bank;
   }
-  await storeUserLocal(user);
+  console.log(`added ${word.word} to bank`);
 }
 
 async function storeProgress(progress) {
@@ -184,5 +178,5 @@ async function getSettings() {
 
 export {
   storeSettings, getSettings, storeUserLocal, getUserLocal, clearUserLocal,
-  review, learnNew, getStyle, retrieveProgress
+  review, learnNew, getStyle, retrieveProgress, addWordtoBank, generateAnswers
 };
