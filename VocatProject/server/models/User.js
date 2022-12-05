@@ -28,6 +28,11 @@ const userSchema = new Schema({
         ref: "VocabWord",
         required: false,
     },
+    wordBankProgress: {
+        type: Number,
+        required: false,
+        default: 0,
+    },
     lastLogInDate: {
         type: String,
         required: false,
