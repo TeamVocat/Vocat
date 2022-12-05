@@ -58,6 +58,7 @@ const CatHouseScreen = ({navigation, route}) => {
           style={{
             height: 110,
             width: 110,
+            zIndex: 6,
           }}
           resizeMode="contain"></Image>
       );
@@ -122,6 +123,7 @@ const CatHouseScreen = ({navigation, route}) => {
           style={{
             borderTopStartRadius: 5,
             borderRadius: 2,
+            zIndex: 10,
           }}
           offset={[-10, 13]}>
           <TouchableOpacity
@@ -160,7 +162,7 @@ const CatHouseScreen = ({navigation, route}) => {
           <ScrollView style={{height: 100}}>{showTable()}</ScrollView>
         </View>
       </View>
-      <View id="footer" style={[styles.footer]}>
+      {/* <View id="footer" style={[styles.footer]}>
         <Shadow
           distance={7}
           tartColor={'#E6E5DA40'}
@@ -187,7 +189,7 @@ const CatHouseScreen = ({navigation, route}) => {
             <Text style={{fontSize: 30}}>Home</Text>
           </TouchableOpacity>
         </Shadow>
-      </View>
+      </View> */}
     </View>
   );
 };
