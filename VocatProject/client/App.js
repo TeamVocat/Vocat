@@ -40,6 +40,7 @@ import SignUpScreen from './src/SignUpScreen.js';
 import Signup from './src/SignUp';
 import Signin from './src/SignIn';
 import Reviewing from './src/ReviewingScreen';
+import UserScreen from './src/UserScreen';
 
 function Home() {
   return (
@@ -260,6 +261,39 @@ const App: () => Node = () => {
                     color: focused ? 'white' : '#2A9D8F',
                   }}>
                   User
+                </Text>
+              </View>
+            ),
+          }}
+        />
+
+        <Tab.Screen
+          name="Profile"
+          component={UserScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: focused ? '#95C3BE' : '#EFEFEF',
+                  height: '100%',
+                  width: '100%',
+                  //   borderTopColor: '#95C3BE',
+                  //   borderTopWidth: 4,
+                }}>
+                <ProfileCircled
+                  //   color={focused ? '#2a9d8f' : '#6b6b6b'}
+                  color={focused ? 'white' : '#2A9D8F'}
+                  height={23}
+                  width={23}
+                />
+                <Text
+                  style={{
+                    // color: focused ? '#2a9d8f' : '#6b6b6b',
+                    color: focused ? 'white' : '#2A9D8F',
+                  }}>
+                  Profile
                 </Text>
               </View>
             ),
