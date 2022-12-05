@@ -69,9 +69,10 @@ export const signup = async (req, res) => {
 export const signin = async (req, res) => {
     // console.log(req.body);
     try {
-        const { email, password } = req.body;
+        const { email, password, date } = req.body;
+        console.log(date);
         // check if our db has user with that email
-        const user = await User.findOne({ email });
+        let user = await User.findOne({ email });
         if (!user) {
             return res.json({
                 error: "No user found",
@@ -90,13 +91,39 @@ export const signin = async (req, res) => {
         });
         user.password = undefined;
         user.secret = undefined;
-        res.json({
+        user.lastLogInDate = date;
+        return res.json({
             token,
             user,
         });
     } catch (err) {
         console.log(err);
         return res.status(400).send("Error. Try again.");
+    }
+};
+
+export const updateUser = async (req, res) => {
+    console.log("Signup Hit");
+    try {
+        const { user } = req.body;
+        if (!user._id) {
+            return res.json({
+                error: "User object not given.",
+            });
+        }
+        const existingUser = await User.findOne({ _id: user._id });
+        if (existingUser) {
+            await User.updateOne({ _id: user._id }, user);
+            return res.json({
+                success: "User last login date updated.",
+            });
+        } else {
+            return res.json({
+                error: "User not in database.",
+            });
+        }
+    } catch (err) {
+        console.log(err);
     }
 };
 

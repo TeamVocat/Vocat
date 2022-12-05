@@ -16,13 +16,15 @@ import {
   TextInput,
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-// import {Iconoir, User, Lock, Mail} from 'iconoir-react-native';
+import { Iconoir, User, Lock, Mail } from 'iconoir-react-native';
 
 import { Images } from '../assets';
 
+import { REACT_APP_SERVER_HOSTNAME } from "@env";
+import axios from 'react-native-axios';
+
 const SignUpScreen = ({ navigation, route }) => {
   const cyan = '#2a9d8f';
-  const [settings, setSettings] = useState({ textSize: 30 });
   const [userText, setUserText] = React.useState('');
   const [passText, setpassText] = React.useState('');
   const [emailText, setEmailText] = React.useState('');
@@ -48,6 +50,20 @@ const SignUpScreen = ({ navigation, route }) => {
   //     }).start();
   //   });
   let logoSize = new Animated.Value(IMAGE_HEIGHT_LARGE);
+
+  const handleSubmit = async () => {
+    if (userText === '' || emailText === '' || passText === '') {
+      alert("All fields are required");
+      return;
+    }
+    const res = await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/signup`, { name: userText, email: emailText, password: passText });
+    if (res.data.error) {
+      alert(res.data.error);
+    } else {
+      alert("Sign Up Successful");
+      navigation.navigate('LogIn');
+    }
+  };
 
   useEffect(() => {
     const show1 = Keyboard.addListener('keyboardWillShow', event => {
@@ -156,7 +172,7 @@ const SignUpScreen = ({ navigation, route }) => {
             />
             <TextInput
               style={[styles.input]}
-              onChangeText={setUserText}
+              onChangeText={text => setUserText(text)}
               value={userText}
               placeholder="username"
             />
@@ -175,7 +191,7 @@ const SignUpScreen = ({ navigation, route }) => {
             />
             <TextInput
               style={[styles.input]}
-              onChangeText={setEmailText}
+              onChangeText={text => setEmailText(text)}
               value={emailText}
               placeholder="email"
             />
@@ -194,7 +210,7 @@ const SignUpScreen = ({ navigation, route }) => {
             />
             <TextInput
               style={styles.input}
-              onChangeText={setpassText}
+              onChangeText={text => setpassText(text)}
               secureTextEntry={true}
               value={passText}
               placeholder="password"
@@ -210,7 +226,7 @@ const SignUpScreen = ({ navigation, route }) => {
             alignItems: 'center',
             justifyContent: 'flex-start',
           }}>
-          <TouchableOpacity style={[styles.button, { width: 300, height: 50 }]}>
+          <TouchableOpacity onPress={handleSubmit} style={[styles.button, { width: 300, height: 50 }]}>
             <Text
               style={{
                 textAlign: 'center',
@@ -231,7 +247,7 @@ const SignUpScreen = ({ navigation, route }) => {
           <Text
             style={{ textAlign: 'center', fontSize: 13, color: cyan }}
             onPress={() =>
-              navigation.navigate('LogIn', { settings: route.params.settings })
+              navigation.navigate('LogIn')
             }>
             Sign in here.
           </Text>
