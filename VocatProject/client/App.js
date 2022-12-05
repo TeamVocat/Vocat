@@ -7,10 +7,12 @@
  */
 
 import React from 'react';
-import type { Node } from 'react';
-import { useColorScheme } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import type {Node} from 'react';
+import {useColorScheme} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 /**
@@ -31,6 +33,37 @@ import Signup from './src/SignUp';
 import Signin from './src/SignIn';
 import Reviewing from './src/ReviewingScreen';
 
+function Home() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Welcome" component={HomeScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="LogIn" component={LogInScreen} />
+      <Stack.Screen name="Register" component={SignUpScreen} />
+      <Stack.Screen name="Signup" component={Signup} />
+      <Stack.Screen name="Signin" component={Signin} />
+    </Stack.Navigator>
+  );
+}
+
+function User() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Plan" component={PlanScreen} />
+      <Stack.Screen name="Progress" component={ProgressScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function Cat() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="CatHouse" component={CatHouseScreen} />
+      <Stack.Screen name="Store" component={StoreScreen} />
+    </Stack.Navigator>
+  );
+}
+
 /**
  * App.js will be used for navigating between pages
  */
@@ -43,21 +76,18 @@ const App: () => Node = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-        <Stack.Screen name="Plan" component={PlanScreen} />
-        <Stack.Screen name="Learning" component={LearningScreen} />
-        <Stack.Screen name="Progress" component={ProgressScreen} />
-        <Stack.Screen name="CatHouse" component={CatHouseScreen} />
-        <Stack.Screen name="LearnNew" component={LearnNewScreen} />
-        <Stack.Screen name="Store" component={StoreScreen} />
-        <Stack.Screen name="LogIn" component={LogInScreen} />
-        <Stack.Screen name="Register" component={SignUpScreen} />
-        <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen name="Signin" component={Signin} />
-        <Stack.Screen name="Reviewing" component={Reviewing} />
-      </Stack.Navigator>
+      <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={{headerShown: false}}>
+        <Tab.Screen name="Home" component={Home} />
+
+        <Tab.Screen name="Learning" component={LearningScreen} />
+        <Tab.Screen name="Reviewing" component={Reviewing} />
+
+        <Tab.Screen name="My Cat" component={Cat} />
+
+        <Tab.Screen name="User" component={User} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 };
