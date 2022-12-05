@@ -25,7 +25,6 @@ import axios from 'react-native-axios';
 
 const SignUpScreen = ({ navigation, route }) => {
   const cyan = '#2a9d8f';
-  const [settings, setSettings] = useState({ textSize: 30 });
   const [userText, setUserText] = React.useState('');
   const [passText, setpassText] = React.useState('');
   const [emailText, setEmailText] = React.useState('');
@@ -75,20 +74,27 @@ const SignUpScreen = ({ navigation, route }) => {
       //setTextLocHeight(-20);
     });
     const show2 = Keyboard.addListener('keyboardDidShow', event => {
-      // Animated.timing(logoSize, {
-      //   duration: event.duration,
-      //   toValue: IMAGE_HEIGHT_SMALL,
-      // }).start();
+      Animated.timing(logoSize, {
+        duration: event.duration,
+        toValue: IMAGE_HEIGHT_SMALL,
+        useNativeDriver: false,
+      }).start();
       setTextLocHeight(-10);
     });
     const hide1 = Keyboard.addListener('keyboardWillHide', event => {
+      Animated.timing(logoSize, {
+        duration: event.duration,
+        toValue: IMAGE_HEIGHT_LARGE,
+        useNativeDriver: false,
+      }).start();
       setTextLocHeight(10);
     });
     const hide2 = Keyboard.addListener('keyboardDidHide', event => {
-      // Animated.timing(logoSize, {
-      //   duration: event.duration,
-      //   toValue: IMAGE_HEIGHT_LARGE,
-      // }).start();
+      Animated.timing(logoSize, {
+        duration: event.duration,
+        toValue: IMAGE_HEIGHT_LARGE,
+        useNativeDriver: false,
+      }).start();
       //setTextLocHeight(10);
     });
 
@@ -241,7 +247,7 @@ const SignUpScreen = ({ navigation, route }) => {
           <Text
             style={{ textAlign: 'center', fontSize: 13, color: cyan }}
             onPress={() =>
-              navigation.navigate('LogIn', { settings: route.params.settings })
+              navigation.navigate('LogIn')
             }>
             Sign in here.
           </Text>

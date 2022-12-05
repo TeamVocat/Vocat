@@ -26,7 +26,6 @@ import { getUserLocal, storeUserLocal } from './Functions.js';
 
 const LogInScreen = ({ navigation, route }) => {
   const cyan = '#2a9d8f';
-  const [settings, setSettings] = useState({});
   const [userText, setUserText] = React.useState('');
   const [passText, setpassText] = React.useState('');
   //const [userFocused, setUserFocused] = useState(false);
@@ -92,25 +91,28 @@ const LogInScreen = ({ navigation, route }) => {
       //setTextLocHeight(-20);
     });
     const show2 = Keyboard.addListener('keyboardDidShow', event => {
-      // Animated.timing(logoSize, {
-      //   duration: event.duration,
-      //   toValue: IMAGE_HEIGHT_SMALL,
-      // }).start();
+      Animated.timing(logoSize, {
+        duration: event.duration,
+        toValue: IMAGE_HEIGHT_SMALL,
+        useNativeDriver: false,
+      }).start();
       setTextLocHeight(-10);
     });
     const hide1 = Keyboard.addListener('keyboardWillHide', event => {
-      // Animated.timing(logoSize, {
-      //   duration: event.duration,
-      //   toValue: IMAGE_HEIGHT_LARGE,
-      // }).start();
+      Animated.timing(logoSize, {
+        duration: event.duration,
+        toValue: IMAGE_HEIGHT_LARGE,
+        useNativeDriver: false,
+      }).start();
       setTextLocHeight(10);
     });
     const hide2 = Keyboard.addListener('keyboardDidHide', event => {
-      // Animated.timing(logoSize, {
-      //   duration: event.duration,
-      //   toValue: IMAGE_HEIGHT_LARGE,
-      // }).start();
-      //setTextLocHeight(10);
+      Animated.timing(logoSize, {
+        duration: event.duration,
+        toValue: IMAGE_HEIGHT_LARGE,
+        useNativeDriver: false,
+      }).start();
+      setTextLocHeight(10);
     });
 
     return () => {
@@ -244,7 +246,7 @@ const LogInScreen = ({ navigation, route }) => {
           <Text
             style={{ textAlign: 'center', fontSize: 13, color: cyan }}
             onPress={() =>
-              navigation.navigate('Register', { settings: route.params.settings })
+              navigation.navigate('Register')
             }>
             Sign up here.
           </Text>
