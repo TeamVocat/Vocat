@@ -1,10 +1,11 @@
 import express from "express";
 var mongoose = require('mongoose');
-const router = express.Router();
+const router = express();
 const { EnglishVocabWord } = require("../models/VocabWord");
+const { User } = require("../models/User");
 
 // controllers
-const { signup, signin, updateUser } = require("../controllers/auth");
+const { signup, signin } = require("../controllers/auth");
 
 router.get("/home", (req, res) => {
     try {
@@ -22,7 +23,21 @@ router.get("/home", (req, res) => {
     }
 });
 
-router.get("/newVocab", async (req, res) => {
+router.get('/newVocab', async (req, res) => {
+  if (req.query.id){
+    await User.findOne({id:`new ObjectId("${req.query.id}")`}).exec(function (err, result) {
+      const returnWords = []
+      EnglishVocabWord.findOne().skip(req.query.progress).exec(
+          function (err, wordResult) {
+              // words in order
+              res.json({
+                  word: wordResult,
+                  status: "Success"
+              });
+      })
+    })
+  }
+  else {
     try {
         await EnglishVocabWord.count()
             .exec(async function (err, count) {
@@ -32,7 +47,7 @@ router.get("/newVocab", async (req, res) => {
                 EnglishVocabWord.findOne().skip(random).exec(
                     function (err, result) {
                         // Tada! random word
-                        console.log(result);
+                        //console.log(result);
                         res.json({
                             word: result,
                             status: "Success"
@@ -46,27 +61,10 @@ router.get("/newVocab", async (req, res) => {
             status: "Failed to .get NEW VOCAB WORD",
         })
     }
-});
-
-router.get("/getDate", async (req, res) => {
-    // console.log(req.body);
-    try {
-        const dateObj = new Date();
-        const year = dateObj.getFullYear();
-        const month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
-        const date = ("0" + dateObj.getDate()).slice(-2);
-
-        res.json({
-            currentDate: month + "/" + date + "/" + year,
-        });
-    } catch (err) {
-        console.log(err);
-        return res.status(400).send("Error. Try again.");
-    }
-});
+  }
+})
 
 router.post("/signup", signup);
 router.post("/signin", signin);
-router.post("/updateUser", updateUser);
 
 export default router;
