@@ -14,7 +14,7 @@ import {
 import catPile from './../assets/cat_pile.png';
 import axios from 'react-native-axios';
 import { REACT_APP_SERVER_HOSTNAME } from '@env';
-import { storeSettings, getSettings, getUserLocal } from './Functions.js';
+import { storeSettings, getSettings, getUserLocal, clearUserLocal } from './Functions.js';
 
 const HomeScreen = props => {
   // const isFocused = useIsFocused();
@@ -78,7 +78,7 @@ const HomeScreen = props => {
               },
             ]}
             onPress={() => {
-              props.navigation.navigate('LogIn', { settings: settings });
+              props.navigation.navigate('LogIn');
             }}>
             <Text style={styles.headerButtonText}>Log In/Sign Up</Text>
           </TouchableOpacity>
@@ -132,7 +132,8 @@ const HomeScreen = props => {
               top: 80,
             }]}
             onPress={() => {
-              setUser({ username: "User" });
+              clearUserLocal();
+              setUser({});
             }}
           >
             <Text style={styles.headerButtonText}>Signout</Text>

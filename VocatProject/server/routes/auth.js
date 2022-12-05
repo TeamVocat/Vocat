@@ -4,7 +4,7 @@ const router = express.Router();
 const { EnglishVocabWord } = require("../models/VocabWord");
 
 // controllers
-const { signup, signin } = require("../controllers/auth");
+const { signup, signin, updateUser } = require("../controllers/auth");
 
 router.get("/home", (req, res) => {
     try {
@@ -46,9 +46,27 @@ router.get("/newVocab", async (req, res) => {
             status: "Failed to .get NEW VOCAB WORD",
         })
     }
-})
+});
+
+router.get("/getDate", async (req, res) => {
+    // console.log(req.body);
+    try {
+        const dateObj = new Date();
+        const year = dateObj.getFullYear();
+        const month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
+        const date = ("0" + dateObj.getDate()).slice(-2);
+
+        res.json({
+            currentDate: month + "/" + date + "/" + year,
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(400).send("Error. Try again.");
+    }
+});
 
 router.post("/signup", signup);
 router.post("/signin", signin);
+router.post("/updateUser", updateUser);
 
 export default router;

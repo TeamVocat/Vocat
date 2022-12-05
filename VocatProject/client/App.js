@@ -53,7 +53,7 @@ const App: () => Node = () => {
         <Stack.Screen name="LearnNew" component={LearnNewScreen} />
         <Stack.Screen name="Store" component={StoreScreen} />
         <Stack.Screen name="LogIn" component={LogInScreen} />
-        {/* <Stack.Screen name="Register" component={SignUpScreen} /> */}
+        <Stack.Screen name="Register" component={SignUpScreen} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Signin" component={Signin} />
         <Stack.Screen name="Reviewing" component={Reviewing} />
