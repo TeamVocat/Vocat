@@ -16,9 +16,12 @@ import {
   TextInput,
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-// import {Iconoir, User, Lock, Mail} from 'iconoir-react-native';
+import { Iconoir, User, Lock, Mail } from 'iconoir-react-native';
 
 import { Images } from '../assets';
+
+import { REACT_APP_SERVER_HOSTNAME } from "@env";
+import axios from 'react-native-axios';
 
 const SignUpScreen = ({ navigation, route }) => {
   const cyan = '#2a9d8f';
@@ -49,6 +52,20 @@ const SignUpScreen = ({ navigation, route }) => {
   //   });
   let logoSize = new Animated.Value(IMAGE_HEIGHT_LARGE);
 
+  const handleSubmit = async () => {
+    if (userText === '' || emailText === '' || passText === '') {
+      alert("All fields are required");
+      return;
+    }
+    const res = await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/signup`, { name: userText, email: emailText, password: passText });
+    if (res.data.error) {
+      alert(res.data.error);
+    } else {
+      alert("Sign Up Successful");
+      navigation.navigate('LogIn');
+    }
+  };
+
   useEffect(() => {
     const show1 = Keyboard.addListener('keyboardWillShow', event => {
       //   Animated.timing(logoSize, {
@@ -58,20 +75,20 @@ const SignUpScreen = ({ navigation, route }) => {
       //setTextLocHeight(-20);
     });
     const show2 = Keyboard.addListener('keyboardDidShow', event => {
-      Animated.timing(logoSize, {
-        duration: event.duration,
-        toValue: IMAGE_HEIGHT_SMALL,
-      }).start();
+      // Animated.timing(logoSize, {
+      //   duration: event.duration,
+      //   toValue: IMAGE_HEIGHT_SMALL,
+      // }).start();
       setTextLocHeight(-10);
     });
     const hide1 = Keyboard.addListener('keyboardWillHide', event => {
       setTextLocHeight(10);
     });
     const hide2 = Keyboard.addListener('keyboardDidHide', event => {
-      Animated.timing(logoSize, {
-        duration: event.duration,
-        toValue: IMAGE_HEIGHT_LARGE,
-      }).start();
+      // Animated.timing(logoSize, {
+      //   duration: event.duration,
+      //   toValue: IMAGE_HEIGHT_LARGE,
+      // }).start();
       //setTextLocHeight(10);
     });
 
@@ -149,7 +166,7 @@ const SignUpScreen = ({ navigation, route }) => {
             />
             <TextInput
               style={[styles.input]}
-              onChangeText={setUserText}
+              onChangeText={text => setUserText(text)}
               value={userText}
               placeholder="username"
             />
@@ -168,7 +185,7 @@ const SignUpScreen = ({ navigation, route }) => {
             />
             <TextInput
               style={[styles.input]}
-              onChangeText={setEmailText}
+              onChangeText={text => setEmailText(text)}
               value={emailText}
               placeholder="email"
             />
@@ -187,7 +204,7 @@ const SignUpScreen = ({ navigation, route }) => {
             />
             <TextInput
               style={styles.input}
-              onChangeText={setpassText}
+              onChangeText={text => setpassText(text)}
               secureTextEntry={true}
               value={passText}
               placeholder="password"
@@ -203,7 +220,7 @@ const SignUpScreen = ({ navigation, route }) => {
             alignItems: 'center',
             justifyContent: 'flex-start',
           }}>
-          <TouchableOpacity style={[styles.button, { width: 300, height: 50 }]}>
+          <TouchableOpacity onPress={handleSubmit} style={[styles.button, { width: 300, height: 50 }]}>
             <Text
               style={{
                 textAlign: 'center',

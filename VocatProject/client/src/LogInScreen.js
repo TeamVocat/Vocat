@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Slider from '@react-native-community/slider';
 import {
   Animated,
@@ -15,14 +15,18 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import Svg, {Path} from 'react-native-svg';
-import {Iconoir, User, Lock} from 'iconoir-react-native';
+import Svg, { Path } from 'react-native-svg';
+import { Iconoir, User, Lock } from 'iconoir-react-native';
 
-import {Images} from '../assets/';
+import { Images } from '../assets/';
 
-const LogInScreen = ({navigation, route}) => {
+import { REACT_APP_SERVER_HOSTNAME } from "@env";
+import axios from 'react-native-axios';
+import { getUserLocal, storeUserLocal } from './Functions.js';
+
+const LogInScreen = ({ navigation, route }) => {
   const cyan = '#2a9d8f';
-  const [settings, setSettings] = useState({textSize: 30});
+  const [settings, setSettings] = useState({});
   const [userText, setUserText] = React.useState('');
   const [passText, setpassText] = React.useState('');
   //const [userFocused, setUserFocused] = useState(false);
@@ -47,29 +51,65 @@ const LogInScreen = ({navigation, route}) => {
   //   });
   let logoSize = new Animated.Value(IMAGE_HEIGHT_LARGE);
 
+  const handleSubmit = async () => {
+    if (userText === '' || passText === '') {
+      alert("All fields are required");
+      return;
+    }
+    try {
+      let statusJSON;
+      await fetchDate().then(async (date) => {
+        statusJSON = await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/signin`,
+          { email: userText, password: passText, date })
+      });
+      console.log(statusJSON.data);
+      if (statusJSON.data.error) {
+        alert(statusJSON.data.error);
+      } else {
+        let temp = await getUserLocal();
+        temp.username = statusJSON.data.user.username;
+        await storeUserLocal(statusJSON.data.user);
+        alert("Signin Successful!");
+        navigation.navigate('Home');
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const fetchDate = async () => {
+    try {
+      const dateJSON = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/getDate`);
+      console.log(dateJSON.data);
+      return dateJSON.data.currentDate;
+    } catch (error) {
+      alert(error);
+    }
+  }
+
   useEffect(() => {
     const show1 = Keyboard.addListener('keyboardWillShow', event => {
       //setTextLocHeight(-20);
     });
     const show2 = Keyboard.addListener('keyboardDidShow', event => {
-      Animated.timing(logoSize, {
-        duration: event.duration,
-        toValue: IMAGE_HEIGHT_SMALL,
-      }).start();
+      // Animated.timing(logoSize, {
+      //   duration: event.duration,
+      //   toValue: IMAGE_HEIGHT_SMALL,
+      // }).start();
       setTextLocHeight(-10);
     });
     const hide1 = Keyboard.addListener('keyboardWillHide', event => {
-      Animated.timing(logoSize, {
-        duration: event.duration,
-        toValue: IMAGE_HEIGHT_LARGE,
-      }).start();
+      // Animated.timing(logoSize, {
+      //   duration: event.duration,
+      //   toValue: IMAGE_HEIGHT_LARGE,
+      // }).start();
       setTextLocHeight(10);
     });
     const hide2 = Keyboard.addListener('keyboardDidHide', event => {
-      Animated.timing(logoSize, {
-        duration: event.duration,
-        toValue: IMAGE_HEIGHT_LARGE,
-      }).start();
+      // Animated.timing(logoSize, {
+      //   duration: event.duration,
+      //   toValue: IMAGE_HEIGHT_LARGE,
+      // }).start();
       //setTextLocHeight(10);
     });
 
@@ -83,8 +123,8 @@ const LogInScreen = ({navigation, route}) => {
 
   return (
     <View style={styles.logInContainer}>
-      <View class="header" style={[styles.header, {flex: 1.4}]}>
-        <View class="logo_login" style={{flex: 3}}>
+      <View class="header" style={[styles.header, { flex: 1.4 }]}>
+        <View class="logo_login" style={{ flex: 3 }}>
           <Animated.Image
             source={Images.logos.logo_titled_transparent}
             style={{
@@ -95,7 +135,7 @@ const LogInScreen = ({navigation, route}) => {
           />
         </View>
 
-        <View class="title_login" style={{flex: 1.8}}>
+        <View class="title_login" style={{ flex: 1.8 }}>
           <View
             style={{
               margin: 0,
@@ -107,7 +147,7 @@ const LogInScreen = ({navigation, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            <View style={{flex: 1, height: 1, backgroundColor: cyan}} />
+            <View style={{ flex: 1, height: 1, backgroundColor: cyan }} />
             <View>
               <Text
                 style={{
@@ -120,12 +160,12 @@ const LogInScreen = ({navigation, route}) => {
                 Log In
               </Text>
             </View>
-            <View style={{flex: 1, height: 1, backgroundColor: cyan}} />
+            <View style={{ flex: 1, height: 1, backgroundColor: cyan }} />
           </View>
         </View>
       </View>
 
-      <View class="contents" style={[styles.contents, {flex: 2}]}>
+      <View class="contents" style={[styles.contents, { flex: 2 }]}>
         <View
           class="inputfields"
           style={{
@@ -144,11 +184,11 @@ const LogInScreen = ({navigation, route}) => {
               color="#AAAAAA"
               height={25}
               width={25}
-              style={{position: 'relative', left: 45, top: 23, zIndex: 10}}
+              style={{ position: 'relative', left: 45, top: 23, zIndex: 10 }}
             />
             <TextInput
               style={[styles.input]}
-              onChangeText={setUserText}
+              onChangeText={text => setUserText(text)}
               value={userText}
               placeholder="username"
             />
@@ -163,11 +203,11 @@ const LogInScreen = ({navigation, route}) => {
               color="#AAAAAA"
               height={25}
               width={25}
-              style={{position: 'relative', left: 45, top: 23, zIndex: 10}}
+              style={{ position: 'relative', left: 45, top: 23, zIndex: 10 }}
             />
             <TextInput
               style={styles.input}
-              onChangeText={setpassText}
+              onChangeText={text => setpassText(text)}
               secureTextEntry={true}
               value={passText}
               placeholder="password"
@@ -183,7 +223,7 @@ const LogInScreen = ({navigation, route}) => {
             alignItems: 'center',
             justifyContent: 'flex-start',
           }}>
-          <TouchableOpacity style={[styles.button, {width: 300, height: 50}]}>
+          <TouchableOpacity onPress={handleSubmit} style={[styles.button, { width: 300, height: 50 }]}>
             <Text
               style={{
                 textAlign: 'center',
@@ -202,15 +242,15 @@ const LogInScreen = ({navigation, route}) => {
             Don't have an account?
           </Text>
           <Text
-            style={{textAlign: 'center', fontSize: 13, color: cyan}}
+            style={{ textAlign: 'center', fontSize: 13, color: cyan }}
             onPress={() =>
-              navigation.navigate('Register', {settings: route.params.settings})
+              navigation.navigate('Register', { settings: route.params.settings })
             }>
             Sign up here.
           </Text>
         </View>
       </View>
-    </View>
+    </View >
   );
 };
 

@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import Slider from '@react-native-community/slider';
 import { TouchableOpacity, StyleSheet, Text, View, } from 'react-native';
-import { storeSettings, getSettings } from './Functions.js';
+import { storeSettings, getSettings, getUserLocal } from './Functions.js';
+import axios from 'react-native-axios';
+import { REACT_APP_SERVER_HOSTNAME } from '@env';
 
 const SettingsScreen = ({ navigation }) => {
     const [finalSize, setFinalSize] = useState();
     const [settings, setSettings] = useState({});
+    const [user, setUser] = useState({});
 
     useEffect(() => {
-        fetchSettings();
+        fetchSettingsUser();
     }, []);
 
     const handleSync = async () => {
@@ -16,7 +19,18 @@ const SettingsScreen = ({ navigation }) => {
             ...settings,
             textSize: finalSize,
         });
-        await storeSettings(settings);
+        try {
+            await storeSettings(settings);
+        } catch (err) {
+            console.log("Settings could not be stored locally", err);
+        }
+        try {
+            console.log(user);
+            await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/updateUser`, { user });
+            alert("Successfully Synced User to Database");
+        } catch (err) {
+            console.log("Could not update user", err);
+        }
     };
 
     const fetchSettings = async () => {
@@ -30,6 +44,27 @@ const SettingsScreen = ({ navigation }) => {
                 setSettings(temp_settings);
                 setFinalSize(temp_settings.textSize);
             }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const fetchSettingsUser = async () => {
+        console.log(
+            `Fetching Settings and User from local storage...`,
+        );
+        try {
+            let temp_settings = await getSettings();
+            if (temp_settings) {
+                // console.log("new settings:", temp_settings);
+                setSettings(temp_settings);
+                setFinalSize(temp_settings.textSize);
+            }
+            let temp_user = await getUserLocal();
+            if (temp_user) {
+                // console.log("new user:", temp_user);
+                setUser(temp_user);
+            };
         } catch (error) {
             console.log(error);
         }

@@ -8,6 +8,7 @@ import { getUserLocal, storeUserLocal } from './Functions.js';
 const SignIn = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
     const handleSubmit = async () => {
         if (email === '' || password === '') {
             alert("All fields are required");
@@ -29,6 +30,7 @@ const SignIn = ({ navigation }) => {
             alert(error);
         }
     };
+
     return (
         <View style={styles.homeContainer}>
             {/* <KeyboardAwareScrollView contentCotainerStyle={styles.container}> */}
