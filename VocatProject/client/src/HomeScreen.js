@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   TouchableOpacity,
@@ -13,13 +13,18 @@ import {
 } from 'react-native';
 import catPile from './../assets/cat_pile.png';
 import axios from 'react-native-axios';
-import { REACT_APP_SERVER_HOSTNAME } from '@env';
-import { storeSettings, getSettings, getUserLocal, clearUserLocal } from './Functions.js';
+import {REACT_APP_SERVER_HOSTNAME} from '@env';
+import {
+  storeSettings,
+  getSettings,
+  getUserLocal,
+  clearUserLocal,
+} from './Functions.js';
 
 const HomeScreen = props => {
   // const isFocused = useIsFocused();
   const [user, setUser] = useState({});
-  const [settings, setSettings] = useState({ textSize: 30, wordList: "English" });
+  const [settings, setSettings] = useState({textSize: 30, wordList: 'English'});
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -32,20 +37,18 @@ const HomeScreen = props => {
   }, [props.navigation]);
 
   const fetchSettingsUser = async () => {
-    console.log(
-      `Fetching Settings and User from local storage...`,
-    );
+    console.log(`Fetching Settings and User from local storage...`);
     try {
       let temp_settings = await getSettings();
       if (temp_settings) {
-        console.log("new settings:", temp_settings);
+        console.log('new settings:', temp_settings);
         setSettings(temp_settings);
       }
       let temp_user = await getUserLocal();
       if (temp_user) {
-        console.log("new user:", temp_user);
+        console.log('new user:', temp_user);
         setUser(temp_user);
-      };
+      }
     } catch (error) {
       console.log(error);
     }
@@ -56,9 +59,7 @@ const HomeScreen = props => {
       `Fetching Message from ${REACT_APP_SERVER_HOSTNAME}/api/home...`,
     );
     try {
-      const message = await axios.get(
-        `${REACT_APP_SERVER_HOSTNAME}/api/home`,
-      );
+      const message = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/home`);
       setMessage(message.data.message);
     } catch (error) {
       console.log(error);
@@ -108,38 +109,42 @@ const HomeScreen = props => {
           </TouchableOpacity>
         </View>
         <View id="center_content" style={[styles.content]}>
-
           <TouchableOpacity
-            style={[styles.button,]}
+            style={[styles.button]}
             onPress={() => {
-              props.navigation.navigate("Signup");
-            }}
-          >
+              props.navigation.navigate('Signup');
+            }}>
             <Text style={styles.headerButtonText}>Signup</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.button, {
-              top: 40,
-            }]}
+            style={[
+              styles.button,
+              {
+                top: 40,
+              },
+            ]}
             onPress={() => {
-              props.navigation.navigate("Signin");
-            }}
-          >
+              props.navigation.navigate('Signin');
+            }}>
             <Text style={styles.headerButtonText}>Signin</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.button, {
-              top: 80,
-            }]}
+            style={[
+              styles.button,
+              {
+                top: 80,
+              },
+            ]}
             onPress={() => {
               clearUserLocal();
               setUser({});
-            }}
-          >
+            }}>
             <Text style={styles.headerButtonText}>Signout</Text>
           </TouchableOpacity>
-          <Text style={[styles.message, { fontSize: settings.textSize }]}>
-            {(user.username) ? (message + ", " + user.username + "!") : (message + "!")}
+          <Text style={[styles.message, {fontSize: settings.textSize}]}>
+            {user.username
+              ? message + ', ' + user.username + '!'
+              : message + '!'}
           </Text>
           <Image
             source={catPile}
@@ -151,30 +156,28 @@ const HomeScreen = props => {
             style={[
               styles.button,
               {
-                position: "static",
+                position: 'static',
                 marginBottom: 20,
                 fontSize: settings.textSize,
               },
             ]}
             onPress={() => {
-              props.navigation.navigate("Learning", { settings: settings });
-            }}
-          >
+              props.navigation.navigate('Learning', {settings: settings});
+            }}>
             <Text style={styles.buttonText}>Learn New</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.button,
               {
-                position: "static",
+                position: 'static',
                 marginBottom: 20,
                 fontSize: settings.textSize,
               },
             ]}
             onPress={() => {
-              props.navigation.navigate("Reviewing", { settings: settings });
-            }}
-          >
+              props.navigation.navigate('Reviewing', {settings: settings});
+            }}>
             <Text style={styles.buttonText}>Review</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -187,7 +190,7 @@ const HomeScreen = props => {
               },
             ]}
             onPress={() => {
-              props.navigation.navigate('Progress', { settings: settings });
+              props.navigation.navigate('User', {settings: settings});
             }}>
             <Text style={styles.buttonText}>Progress</Text>
           </TouchableOpacity>
@@ -201,7 +204,7 @@ const HomeScreen = props => {
               },
             ]}
             onPress={() => {
-              props.navigation.navigate('CatHouse', { settings: settings });
+              props.navigation.navigate('CatHouse', {settings: settings});
             }}>
             <Text style={styles.buttonText}>My Cats</Text>
           </TouchableOpacity>

@@ -40,6 +40,7 @@ import SignUpScreen from './src/SignUpScreen.js';
 import Signup from './src/SignUp';
 import Signin from './src/SignIn';
 import Reviewing from './src/ReviewingScreen';
+import UserScreen from './src/UserScreen';
 
 function Home() {
   return (
@@ -235,7 +236,7 @@ const App: () => Node = () => {
 
         <Tab.Screen
           name="User"
-          component={User}
+          component={UserScreen}
           options={{
             tabBarIcon: ({focused}) => (
               <View
