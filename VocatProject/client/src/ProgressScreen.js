@@ -98,7 +98,6 @@ const ProgressScreen = ({ props, navigation, route }) => {
     );
 };
 
-
 const styles = StyleSheet.create({
     settingsContainer: {
         width: '100%',
@@ -135,7 +134,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 0,
         textAlign: 'center'
-     },
+    },
 });
 
 export default ProgressScreen;

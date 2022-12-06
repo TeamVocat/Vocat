@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   Image,
   TouchableOpacity,
@@ -15,6 +15,8 @@ import {
 import {Row, Rows, Table, TableWrapper} from 'react-native-table-component';
 import {Images} from '../assets/';
 import {Shadow} from 'react-native-shadow-2';
+import { REACT_APP_SERVER_HOSTNAME } from '@env';
+import { storeSettings, getSettings, getUserLocal, userCoins } from './Functions.js';
 
 const CatHouseScreen = ({navigation, route}) => {
   const [settings, setSettings] = useState({textSize: 30});
@@ -50,19 +52,7 @@ const CatHouseScreen = ({navigation, route}) => {
       </Pressable>
     );
   };
-  const showItem = () => {
-    if (catState === 'lying') {
-      return (
-        <Image
-          source={Images.foods.food2}
-          style={{
-            height: 110,
-            width: 110,
-          }}
-          resizeMode="contain"></Image>
-      );
-    }
-  };
+  
   const [ItemState, setItemState] = useState('foods');
   const foods = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
   const toys = ['food4', 'food5', 'food6', 'food1', 'food2', 'food3'];
@@ -74,20 +64,74 @@ const CatHouseScreen = ({navigation, route}) => {
     setItemState('toys');
   };
 
+  const ref = useRef(null);
+  const foodtoyOverlay = 'Images.foods.food1';
+
+  const interactFood = () => {
+    const foodImgNum = ref.current.id + 1;
+    if (foodImgNum == 1) {
+      foodtoyOverlay = 'Images.foods.food1';
+    } else if (foodImgNum == 2) {
+      foodtoyOverlay = 'Images.foods.food2';
+    } else if (foodImgNum == 3) {
+      foodtoyOverlay = 'Images.foods.food3';
+    } else if (foodImgNum == 4) {
+      foodtoyOverlay = 'Images.foods.food4';
+    } else if (foodImgNum == 5) {
+      foodtoyOverlay = 'Images.foods.food5';
+    } else if (foodImgNum == 6) {
+      foodtoyOverlay = 'Images.foods.food6';
+    }
+    showItem(foodtoyOverlay);
+  };
+  const interactToys = () => {
+    const toysImgNum = ref.current.id + 1;
+    if (toysImgNum == 1) {
+      foodtoyOverlay = 'Images.foods.food1';
+    } else if (toysImgNum == 2) {
+      foodtoyOverlay = 'Images.foods.food2';
+    } else if (toysImgNum == 3) {
+      foodtoyOverlay = 'Images.foods.food3';
+    } else if (toysImgNum == 4) {
+      foodtoyOverlay = 'Images.foods.food4';
+    } else if (toysImgNum == 5) {
+      foodtoyOverlay = 'Images.foods.food5';
+    } else if (toysImgNum == 6) {
+      foodtoyOverlay = 'Images.foods.food6';
+    }
+    showItem(foodtoyOverlay);
+  };
+
+  const showItem = (foodtoys) => {
+    if (catState === 'lying') {
+      return (
+        <Image
+          source= {foodtoys}
+          style={{
+            height: 110,
+            width: 110,
+            zIndex: 6,
+          }}
+          resizeMode="contain"></Image>
+      );
+    }
+  };
+
   const showTable = () => {
     if (ItemState === 'foods') {
       return (
         <View id="Foods" style={styles.imgContainer}>
           {foods.map((x, i) => (
-            <View key={i} style={styles.imgItemWrap}>
-              <Image
-                source={Images.foods[x]}
-                style={{
-                  height: 110,
-                  width: 110,
-                }}
-                resizeMode="contain"></Image>
-            </View>
+            <View key={i} style={styles.imgItemWrap} ref={ref} id={x}>
+            <TouchableOpacity onPress = {interactFood}>
+            <Image 
+              source={Images.foods[x]}
+              style={{
+                height: 110,
+                width: 110,
+              }}
+              resizeMode="contain"></Image></TouchableOpacity>
+          </View>
           ))}
         </View>
       );
@@ -95,15 +139,16 @@ const CatHouseScreen = ({navigation, route}) => {
       return (
         <View id="Toys" style={styles.imgContainer}>
           {toys.map((x, i) => (
-            <View key={i} style={styles.imgItemWrap}>
-              <Image
-                source={Images.foods[x]}
-                style={{
-                  height: 110,
-                  width: 110,
-                }}
-                resizeMode="contain"></Image>
-            </View>
+            <View key={i} style={styles.imgItemWrap} ref={ref} id={x}>
+            <TouchableOpacity onPress = {interactToys}>
+            <Image id={x}
+              source={Images.foods[x]}
+              style={{
+                height: 110,
+                width: 110,
+              }}
+              resizeMode="contain"></Image></TouchableOpacity>
+          </View>
           ))}
         </View>
       );
@@ -122,6 +167,7 @@ const CatHouseScreen = ({navigation, route}) => {
           style={{
             borderTopStartRadius: 5,
             borderRadius: 2,
+            zIndex: 10,
           }}
           offset={[-10, 13]}>
           <TouchableOpacity
@@ -160,7 +206,7 @@ const CatHouseScreen = ({navigation, route}) => {
           <ScrollView style={{height: 100}}>{showTable()}</ScrollView>
         </View>
       </View>
-      <View id="footer" style={[styles.footer]}>
+      {/* <View id="footer" style={[styles.footer]}>
         <Shadow
           distance={7}
           tartColor={'#E6E5DA40'}
@@ -187,7 +233,7 @@ const CatHouseScreen = ({navigation, route}) => {
             <Text style={{fontSize: 30}}>Home</Text>
           </TouchableOpacity>
         </Shadow>
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -230,10 +276,9 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 25,
     paddingVertical: 7,
-    borderRadius: 15,
     alignSelf: 'flex-start',
     textAlign: 'center',
-    backgroundColor: '#CCD5AE',
+    backgroundColor: '#009E81',
   },
   headerButtonText: {
     fontSize: 20,
@@ -280,7 +325,7 @@ const styles = StyleSheet.create({
     margin: 5,
     alignSelf: 'flex-start',
     textAlign: 'center',
-    backgroundColor: '#CCD5AE',
+    backgroundColor: '#009E81',
     alignContent: 'center',
     alignItems: 'center',
   },
