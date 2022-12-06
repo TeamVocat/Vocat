@@ -13,6 +13,7 @@ import {
   ScrollView,
   SectionList,
   useWindowDimensions,
+  TextInput,
 } from 'react-native';
 import axios from 'react-native-axios';
 import {REACT_APP_SERVER_HOSTNAME} from '@env';
@@ -25,14 +26,16 @@ import {
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {Images} from '../assets/';
 import {LineChart} from 'react-native-chart-kit';
+import SettingsScreen from './SettingsScreen';
+import SelectDropdown from 'react-native-select-dropdown';
 
 const UserScreen = ({navigation, route}) => {
   const layout = useWindowDimensions();
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    {key: 'first', title: 'Progress'},
-    {key: 'second', title: 'Settings'},
+    {key: 'progress', title: 'Progress'},
+    {key: 'settings', title: 'Settings'},
   ]);
 
   const [user, setUser] = useState({});
@@ -68,6 +71,8 @@ const UserScreen = ({navigation, route}) => {
     legend: ['Words Learned'], // optional
   };
 
+  const [wordNum, setWordNum] = useState(100);
+
   //   const fetchSettingsUser = async () => {
   //     console.log(`Fetching Settings and User from local storage...`);
   //     try {
@@ -90,7 +95,7 @@ const UserScreen = ({navigation, route}) => {
   //     fetchSettingsUser();
   //   }, []);
 
-  const FirstRoute = () => (
+  const ProgressRoute = () => (
     <View
       style={{
         flex: 1,
@@ -106,10 +111,32 @@ const UserScreen = ({navigation, route}) => {
         style={{margin: 10, left: -10}}
       />
 
+      <View style={{flexDirection: 'row'}}>
+        <Text
+          style={[
+            styles.text,
+            {alignSelf: 'flex-start', left: '10%', margin: 5, top: 4},
+          ]}>
+          Number of words to learn per day:
+        </Text>
+        <TextInput
+          style={{
+            height: 30,
+            width: 60,
+            borderColor: '#EFEFEF',
+            borderWidth: 3,
+            margin: 5,
+            padding: 5,
+          }}
+          onChangeText={text => setWordNum(text)}
+          value={wordNum}
+          placeholder="number"></TextInput>
+      </View>
+
       <Text
         style={[
           styles.text,
-          {alignSelf: 'flex-start', left: '10%', margin: 5},
+          {alignSelf: 'flex-start', left: '10%', margin: 5, top: -4},
         ]}>
         Number of words learned: {500}
       </Text>
@@ -117,22 +144,50 @@ const UserScreen = ({navigation, route}) => {
       <Text
         style={[
           styles.text,
-          {alignSelf: 'flex-start', left: '10%', margin: 5},
+          {alignSelf: 'flex-start', left: '10%', margin: 5, top: -4},
         ]}>
         Number of words to be learned: {300}
       </Text>
+
+      <TouchableOpacity
+        style={{
+          backgroundColor: '#AAAAAA',
+          paddingVertical: 5,
+          paddingHorizontal: 15,
+          borderRadius: 4,
+          margin: 10,
+        }}
+        onPress={() => {
+          if (wordNum == '') {
+            Alert.alert('Invalid Input', 'Please enter a number', [
+              {text: 'OK', onPress: () => console.log('OK Pressed')},
+            ]);
+          } else if (isNaN(wordNum)) {
+            Alert.alert('Invalid Input', 'Please enter a valid number', [
+              {text: 'OK', onPress: () => console.log('OK Pressed')},
+            ]);
+          } else if (wordNum < 0) {
+            Alert.alert('Invalid Input', 'Please enter a valid number (>0)', [
+              {text: 'OK', onPress: () => console.log('OK Pressed')},
+            ]);
+          } else {
+            console.log(`saving...Your Word study plan is ${wordNum} per day.`);
+          }
+        }}>
+        <Text style={{color: 'white'}}>OK</Text>
+      </TouchableOpacity>
     </View>
   );
 
-  const SecondRoute = () => (
-    <View style={{flex: 1, backgroundColor: '#673ab7'}}>
-      <Text style={{fontSize: 50}}>Settings</Text>
+  const SettingsRoute = () => (
+    <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
+      {SettingsScreen(navigation)}
     </View>
   );
 
   const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
+    progress: ProgressRoute,
+    settings: SettingsRoute,
   });
 
   const renderTabBar = props => (
@@ -188,7 +243,7 @@ const UserScreen = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 20,
+    fontSize: 16,
   },
 });
 
