@@ -3,21 +3,33 @@ import { Dimensions, TouchableOpacity, DeviceEventEmitter, StyleSheet, Button, T
 import { Picker } from '@react-native-picker/picker';
 import { LineChart } from "react-native-chart-kit";
 import Svg, { Circle, Ellipse, G, LinearGradient, RadialGradient, Line, Path, Polygon, Polyline, Rect, Symbol, Use, Defs, Stop } from 'react-native-svg';
-import { retrieveProgress } from './Functions.js';
-
-const date = "11/1";
-const wordsNotLearned = 870;
+import { retrieveProgress, storeUserLocal, getUserLocal, updateWordsPerDay } from './Functions.js';
 
 const ProgressScreen = ({ props, navigation, route }) => {
     const [labels, setLabels] = useState(['11.1','11.2','11.3','11.4','11.5']);
     const [progresses, setProgresses] = useState([1,2,3,4,5]);
+    const [wordsPerDay, setWordsPerDay] = useState('0');
+    const [hasChart, setHasChart] = useState(false);
 
     useEffect(() => {
         async function fetchMessage() {
             try {
-              let progressArray = await retrieveProgress();
-              progressArray = progressArray.slice(progressArray.length-6);
-              setProgresses(progressArray);
+              const user = await getUserLocal();
+              const progressArray = [];
+              const dateArray = [];
+              setWordsPerDay(user.wordsPerDay);
+              console.log(wordsPerDay);
+              if (user.lastLogInDate.length>=5){
+                for (let i = 0; i < 5;i++){
+                    console.log(user.lastLogInDate[user.lastLogInDate.length-1-i]);
+                    const dateObj = user.lastLogInDate[user.lastLogInDate.length-1-i];
+                    progressArray.unshift(dateObj.numWords);
+                    dateArray.unshift(dateObj.dateString);
+                }
+                setProgresses(progressArray);
+                setLabels(dateArray);
+                setHasChart(true);
+              }
             } catch (error) {
                 console.log(error);
             }
@@ -28,8 +40,8 @@ const ProgressScreen = ({ props, navigation, route }) => {
     let data = [{ value: 'book1' }];
     //let newWords = 20;
     //let reviewWords = 30;
-    const [newWords, numNewWords] = React.useState('20');
-    const [oldWords, numOldWords] = React.useState('30');
+    const [newWords, numNewWords] = React.useState('0');
+    const [oldWords, numOldWords] = React.useState('0');
     const chartConfig = {
         backgroundGradientFrom: '#ffffff',
         backgroundGradientTo: '#ffffff',
@@ -52,25 +64,36 @@ const ProgressScreen = ({ props, navigation, route }) => {
 
     return (
         <View style={styles.settingsContainer}>
-            <TouchableOpacity style={styles.button}
-                onPress={() => {
-                    navigation.navigate('Plan', { settings: route.params.settings });
-                }}>
-                <Text style={{ fontSize: 30 }}>Study Plan</Text>
-            </TouchableOpacity>
+            <Text style={[styles.buttonLabel, {marginTop: 30}]}>Number of words per day:</Text>
+            <TextInput
+                style={[styles.input, {height: route.params.settings.textSize, fontSize: route.params.settings.textSize-10}]}
+                editable
+                placeholder= {wordsPerDay+''}
+                onChangeText= {
+                  async (input) => {await updateWordsPerDay(input);}
+                }
+                maxLength={4}
+            />
 
+            <Text style={[styles.buttonLabel, {marginTop: 30}]}>Number of words learned:</Text>
+            <Text style={styles.buttonLabel}>{progresses[4]}</Text>
+
+            <Text style={[styles.buttonLabel, {marginTop: 30}]}>Number of words to be learned:</Text>
+            <Text style={styles.buttonLabel}>{1066-progresses[4]}</Text>
+            { hasChart == true &&
             <LineChart
+                style={{marginTop: 30}}
                 data={chartData}
                 width={screenWidth}
                 height={220}
                 chartConfig={chartConfig}
             />
-
-            <Text style={styles.buttonLabel}>Number of words learned:</Text>
-            <Text style={styles.buttonLabel}>{progresses[progresses.length-1]}</Text>
-
-            <Text style={styles.buttonLabel}>Number of words to be learned:</Text>
-            <Text style={styles.buttonLabel}>{wordsNotLearned}</Text>
+            }
+            { hasChart == false &&
+            <Text style={[styles.buttonLabel, {marginTop: 60}]}>
+            Study 5 days to see progress chart!
+            </Text>
+            }
         </View >
     );
 };
@@ -88,7 +111,6 @@ const styles = StyleSheet.create({
     },
     buttonLabel: {
         alignItems: 'flex-start',
-        marginTop: 30,
         fontSize: 20,
         flexDirection: 'row',
         flexWrap: 'wrap'
@@ -106,7 +128,14 @@ const styles = StyleSheet.create({
     message: {
         marginTop: '30%',
         marginBottom: 20,
-    }
+    },
+    input: {
+        backgroundColor: 'white',
+        width: 60,
+        borderWidth: 1,
+        padding: 0,
+        textAlign: 'center'
+     },
 });
 
 export default ProgressScreen;
