@@ -73,7 +73,7 @@ const UserScreen = ({navigation, route}) => {
     legend: ['Words Learned'], // optional
   };
 
-  const [wordNum, setWordNum] = useState(100);
+  const [wordNum, setWordNum] = useState('');
 
   //   const fetchSettingsUser = async () => {
   //     console.log(`Fetching Settings and User from local storage...`);
@@ -261,7 +261,7 @@ const UserScreen = ({navigation, route}) => {
           alignItems: 'center',
           backgroundColor: 'white',
         }}>
-        <ScrollView style={{width: '100%'}}>
+        <ScrollView style={{width: '100%', heigh: '100%'}}>
           <View
             style={{
               flex: 1,
@@ -283,9 +283,9 @@ const UserScreen = ({navigation, route}) => {
               <View
                 style={{
                   width: '100%',
-                  height: 30,
+                  height: 40,
                   left: 15,
-                  top: 10,
+                  top: 20,
                 }}>
                 <Text style={{color: '#AAAAAA', fontSize: 14}}>
                   Personalize
@@ -296,7 +296,7 @@ const UserScreen = ({navigation, route}) => {
                   flex: 1,
                   height: 50,
                   width: '100%',
-                  backgroundColor: '#D9D9D9',
+                  backgroundColor: '#EFEFEF',
                   alignContent: 'center',
                   alignItems: 'center',
                   flexDirection: 'row',
@@ -324,7 +324,7 @@ const UserScreen = ({navigation, route}) => {
                 value={finalSize}
                 onValueChange={value => setFinalSize(value)}
                 style={{
-                  backgroundColor: '#EFEFEF',
+                  backgroundColor: 'white',
                   height: 50,
                   width: '100%',
                   padding: 10,
@@ -333,11 +333,13 @@ const UserScreen = ({navigation, route}) => {
               <View
                 style={{
                   width: '100%',
-                  backgroundColor: '#EFEFEF',
+                  backgroundColor: 'white',
                   justifyContent: 'flex-start',
                   alignContent: 'center',
                   alignItems: 'center',
                   paddingBottom: 20,
+                  borderBottomColor: '#D9D9D9',
+                  borderBottomWidth: 1,
                 }}>
                 <Text style={style(settings)}>Text fontSize: {finalSize}</Text>
               </View>
@@ -348,9 +350,9 @@ const UserScreen = ({navigation, route}) => {
               <View
                 style={{
                   width: '100%',
-                  height: 30,
+                  height: 40,
                   left: 15,
-                  top: 10,
+                  top: 20,
                 }}>
                 <Text style={{color: '#AAAAAA', fontSize: 14}}>Learning</Text>
               </View>
@@ -359,7 +361,7 @@ const UserScreen = ({navigation, route}) => {
                   flex: 1,
                   height: 50,
                   width: '100%',
-                  backgroundColor: '#D9D9D9',
+                  backgroundColor: '#EFEFEF',
                   alignContent: 'center',
                   alignItems: 'center',
                   flexDirection: 'row',
@@ -389,16 +391,23 @@ const UserScreen = ({navigation, route}) => {
                 buttonStyle={{
                   width: '100%',
                   height: 50,
+                  backgroundColor: 'white',
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#D9D9D9',
                 }}
               />
             </View>
             <View
               class={'buttons'}
-              style={{flex: 0.5, flexDirection: 'row', margin: 5}}>
+              style={{
+                flex: 0.5,
+                margin: 5,
+                marginBottom: 20,
+              }}>
               <TouchableOpacity
                 style={[
                   styles.bigButton,
-                  {backgroundColor: '#2A9D8F', marginHorizontal: 10},
+                  {backgroundColor: '#2A9D8F', margin: 10},
                 ]}
                 onPress={() => {
                   navigation.navigate('Home');
@@ -408,7 +417,7 @@ const UserScreen = ({navigation, route}) => {
               <TouchableOpacity
                 style={[
                   styles.bigButton,
-                  {backgroundColor: '#AAAAAA', marginHorizontal: 10},
+                  {backgroundColor: '#D9D9D9', margin: 10},
                 ]}
                 onPress={() => {
                   navigation.navigate('Home');
