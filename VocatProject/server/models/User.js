@@ -24,9 +24,19 @@ const userSchema = new Schema({
         required: false,
     },
     wordBank: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "VocabWord",
-        required: false,
+        type: [{
+            word: String,
+            definition: String,
+            part_of_speech: String,
+            example: String
+        }],
+        required: true,
+        default: [{
+            word: "null",
+            definition: "null",
+            part_of_speech: "null",
+            example: "null",
+        }]
     },
     wordBankProgress: {
         type: Number,
@@ -60,7 +70,7 @@ const userSchema = new Schema({
         type: Number,
         required: true,
         default: 5,
-    }
+    },
 })
 
 // create mongoose Model
