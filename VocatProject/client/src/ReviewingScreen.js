@@ -20,54 +20,54 @@ const LearningScreen = ({ navigation, route }) => {
   const [activeButton, setActiveButton] = useState(-1);
   const [doneReviewing, setDoneReviewing] = useState(false);
   const [settings, setSettings] = useState({ textSize: 20 })
-  const [user, setUser] = useState({})
 
-  useEffect(() => {
-    async function fetchMessage() {
-      setDoneReviewing(false);
-      try {
-        if (user.reviewToday.length > 0) {
+  async function fetchMessage() {
+    setDoneReviewing(false);
+    try {
+      const user = await getUserLocal();
+      if (user.reviewToday.length > 0) {
+        const newArray = user.reviewToday;
+        setVocabWordsArr(newArray);
+        setAnswersArr(newArray[0].answers);
+      }
+      else {
+        console.log("REVIEW() CALLED", user);
+        await review(user);
+        if (user.reviewToday.length > 0) { //first time here today
           const newArray = user.reviewToday;
           setVocabWordsArr(newArray);
           setAnswersArr(newArray[0].answers);
         }
-        else {
-          await review(user);
-          if (user.reviewToday.length > 0) { //first time here today
-            const newArray = user.reviewToday;
-            setVocabWordsArr(newArray);
-            setAnswersArr(newArray[0].answers);
-          }
-          else { //done today
-            setDoneReviewing(true);
-          }
+        else { //done today
+          setDoneReviewing(true);
         }
-      } catch (error) {
-        console.log(error);
       }
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    const fetchSettingsUser = async () => {
-      console.log(`Fetching Settings from local storage...`);
-      try {
-        let temp_settings = await getSettings();
-        if (temp_settings) {
-          console.log('new settings:', temp_settings);
-          setSettings(temp_settings);
-        }
-        let temp_user = await getUserLocal();
-        if (temp_user) {
-          console.log('new user:', temp_user);
-          setUser(temp_user);
-        }
-      } catch (error) {
-        console.log(error);
+  const fetchSettings = async () => {
+    console.log(`Fetching Settings from local storage...`);
+    try {
+      let temp_settings = await getSettings();
+      if (temp_settings) {
+        console.log('new settings:', temp_settings);
+        setSettings(temp_settings);
       }
-    };
-    fetchSettingsUser().then(() => {
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
       fetchMessage();
+      fetchSettings();
+      // alert('Refreshed');
     });
-  }, []);
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={styles.homeContainer}>
@@ -124,6 +124,8 @@ const LearningScreen = ({ navigation, route }) => {
               setActiveButton(activeButton + 4);
             }
             else {
+              //update user
+              const user = await getUserLocal();
               //check if correct
               if (answersArr[activeButton - 4].correct) {
                 //correct, remove from review array

@@ -14,62 +14,82 @@ import {
 } from "react-native";
 import { getSettings, learnNew, getUserLocal, storeUserLocal, addWordtoBank, Progress, compare } from './Functions.js';
 
-const LearningScreen = ({ navigation, route }) => {
+const LearningScreen = ({ props, navigation, route }) => {
 
   const [settings, setSettings] = useState({ textSize: 20 });
   const [vocabWordsArr, setVocabWordsArr] = useState([{ word: 'null', definition: 'lalal', part_of_speech: 'foo', example: 'bar' }]);
   const [doneLearning, setDoneLearning] = useState(false);
-  // const [user, setUser] = useState({ lastLogInDate: [] });
   let user;
   //const learnedArr;
-  useEffect(() => {
-    async function fetchMessage() {
-      try {
-        let newArray;
-        user = await getUserLocal();
-        // //several lines to clear wordbanks for testing
-        // user.wordsToday = await learnNew();
-        // user.wordBank = [];
-        // user.wordBankProgress = 0;
-        // user.reviewToday = [];
 
-        //log progress
-        const date = new Date();
-        const progress = new Progress(date, user.wordBankProgress + user.wordsToday);
-        if (user.lastLogInDate.length <= 0) {
-          user.lastLogInDate.push(progress);
-        }
-        else if (compare(user.lastLogInDate[user.lastLogInDate.length - 1].dateString, date) == false) {
-          user.lastLogInDate.push(progress);
-        }
-        //do nothing if last entry is the same
-        console.log(user.lastLogInDate);
-        if (user.doneLearningToday == false && user.wordsToday.length <= 0) { //has not learned today
-          console.log('has not learned today, innitialize wordsToday');
-          //grab new words
-          user.wordsToday = await learnNew();
-          console.log('wordsToday: ', user.wordsToday);
-          newArray = user.wordsToday;
-          console.log('newArray: ', newArray);
+  async function fetchMessage() {
+    try {
+      let newArray;
+      user = await getUserLocal();
+      // //several lines to clear wordbanks for testing
+      // user.wordsToday = await learnNew();
+      // user.wordBank = [];
+      // user.wordBankProgress = 0;
+      // user.reviewToday = [];
+
+      //log progress
+      const date = new Date();
+      const progress = new Progress(date, user.wordBankProgress + user.wordsToday);
+      if (user.lastLogInDate.length <= 0) {
+        user.lastLogInDate.push(progress);
+      }
+      else if (compare(user.lastLogInDate[user.lastLogInDate.length - 1].dateString, date) == false) {
+        user.lastLogInDate.push(progress);
+      }
+      //do nothing if last entry is the same
+      console.log(user.lastLogInDate);
+      if (user.doneLearningToday == false && user.wordsToday.length <= 0) { //has not learned today
+        console.log('has not learned today, innitialize wordsToday');
+        //grab new words
+        user.wordsToday = await learnNew();
+        console.log('wordsToday: ', user.wordsToday);
+        newArray = user.wordsToday;
+        console.log('newArray: ', newArray);
+      }
+      else {
+        console.log('has learned today, continue learning');
+        //grab words left for today
+        if (user.wordsToday.length <= 0) {
+          setDoneLearning(true);
         }
         else {
-          console.log('has learned today, continue learning');
-          //grab words left for today
-          if (user.wordsToday.length <= 0) {
-            setDoneLearning(true);
-          }
-          else {
-            newArray = user.wordsToday;
-          }
+          newArray = user.wordsToday;
         }
-        await storeUserLocal(user);
-        setVocabWordsArr(newArray);
-      } catch (error) {
-        console.log(error);
       }
-    };
-    fetchMessage();
-  }, []);
+      await storeUserLocal(user);
+      setVocabWordsArr(newArray);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchSettings = async () => {
+    console.log(`Fetching Settings from local storage...`);
+    try {
+      let temp_settings = await getSettings();
+      if (temp_settings) {
+        console.log('new settings:', temp_settings);
+        setSettings(temp_settings);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchMessage();
+      fetchSettings();
+      // alert('Refreshed');
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <View style={styles.homeContainer}>
       <View id="center_content" style={[styles.content]}>

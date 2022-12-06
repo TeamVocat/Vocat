@@ -2,6 +2,7 @@ import express from "express";
 var mongoose = require('mongoose');
 const router = express.Router();
 const { EnglishVocabWord } = require("../models/VocabWord");
+const { User } = require("../models/User");
 
 // controllers
 const { signup, signin, updateUser } = require("../controllers/auth");
@@ -24,17 +25,25 @@ router.get("/home", (req, res) => {
 
 router.get('/newVocab', async (req, res) => {
     if (req.query.id) {
-        await User.findOne({ id: `new ObjectId("${req.query.id}")` }).exec(function (err, result) {
-            const returnWords = []
-            EnglishVocabWord.findOne().skip(req.query.progress).exec(
-                async function (err, wordResult) {
-                    // words in order
-                    res.json({
-                        word: wordResult,
-                        status: "Success"
-                    });
-                })
-        })
+        try {
+            await User.findOne({ id: `new ObjectId("${req.query.id}")` }).exec(function (err, result) {
+                const returnWords = []
+                EnglishVocabWord.findOne().skip(req.query.progress).exec(
+                    async function (err, wordResult) {
+                        // words in order
+                        res.json({
+                            word: wordResult,
+                            status: "Success"
+                        });
+                    })
+            })
+        } catch (error) {
+            console.error(error)
+            res.status(400).json({
+                error: error,
+                status: "Failed to .get NEW VOCAB WORD with id",
+            })
+        }
     }
     else {
         try {
