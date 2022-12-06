@@ -3,41 +3,22 @@ import axios from 'react-native-axios';
 import { REACT_APP_SERVER_HOSTNAME } from "@env";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-let userCoins = 0;
-
-async function review() {
-  //get UserWordBank
-  const wordbank = await retrieve();
+async function review(user) {
   //get words that finished
-  const reviewToday = [];
-  let i = 0;
-  while (wordbank.wordbank[0].cooldown <= 0) {
-    const newWord = wordbank.wordbank[0];
-    newWord.answers = await generateAnswers(newWord.word);
-    reviewToday.push(newWord);
-    wordbank.wordbank = wordbank.wordbank.slice(1);
-    if (wordbank.wordbank.length <= 0) {
-      break;
+  user.reviewToday = [];
+  if (user.wordBank.length > 0){
+    while (user.wordBank[0].cooldown <= 0) {
+      console.log(`should review ${user.wordBank[0].word}, whose cd is ${user.wordBank[0].cooldown}`);
+      const newWord = user.wordBank[0];
+      newWord.answers = await generateAnswers(newWord.word);
+      user.reviewToday.push(newWord);
+      user.wordBank = user.wordBank.slice(1);
+      if (user.wordBank.length <= 0) {
+        break;
+      }
     }
   }
-  return reviewToday;
-}
-
-async function learnNew(newWords) {
-  for (let i = 0; i < 5; i++) {
-    const newWord = await grab(/word,/);
-    newWord.answers = await generateAnswers(newWord.word);
-    newWords.push(newWord);
-  }
-  await store(new UserWordBank(newWords));
-  let progress = await retrieveProgress();
-  console.log(progress);
-  if (progress == null) {
-    progress = [0];
-  }
-  progress.push(progress[progress.length - 1] + newWords.length);
-  await storeProgress(progress);
-  return newWords;
+  console.log(user.reviewToday);
 }
 
 async function generateAnswers(word) {
@@ -45,12 +26,12 @@ async function generateAnswers(word) {
   for (let i = 0; i < 4; i++) {
     let result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`);
     while (result.data.word.word == word) {
-      result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`);
+      result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab/`);
     }
     answers.push(new Answer(result.data.word.word, false));
   }
-  const correctIndex = Math.floor(Math.random() * 4);
-  answers[correctIndex] = new Answer(word, true);
+  const currectIndex = Math.floor(Math.random() * 4);
+  answers[currectIndex] = new Answer(word, true);
   return answers;
 }
 
@@ -69,10 +50,17 @@ function getStyle(button, state, answer) {
   }
 }
 
-async function grab(/*word,*/) {  //from db into user wordbank
-  const result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`);
-  const newWord = new UserWord(result.data.word.word, result.data.word.definition, result.data.word.part_of_speech, result.data.word.example);
-  return newWord;
+async function learnNew() {  //from db into user wordbank
+  const user = await getUserLocal();
+  const newWords = [];
+  for (let i = 0; i < user.wordsPerDay; i++){
+    const result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`, { params: { id: user._id, progress: /*user.wordBankProgress*/i } });
+    const newWord = new UserWord(result.data.word.word, result.data.word.definition, result.data.word.part_of_speech, result.data.word.example);
+    newWords.push(newWord);
+  }
+  user.wordsToday = newWords;
+  await storeUserLocal(user);
+  return newWords;
 };
 
 class Answer {
@@ -89,14 +77,11 @@ class UserWord {
     this.part_of_speech = part_of_speech;
     this.example = example;
     this.cooldown = 0;
-    this.doneToday = false;
     this.answers = [];
   }
   review(correct) {  //boolean value
     if (correct) {
       this.cooldown = 14;
-      this.cooldownToday = true;
-      userCoins++;
     }
     else {
       this.cooldown = 3;
@@ -105,78 +90,46 @@ class UserWord {
   }
 }
 
-class UserWordBank {
-
-  constructor(wordbank) {
-    this.wordbank = wordbank;
-    this.reviewToday = [];
+class Progress{
+  constructor(date, numWords){
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const dateNum = ("0" + date.getDate()).slice(-2);
+    this.dateString = `${month}/${dateNum}`;
+    this.numWords = numWords;
   }
 
-  updateCD() {
-    for (let i = 0; i < this.wordbank.length; i++) {
-      this.wordbank[i].cooldown--;
-    }
-  }
+}
 
-  //insert a userWord once the user learns it (priority queue according to cd)
-  add(word) {
-    if (this.wordbank.length == 0) {
-      this.wordbank.push(word);
-    }
-    else {
-      for (let i = 0; i < this.wordbank.length; i++) {
-        if (this.wordbank[i].cooldown > word.cooldown) {
-          this.wordbank.splice(i, 0, word);
-          return;
-        }
+
+function compare(dateString, date){
+  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+  const dateNum = ("0" + date.getDate()).slice(-2);
+  return (dateString == `${month}/${dateNum}`);
+}
+
+async function addWordtoBank(word,user) {
+  if (!user.wordBank[0]){
+    console.log('initializing wordBank');
+    user.wordBank = [word];
+  }
+  else{
+    let bank = user.wordBank;
+    for (let j = 0; j < bank.length; j++) {
+      if (bank[j].cooldown > word.cooldown) {
+        bank.splice(j, 0, word);
+        return;
       }
-      this.wordbank.push(word);
     }
+    bank.push(word);
+    user.wordBank = bank;
   }
+  console.log(`added ${word.word} to bank`);
 }
 
-async function store(wordbank) {
-  console.log('storing wordbank');
-  try {
-    const jsonValue = JSON.stringify(wordbank);
-    await AsyncStorage.mergeItem('wordbank', jsonValue)
-  } catch (e) {
-    // saving error
-    console.log(e);
-  }
-}
-
-async function storeProgress(progress) {
-  console.log('storing progress');
-  try {
-    const jsonValue = JSON.stringify(progress);
-    await AsyncStorage.setItem('progress', jsonValue)
-  } catch (e) {
-    // saving error
-    console.log(e);
-  }
-}
-
-async function retrieve() {
-  try {
-    const jsonValue = await AsyncStorage.getItem('wordbank');
-    //console.log(jsonValue);
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    // error reading value
-    console.log(e);
-  }
-}
-
-async function retrieveProgress() {
-  try {
-    const jsonValue = await AsyncStorage.getItem('progress');
-    //console.log(jsonValue);
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    // error reading value
-    console.log(e);
-  }
+async function updateWordsPerDay(newNumber){
+  const user = await getUserLocal();
+  user.wordsPerDay = newNumber;
+  await storeUserLocal(user);
 }
 
 async function storeUserLocal(user) {
@@ -226,5 +179,5 @@ async function getSettings() {
 
 export {
   storeSettings, getSettings, storeUserLocal, getUserLocal, clearUserLocal,
-  review, learnNew, grab, userCoins, retrieve, UserWordBank, getStyle, retrieveProgress
+  review, learnNew, getStyle, addWordtoBank, generateAnswers, Progress, compare, updateWordsPerDay
 };
