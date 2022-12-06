@@ -34,8 +34,8 @@ export default {
     toy2: require('./toys/toy_blocks.png'),
     toy3: require('./toys/present.png'),
     toy4: require('./toys/fish_pillow.png'),
-    toy5: require('./toys/fake_mouse.png'),
-    toy6: require('./toys/cat_mint.png'),
+    toy5: require('./toys/mouse_toy.png'),
+    toy6: require('./toys/cat_tree.png'),
   },
   toytitles: {
     toy1: 'Yarn Ball',

@@ -15,6 +15,7 @@ import {
 import {Row, Rows, Table, TableWrapper} from 'react-native-table-component';
 import {Images} from '../assets/';
 import {Shadow} from 'react-native-shadow-2';
+import { getSettings, getUserLocal, storeUserLocal } from './Functions.js';
 
 const StoreScreen = ({navigation, route}) => {
   const [user, setUser] = useState({});
