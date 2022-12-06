@@ -79,8 +79,8 @@ const CatHouseScreen = ({navigation, route}) => {
         <Image
           source={imageSauce}
           style={{
-            height: 150,
-            width: 150,
+            height: 140,
+            width: 140,
             zIndex: 6,
           }}
           resizeMode="contain"></Image>
