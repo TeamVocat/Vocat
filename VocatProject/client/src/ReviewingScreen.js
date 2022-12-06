@@ -23,22 +23,31 @@ const LearningScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     async function fetchMessage() {
+      setDoneReviewing(false);
       try {
         const user = await getUserLocal();
-        await review(user);
-        await storeUserLocal(user);
         if (user.reviewToday.length > 0) {
           const newArray = user.reviewToday;
           setVocabWordsArr(newArray);
           setAnswersArr(newArray[0].answers);
         }
         else {
-          setDoneReviewing(true);
+          await review(user);
+          if (user.reviewToday.length > 0) { //first time here today
+            const newArray = user.reviewToday;
+            setVocabWordsArr(newArray);
+            setAnswersArr(newArray[0].answers);
+          }
+          else { //done today
+            setDoneReviewing(true);
+          }
         }
       } catch (error) {
         console.log(error);
       }
     };
+
+
     const fetchSettings = async () => {
       console.log(`Fetching Settings from local storage...`);
       try {
@@ -51,7 +60,6 @@ const LearningScreen = ({ navigation, route }) => {
         console.log(error);
       }
     };
-
     fetchMessage();
     fetchSettings();
   }, []);
@@ -104,7 +112,6 @@ const LearningScreen = ({ navigation, route }) => {
         </View>
       }
 
-
       <TouchableOpacity style={styles.nextButton}
         onPress={async () => {
           if (!doneReviewing) {
@@ -122,6 +129,8 @@ const LearningScreen = ({ navigation, route }) => {
                 }
                 //put the word back in wordBank
                 addWordtoBank(vocabWordsArr[0], user);
+                //give coins to user
+                user.coinNum += 1;
               }
               else {
                 //got wrong, push to end of review array
@@ -130,21 +139,20 @@ const LearningScreen = ({ navigation, route }) => {
                 vocabWordsArr.push(vocabWordsArr[0]);
                 setVocabWordsArr(vocabWordsArr);
               }
-              user.reviewToday = vocabWordsArr;
-              //console.log(user.reviewToday);
-              await storeUserLocal(user);
-
               //update page
               if (vocabWordsArr.length > 1) {
                 setActiveButton(-1);
                 let newArr = vocabWordsArr.slice(1);
-
+                user.reviewToday = newArr;
                 setVocabWordsArr(newArr);
                 setAnswersArr(newArr[0].answers);
               }
               else {
+                user.reviewToday = [];
                 setDoneReviewing(true);
               }
+              console.log(user.reviewToday);
+              await storeUserLocal(user);
             }
           }
         }}>

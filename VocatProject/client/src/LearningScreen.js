@@ -12,15 +12,12 @@ import {
   Pressable,
   ScrollView
 } from "react-native";
-import axios from 'react-native-axios';
-import { REACT_APP_SERVER_HOSTNAME } from "@env";
-import { screens } from './functions/Words.js';
-import { learnNew, getUserLocal, storeUserLocal, addWordtoBank } from './Functions.js';
+import { learnNew, getUserLocal, storeUserLocal, addWordtoBank, Progress, compare } from './Functions.js';
 
 const LearningScreen = ({ navigation, route }) => {
 
   const [settings, setSettings] = useState({ textSize: 20 });
-  const [vocabWordsArr, setVocabWordsArr] = useState([1, 2, 3, 4]);
+  const [vocabWordsArr, setVocabWordsArr] = useState([{ word: 'null', definition: 'lalal', part_of_speech: 'foo', example: 'bar' }]);
   const [doneLearning, setDoneLearning] = useState(false);
   //const learnedArr;
   let user;
@@ -28,34 +25,49 @@ const LearningScreen = ({ navigation, route }) => {
   useEffect(() => {
     async function fetchMessage() {
       try {
-        const date = new Date().toDateString();
         let newArray;
         user = await getUserLocal();
-        user.wordsToday = await learnNew();
-        user.reviewToday = [];
-        await storeUserLocal(user);
-        if (user.wordsToday == null) { //has not learned today
+        // //several lines to clear wordbanks for testing
+        // user.wordsToday = await learnNew();
+        // user.wordBank = [];
+        // user.wordBankProgress = 0;
+        // user.reviewToday = [];
+
+        //log progress
+        const date = new Date();
+        const progress = new Progress(date, user.wordBankProgress + user.wordsToday);
+        if (user.lastLogInDate.length <= 0) {
+          user.lastLogInDate.push(progress);
+        }
+        else if (compare(user.lastLogInDate[user.lastLogInDate.length - 1].dateString, date) == false) {
+          user.lastLogInDate.push(progress);
+        }
+        //do nothing if last entry is the same
+        console.log(user.lastLogInDate);
+        if (user.doneLearningToday == false && user.wordsToday.length <= 0) { //has not learned today
           console.log('has not learned today, innitialize wordsToday');
           //grab new words
-          newArray = await learnNew();
-          user.wordsToday = newArray;
+          user.wordsToday = await learnNew();
+          console.log('wordsToday: ', user.wordsToday);
+          newArray = user.wordsToday;
+          console.log('newArray: ', newArray);
         }
         else {
           console.log('has learned today, continue learning');
           //grab words left for today
-          if (user.wordsToday == 'done') {
+          if (user.wordsToday.length <= 0) {
             setDoneLearning(true);
           }
           else {
             newArray = user.wordsToday;
           }
         }
+        await storeUserLocal(user);
         setVocabWordsArr(newArray);
       } catch (error) {
         console.log(error);
       }
     };
-
     const fetchSettings = async () => {
       console.log(`Fetching Settings from local storage...`);
       try {
@@ -93,30 +105,29 @@ const LearningScreen = ({ navigation, route }) => {
       </View>
       <TouchableOpacity style={styles.nextButton}
         onPress={async () => {
-          try {
-            if (!doneLearning) {
-              //update user.wordsToday, progress number
-              if (vocabWordsArr.length > 1) {
-                user = await getUserLocal();
-                user.wordsToday = newArr;
-                user.wordBankProgress++;
-                await addWordtoBank(vocabWordsArr[0], user);
-                let newArr = vocabWordsArr.slice(1);
-                setVocabWordsArr(newArr);
-                await storeUserLocal(user);
-              }
-              else {
-                user = await getUserLocal();
-                //show done page
-                setDoneLearning(true);
-                user.wordBankProgress++;
-                user.wordsToday = 'done';
-                await addWordtoBank(vocabWordsArr[0], user);
-                await storeUserLocal(user);
-              }
+          if (!doneLearning) {
+            //update user.wordsToday, progress number
+            if (vocabWordsArr.length > 1) {
+              user = await getUserLocal();
+              user.wordBankProgress++;
+              user.coinNum += 5;
+              await addWordtoBank(vocabWordsArr[0], user);
+              let newArr = vocabWordsArr.slice(1);
+              user.wordsToday = newArr;
+              setVocabWordsArr(newArr);
+              await storeUserLocal(user);
             }
-          } catch (err) {
-            console.log(err);
+            else {
+              user = await getUserLocal();
+              //show done page
+              setDoneLearning(true);
+              user.wordBankProgress++;
+              user.wordsToday = [];
+              user.doneLearningToday = true;
+              user.coinNum += 5;
+              await addWordtoBank(vocabWordsArr[0], user);
+              await storeUserLocal(user);
+            }
           }
         }}>
         <Text style={styles.nextButtonText}>Next</Text>

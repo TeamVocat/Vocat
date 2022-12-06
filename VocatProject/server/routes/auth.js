@@ -22,29 +22,44 @@ router.get("/home", (req, res) => {
     }
 });
 
-router.get("/newVocab", async (req, res) => {
-    try {
-        await EnglishVocabWord.count()
-            .exec(async function (err, count) {
-                // Get a random entry
-                var random = Math.floor(Math.random() * count)
-                // Again query all words but only fetch one offset by our random #
-                EnglishVocabWord.findOne().skip(random).exec(
-                    function (err, result) {
-                        // Tada! random word
-                        console.log(result);
-                        res.json({
-                            word: result,
-                            status: "Success"
-                        });
-                    })
-            });
-    } catch (error) {
-        console.error(error)
-        res.status(400).json({
-            error: error,
-            status: "Failed to .get NEW VOCAB WORD",
+router.get('/newVocab', async (req, res) => {
+    if (req.query.id) {
+        await User.findOne({ id: `new ObjectId("${req.query.id}")` }).exec(function (err, result) {
+            const returnWords = []
+            EnglishVocabWord.findOne().skip(req.query.progress).exec(
+                async function (err, wordResult) {
+                    // words in order
+                    res.json({
+                        word: wordResult,
+                        status: "Success"
+                    });
+                })
         })
+    }
+    else {
+        try {
+            await EnglishVocabWord.count()
+                .exec(async function (err, count) {
+                    // Get a random entry
+                    var random = Math.floor(Math.random() * count)
+                    // Again query all words but only fetch one offset by our random #
+                    EnglishVocabWord.findOne().skip(random).exec(
+                        function (err, result) {
+                            // Tada! random word
+                            console.log(result);
+                            res.json({
+                                word: result,
+                                status: "Success"
+                            });
+                        })
+                });
+        } catch (error) {
+            console.error(error)
+            res.status(400).json({
+                error: error,
+                status: "Failed to .get NEW VOCAB WORD",
+            })
+        }
     }
 });
 
