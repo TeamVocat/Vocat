@@ -54,6 +54,7 @@ const CatHouseScreen = ({navigation, route}) => {
   };
   
   const [ItemState, setItemState] = useState('foods');
+  const [Item, setItem] = useState('food1');
   const foods = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
   const toys = ['food4', 'food5', 'food6', 'food1', 'food2', 'food3'];
 
@@ -64,49 +65,12 @@ const CatHouseScreen = ({navigation, route}) => {
     setItemState('toys');
   };
 
-  const ref = useRef(null);
-  const foodtoyOverlay = 'Images.foods.food1';
-
-  const interactFood = () => {
-    const foodImgNum = ref.current.id + 1;
-    if (foodImgNum == 1) {
-      foodtoyOverlay = 'Images.foods.food1';
-    } else if (foodImgNum == 2) {
-      foodtoyOverlay = 'Images.foods.food2';
-    } else if (foodImgNum == 3) {
-      foodtoyOverlay = 'Images.foods.food3';
-    } else if (foodImgNum == 4) {
-      foodtoyOverlay = 'Images.foods.food4';
-    } else if (foodImgNum == 5) {
-      foodtoyOverlay = 'Images.foods.food5';
-    } else if (foodImgNum == 6) {
-      foodtoyOverlay = 'Images.foods.food6';
-    }
-    showItem(foodtoyOverlay);
-  };
-  const interactToys = () => {
-    const toysImgNum = ref.current.id + 1;
-    if (toysImgNum == 1) {
-      foodtoyOverlay = 'Images.foods.food1';
-    } else if (toysImgNum == 2) {
-      foodtoyOverlay = 'Images.foods.food2';
-    } else if (toysImgNum == 3) {
-      foodtoyOverlay = 'Images.foods.food3';
-    } else if (toysImgNum == 4) {
-      foodtoyOverlay = 'Images.foods.food4';
-    } else if (toysImgNum == 5) {
-      foodtoyOverlay = 'Images.foods.food5';
-    } else if (toysImgNum == 6) {
-      foodtoyOverlay = 'Images.foods.food6';
-    }
-    showItem(foodtoyOverlay);
-  };
-
-  const showItem = (foodtoys) => {
+  const showItem = () => {
+    console.log(Item);
     if (catState === 'lying') {
       return (
         <Image
-          source= {foodtoys}
+          source={Images.foods[Item]}
           style={{
             height: 110,
             width: 110,
@@ -122,16 +86,23 @@ const CatHouseScreen = ({navigation, route}) => {
       return (
         <View id="Foods" style={styles.imgContainer}>
           {foods.map((x, i) => (
-            <View key={i} style={styles.imgItemWrap} ref={ref} id={x}>
-            <TouchableOpacity onPress = {interactFood}>
-            <Image 
-              source={Images.foods[x]}
-              style={{
-                height: 110,
-                width: 110,
-              }}
-              resizeMode="contain"></Image></TouchableOpacity>
-          </View>
+            <View key={i} style={styles.imgItemWrap}>
+              <TouchableOpacity
+                key={i}
+                onPress={() => {
+                  console.log(`${x} ${i} Pressed`);
+                  setItem(x);
+                }}>
+                <Image
+                  id={x}
+                  source={Images.foods[x]}
+                  style={{
+                    height: 110,
+                    width: 110,
+                  }}
+                  resizeMode="contain"></Image>
+              </TouchableOpacity>
+            </View>
           ))}
         </View>
       );
@@ -139,16 +110,23 @@ const CatHouseScreen = ({navigation, route}) => {
       return (
         <View id="Toys" style={styles.imgContainer}>
           {toys.map((x, i) => (
-            <View key={i} style={styles.imgItemWrap} ref={ref} id={x}>
-            <TouchableOpacity onPress = {interactToys}>
-            <Image id={x}
-              source={Images.foods[x]}
-              style={{
-                height: 110,
-                width: 110,
-              }}
-              resizeMode="contain"></Image></TouchableOpacity>
-          </View>
+            <View key={i} style={styles.imgItemWrap}>
+              <TouchableOpacity 
+                key={i}
+                onPress={() => {
+                  console.log(`${x} ${i} Pressed`);
+                  setItem(x);
+                }}>
+                <Image
+                  id={x}
+                  source={Images.foods[x]}
+                  style={{
+                    height: 110,
+                    width: 110,
+                  }}
+                  resizeMode="contain"></Image>
+              </TouchableOpacity>
+            </View>
           ))}
         </View>
       );
@@ -175,7 +153,7 @@ const CatHouseScreen = ({navigation, route}) => {
             onPress={() => {
               navigation.navigate('Store', {settings: settings});
             }}>
-            <Text style={{fontSize: 30}}>Store</Text>
+            <Text style={{fontSize: 30, color: "#ffffff"}}>Store</Text>
           </TouchableOpacity>
         </Shadow>
       </View>
@@ -186,20 +164,20 @@ const CatHouseScreen = ({navigation, route}) => {
           {showCat()}
         </View>
         <View id="item" style={{position: 'absolute', top: 200}}>
-          {showItem()}
+          {showItem(Item)}
         </View>
         <View id="controls" style={{flex: 0.8, flexDirection: 'row'}}>
           <TouchableOpacity style={[styles.controlBotton]} onPress={sleepClick}>
-            <Text style={{fontSize: 20}}>Sleep</Text>
+            <Text style={{fontSize: 20, color: "#ffffff"}}>Sleep</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.controlBotton]} onPress={waterClick}>
-            <Text style={{fontSize: 20}}>Water</Text>
+            <Text style={{fontSize: 20, color: "#ffffff"}}>Water</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.controlBotton]} onPress={foodClick}>
-            <Text style={{fontSize: 20}}>Foods</Text>
+            <Text style={{fontSize: 20, color: "#ffffff"}}>Foods</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.controlBotton]} onPress={toyClick}>
-            <Text style={{fontSize: 20}}>Toys</Text>
+            <Text style={{fontSize: 20, color: "#ffffff"}}>Toys</Text>
           </TouchableOpacity>
         </View>
         <View id="table" style={[styles.tableContainer]}>
@@ -240,7 +218,7 @@ const CatHouseScreen = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
   catsContainer: {
-    backgroundColor: '#FEFAE0',
+    backgroundColor: '#E9F7EB',
     width: '100%',
     height: '100%',
     flex: 1,
