@@ -20,29 +20,27 @@ const StoreScreen = ({navigation, route}) => {
   const [user, setUser] = useState({});
 
   const fetchSettingsUser = async () => {
-    console.log(
-        `Fetching Settings and User from local storage...`,
-    );
+    console.log(`Fetching Settings and User from local storage...`);
     try {
-        let temp_settings = await getSettings();
-        if (temp_settings) {
-            // console.log("new settings:", temp_settings);
-            setSettings(temp_settings);
-            setFinalSize(temp_settings.textSize);
-        }
-        let temp_user = await getUserLocal();
-        if (temp_user) {
-            // console.log("new user:", temp_user);
-            setUser(temp_user);
-        };
+      let temp_settings = await getSettings();
+      if (temp_settings) {
+        // console.log("new settings:", temp_settings);
+        setSettings(temp_settings);
+        setFinalSize(temp_settings.textSize);
+      }
+      let temp_user = await getUserLocal();
+      if (temp_user) {
+        // console.log("new user:", temp_user);
+        setUser(temp_user);
+      }
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-};
+  };
   const [settings, setSettings] = useState({textSize: 30});
   const [coins, Setcoins] = useState(user.coinNum);
   const foods = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
-  const toys = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
+  const toys = ['toy1', 'toy2', 'toy3', 'toy4', 'toy5', 'toy6'];
 
   const buyItem = () => Setcoins(user.coinNum - 20);
 
@@ -77,13 +75,14 @@ const StoreScreen = ({navigation, route}) => {
             {foods.map((x, i) => (
               <View key={i} style={styles.imgItemWrap}>
                 <TouchableOpacity onPress={buyItem}>
-                <Image
-                  source={Images.foods[x]}
-                  style={{
-                    height: 110,
-                    width: 110,
-                  }}
-                  resizeMode="contain"></Image></TouchableOpacity>
+                  <Image
+                    source={Images.foods[x]}
+                    style={{
+                      height: 110,
+                      width: 110,
+                    }}
+                    resizeMode="contain"></Image>
+                </TouchableOpacity>
                 <Text style={styles.text}>{Images.foodtitles[x]}</Text>
               </View>
             ))}
@@ -95,14 +94,15 @@ const StoreScreen = ({navigation, route}) => {
             {toys.map((x, i) => (
               <View key={i} style={styles.imgItemWrap}>
                 <TouchableOpacity onPress={buyItem}>
-                <Image
-                  source={Images.foods[x]}
-                  style={{
-                    height: 110,
-                    width: 110,
-                  }}
-                  resizeMode="contain"></Image></TouchableOpacity>
-                <Text style={styles.text}>{Images.foodtitles[x]}</Text>
+                  <Image
+                    source={Images.toys[x]}
+                    style={{
+                      height: 110,
+                      width: 110,
+                    }}
+                    resizeMode="contain"></Image>
+                </TouchableOpacity>
+                <Text style={styles.text}>{Images.toytitles[x]}</Text>
               </View>
             ))}
           </View>
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   text: {
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'center',
   },
   titleText: {
