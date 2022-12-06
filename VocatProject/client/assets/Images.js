@@ -27,6 +27,22 @@ export default {
     food5: 'Lunch Set',
     food6: 'Fish Dish',
   },
+  toys: {
+    toy1: require('./toys/yarn_ball.png'),
+    toy2: require('./toy_blocks.png'),
+    toy3: require('./present.png'),
+    toy4: require('./fish_pillow.png'),
+    toy5: require('./fake_mouse.png'),
+    toy6: require('./cat_mint.png'),
+  },
+  toytitles: {
+    toy1: 'Yarn Ball',
+    toy2: 'Toy Blocks',
+    toy3: 'Present',
+    toy4: 'Fish Pillow',
+    toy5: 'Fake Mouse',
+    toy6: 'Cat Mint',
+  },
   actions: {
     drinking: require('./drinking.png'),
     lying: require('./flatcat.png'),
