@@ -34,8 +34,9 @@ const userSchema = new Schema({
         default: 0,
     },
     lastLogInDate: {
-        type: String,
+        type: [String],
         required: false,
+        default: [],
     },
     studiedWordsNum: {
         type: Number,
@@ -60,7 +61,21 @@ const userSchema = new Schema({
         type: Number,
         required: true,
         default: 5,
-    }
+    },
+    wordsToday: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "VocabWord",
+        default: null,
+    },
+    reviewToday: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "VocabWord",
+        default: [],
+    },
+    doneLearningToday: {
+      type: Boolean,
+      default: false,
+    },
 })
 
 // create mongoose Model

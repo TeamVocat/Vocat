@@ -28,7 +28,7 @@ router.get('/newVocab', async (req, res) => {
     await User.findOne({id:`new ObjectId("${req.query.id}")`}).exec(function (err, result) {
       const returnWords = []
       EnglishVocabWord.findOne().skip(req.query.progress).exec(
-          function (err, wordResult) {
+          async function (err, wordResult) {
               // words in order
               res.json({
                   word: wordResult,
