@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   TouchableOpacity,
@@ -13,9 +13,8 @@ import {
 } from 'react-native';
 import catPile from './../assets/cat_pile.png';
 import axios from 'react-native-axios';
-import {REACT_APP_SERVER_HOSTNAME} from '@env';
+import { REACT_APP_SERVER_HOSTNAME } from '@env';
 import {
-  storeSettings,
   getSettings,
   getUserLocal,
   clearUserLocal,
@@ -24,7 +23,7 @@ import {
 const HomeScreen = props => {
   // const isFocused = useIsFocused();
   const [user, setUser] = useState({});
-  const [settings, setSettings] = useState({textSize: 30, wordList: 'English'});
+  const [settings, setSettings] = useState({ textSize: 30, wordList: 'English' });
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -141,7 +140,7 @@ const HomeScreen = props => {
             }}>
             <Text style={styles.headerButtonText}>Signout</Text>
           </TouchableOpacity>
-          <Text style={[styles.message, {fontSize: settings.textSize}]}>
+          <Text style={[styles.message, { fontSize: settings.textSize }]}>
             {user.username
               ? message + ', ' + user.username + '!'
               : message + '!'}
@@ -162,7 +161,7 @@ const HomeScreen = props => {
               },
             ]}
             onPress={() => {
-              props.navigation.navigate('Learning', {settings: settings});
+              props.navigation.navigate('Learning', { settings: settings });
             }}>
             <Text style={styles.buttonText}>Learn New</Text>
           </TouchableOpacity>
@@ -176,7 +175,7 @@ const HomeScreen = props => {
               },
             ]}
             onPress={() => {
-              props.navigation.navigate('Reviewing', {settings: settings});
+              props.navigation.navigate('Reviewing', { settings: settings });
             }}>
             <Text style={styles.buttonText}>Review</Text>
           </TouchableOpacity>
@@ -190,7 +189,7 @@ const HomeScreen = props => {
               },
             ]}
             onPress={() => {
-              props.navigation.navigate('User', {settings: settings});
+              props.navigation.navigate('User', { settings: settings });
             }}>
             <Text style={styles.buttonText}>Progress</Text>
           </TouchableOpacity>
@@ -204,7 +203,7 @@ const HomeScreen = props => {
               },
             ]}
             onPress={() => {
-              props.navigation.navigate('CatHouse', {settings: settings});
+              props.navigation.navigate('CatHouse', { settings: settings });
             }}>
             <Text style={styles.buttonText}>My Cats</Text>
           </TouchableOpacity>

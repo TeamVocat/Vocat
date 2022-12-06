@@ -58,15 +58,14 @@ const LogInScreen = ({ navigation, route }) => {
     try {
       let statusJSON;
       await fetchDate().then(async (date) => {
+        console.log("DATE: ", date);
         statusJSON = await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/signin`,
           { email: userText, password: passText, date })
       });
-      console.log(statusJSON.data);
+      console.log("Lastlogindate: ", statusJSON.data.user);
       if (statusJSON.data.error) {
         alert(statusJSON.data.error);
       } else {
-        let temp = await getUserLocal();
-        temp.username = statusJSON.data.user.username;
         await storeUserLocal(statusJSON.data.user);
         alert("Signin Successful!");
         navigation.navigate('Home');
@@ -79,8 +78,8 @@ const LogInScreen = ({ navigation, route }) => {
   const fetchDate = async () => {
     try {
       const dateJSON = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/getDate`);
-      console.log(dateJSON.data);
-      return dateJSON.data.currentDate;
+      console.log("FETCHDATE: ", dateJSON.data.obj);
+      return dateJSON.data.obj;
     } catch (error) {
       alert(error);
     }
