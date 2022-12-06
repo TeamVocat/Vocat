@@ -10,6 +10,8 @@ export default {
     logo_titled_transparent: require('./logo/vocat_logo_with_title_transparent.png'),
     logo_titled_white: require('./logo/vocat_logo_with_title.png'),
     placeholder: require('./logo/logo_placeholder.png'),
+    profile: require('./logo/vocat_logo_profile.png'),
+    profile_background: require('./logo/vocat_logo_profile_background.png'),
   },
   foods: {
     food1: require('./foods/food1.png'),

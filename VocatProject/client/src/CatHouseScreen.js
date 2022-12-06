@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   Image,
   TouchableOpacity,
@@ -15,6 +15,8 @@ import {
 import {Row, Rows, Table, TableWrapper} from 'react-native-table-component';
 import {Images} from '../assets/';
 import {Shadow} from 'react-native-shadow-2';
+import { REACT_APP_SERVER_HOSTNAME } from '@env';
+import { storeSettings, getSettings, getUserLocal, userCoins } from './Functions.js';
 
 const CatHouseScreen = ({navigation, route}) => {
   const [settings, setSettings] = useState({textSize: 30});
@@ -50,20 +52,9 @@ const CatHouseScreen = ({navigation, route}) => {
       </Pressable>
     );
   };
-  const showItem = () => {
-    if (catState === 'lying') {
-      return (
-        <Image
-          source={Images.foods.food2}
-          style={{
-            height: 110,
-            width: 110,
-          }}
-          resizeMode="contain"></Image>
-      );
-    }
-  };
+  
   const [ItemState, setItemState] = useState('foods');
+  const [Item, setItem] = useState('food1');
   const foods = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
   const toys = ['food4', 'food5', 'food6', 'food1', 'food2', 'food3'];
 
@@ -74,19 +65,43 @@ const CatHouseScreen = ({navigation, route}) => {
     setItemState('toys');
   };
 
+  const showItem = () => {
+    console.log(Item);
+    if (catState === 'lying') {
+      return (
+        <Image
+          source={Images.foods[Item]}
+          style={{
+            height: 110,
+            width: 110,
+            zIndex: 6,
+          }}
+          resizeMode="contain"></Image>
+      );
+    }
+  };
+
   const showTable = () => {
     if (ItemState === 'foods') {
       return (
         <View id="Foods" style={styles.imgContainer}>
           {foods.map((x, i) => (
             <View key={i} style={styles.imgItemWrap}>
-              <Image
-                source={Images.foods[x]}
-                style={{
-                  height: 110,
-                  width: 110,
-                }}
-                resizeMode="contain"></Image>
+              <TouchableOpacity
+                key={i}
+                onPress={() => {
+                  console.log(`${x} ${i} Pressed`);
+                  setItem(x);
+                }}>
+                <Image
+                  id={x}
+                  source={Images.foods[x]}
+                  style={{
+                    height: 110,
+                    width: 110,
+                  }}
+                  resizeMode="contain"></Image>
+              </TouchableOpacity>
             </View>
           ))}
         </View>
@@ -96,13 +111,21 @@ const CatHouseScreen = ({navigation, route}) => {
         <View id="Toys" style={styles.imgContainer}>
           {toys.map((x, i) => (
             <View key={i} style={styles.imgItemWrap}>
-              <Image
-                source={Images.foods[x]}
-                style={{
-                  height: 110,
-                  width: 110,
-                }}
-                resizeMode="contain"></Image>
+              <TouchableOpacity 
+                key={i}
+                onPress={() => {
+                  console.log(`${x} ${i} Pressed`);
+                  setItem(x);
+                }}>
+                <Image
+                  id={x}
+                  source={Images.foods[x]}
+                  style={{
+                    height: 110,
+                    width: 110,
+                  }}
+                  resizeMode="contain"></Image>
+              </TouchableOpacity>
             </View>
           ))}
         </View>
@@ -122,6 +145,7 @@ const CatHouseScreen = ({navigation, route}) => {
           style={{
             borderTopStartRadius: 5,
             borderRadius: 2,
+            zIndex: 10,
           }}
           offset={[-10, 13]}>
           <TouchableOpacity
@@ -129,7 +153,7 @@ const CatHouseScreen = ({navigation, route}) => {
             onPress={() => {
               navigation.navigate('Store', {settings: settings});
             }}>
-            <Text style={{fontSize: 30}}>Store</Text>
+            <Text style={{fontSize: 30, color: "#ffffff"}}>Store</Text>
           </TouchableOpacity>
         </Shadow>
       </View>
@@ -140,27 +164,27 @@ const CatHouseScreen = ({navigation, route}) => {
           {showCat()}
         </View>
         <View id="item" style={{position: 'absolute', top: 200}}>
-          {showItem()}
+          {showItem(Item)}
         </View>
         <View id="controls" style={{flex: 0.8, flexDirection: 'row'}}>
           <TouchableOpacity style={[styles.controlBotton]} onPress={sleepClick}>
-            <Text style={{fontSize: 20}}>Sleep</Text>
+            <Text style={{fontSize: 20, color: "#ffffff"}}>Sleep</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.controlBotton]} onPress={waterClick}>
-            <Text style={{fontSize: 20}}>Water</Text>
+            <Text style={{fontSize: 20, color: "#ffffff"}}>Water</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.controlBotton]} onPress={foodClick}>
-            <Text style={{fontSize: 20}}>Foods</Text>
+            <Text style={{fontSize: 20, color: "#ffffff"}}>Foods</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.controlBotton]} onPress={toyClick}>
-            <Text style={{fontSize: 20}}>Toys</Text>
+            <Text style={{fontSize: 20, color: "#ffffff"}}>Toys</Text>
           </TouchableOpacity>
         </View>
         <View id="table" style={[styles.tableContainer]}>
           <ScrollView style={{height: 100}}>{showTable()}</ScrollView>
         </View>
       </View>
-      <View id="footer" style={[styles.footer]}>
+      {/* <View id="footer" style={[styles.footer]}>
         <Shadow
           distance={7}
           tartColor={'#E6E5DA40'}
@@ -187,14 +211,14 @@ const CatHouseScreen = ({navigation, route}) => {
             <Text style={{fontSize: 30}}>Home</Text>
           </TouchableOpacity>
         </Shadow>
-      </View>
+      </View> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   catsContainer: {
-    backgroundColor: '#FEFAE0',
+    backgroundColor: '#E9F7EB',
     width: '100%',
     height: '100%',
     flex: 1,
@@ -230,10 +254,9 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 25,
     paddingVertical: 7,
-    borderRadius: 15,
     alignSelf: 'flex-start',
     textAlign: 'center',
-    backgroundColor: '#CCD5AE',
+    backgroundColor: '#009E81',
   },
   headerButtonText: {
     fontSize: 20,
@@ -280,7 +303,7 @@ const styles = StyleSheet.create({
     margin: 5,
     alignSelf: 'flex-start',
     textAlign: 'center',
-    backgroundColor: '#CCD5AE',
+    backgroundColor: '#009E81',
     alignContent: 'center',
     alignItems: 'center',
   },

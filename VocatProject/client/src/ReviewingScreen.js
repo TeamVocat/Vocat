@@ -1,167 +1,223 @@
 import React, { useEffect, useState } from "react";
 import {
-    Image,
-    TouchableOpacity,
-    DeviceEventEmitter,
-    StyleSheet,
-    Button,
-    Text,
-    Alert,
-    useColorScheme,
-    View,
-    Pressable,
-    ScrollView
+  Image,
+  TouchableOpacity,
+  DeviceEventEmitter,
+  StyleSheet,
+  Button,
+  Text,
+  Alert,
+  useColorScheme,
+  View,
+  Pressable,
+  ScrollView
 } from "react-native";
-import axios from 'react-native-axios';
-import { REACT_APP_SERVER_HOSTNAME } from "@env";
-import { screens } from './functions/Words.js';
-import { getSettings, review, UserWordBank, learnNew, grab, store, retrieve, getStyle } from './Functions.js';
+import { getSettings, review, getStyle, generateAnswers, storeUserLocal, getUserLocal, addWordtoBank } from './Functions.js';
 
 const LearningScreen = ({ navigation, route }) => {
-    const [settings, setSettings] = useState({});
-    const [vocabWordsArr, setVocabWordsArr] = useState([1, 2, 3, 4]);
-    const [answersArr, setAnswersArr] = useState([1, 2, 3, 4]);
-    const [activeButton, setActiveButton] = useState(-1);
+  const [vocabWordsArr, setVocabWordsArr] = useState([1, 2, 3, 4]);
+  const [answersArr, setAnswersArr] = useState([1, 2, 3, 4]);
+  const [activeButton, setActiveButton] = useState(-1);
+  const [doneReviewing, setDoneReviewing] = useState(false);
+  const [settings, setSettings] = useState({ textSize: 20 })
 
-    async function fetchWordBank() {
-        try {
-            const newArray = await review();
-            setVocabWordsArr(newArray);
-            setAnswersArr(newArray[0].answers);
-        } catch (error) {
-            console.log(error);
+  async function fetchMessage() {
+    setDoneReviewing(false);
+    try {
+      const user = await getUserLocal();
+      if (user.reviewToday.length > 0) {
+        const newArray = user.reviewToday;
+        setVocabWordsArr(newArray);
+        setAnswersArr(newArray[0].answers);
+      }
+      else {
+        console.log("REVIEW() CALLED", user);
+        await review(user);
+        if (user.reviewToday.length > 0) { //first time here today
+          const newArray = user.reviewToday;
+          setVocabWordsArr(newArray);
+          setAnswersArr(newArray[0].answers);
         }
-    };
-    const fetchSettings = async () => {
-        try {
-            let temp_settings = await getSettings();
-            if (temp_settings) {
-                // console.log("new settings:", temp_settings);
-                setSettings(temp_settings);
-            }
-        } catch (error) {
-            console.log(error);
+        else { //done today
+          setDoneReviewing(true);
         }
+      }
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    useEffect(() => {
-        fetchWordBank();
-        fetchSettings();
-    }, []);
+  const fetchSettings = async () => {
+    console.log(`Fetching Settings from local storage...`);
+    try {
+      let temp_settings = await getSettings();
+      if (temp_settings) {
+        console.log('new settings:', temp_settings);
+        setSettings(temp_settings);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    return (
-        <View style={styles.homeContainer}>
-            <View id="center_content" style={styles.content}>
-                <ScrollView style={styles.scrollView}>
-                    <Text style={{ fontSize: settings.textSize }}>
-                        {vocabWordsArr[0].definition} {"\n"}
-                    </Text>
-                </ScrollView>
-                <Pressable
-                    style={[styles.choices, { backgroundColor: getStyle(0, activeButton, answersArr[0]) }]}
-                    onPress={() => { setActiveButton(0); }}>
-                    <Text style={styles.subtext}>
-                        A. {answersArr[0].word}
-                    </Text>
-                </Pressable>
-                <Pressable
-                    style={[styles.choices, { backgroundColor: getStyle(1, activeButton, answersArr[1]) }]}
-                    onPress={() => { setActiveButton(1); }}>
-                    <Text style={styles.subtext}>
-                        B. {answersArr[1].word}
-                    </Text>
-                </Pressable>
-                <Pressable
-                    style={[styles.choices, { backgroundColor: getStyle(2, activeButton, answersArr[2]) }]}
-                    onPress={() => { setActiveButton(2); }}>
-                    <Text style={styles.subtext}>
-                        C. {answersArr[2].word}
-                    </Text>
-                </Pressable>
-                <Pressable
-                    style={[styles.choices, { backgroundColor: getStyle(3, activeButton, answersArr[3]) }]}
-                    onPress={() => { setActiveButton(3); }}>
-                    <Text style={styles.subtext}>
-                        D. {answersArr[3].word}
-                    </Text>
-                </Pressable>
-            </View>
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchMessage();
+      fetchSettings();
+      // alert('Refreshed');
+    });
+    return unsubscribe;
+  }, [navigation]);
 
+  return (
+    <View style={styles.homeContainer}>
+      {doneReviewing == false &&
+        <View id="center_content" style={styles.content}>
+          <ScrollView style={styles.scrollView}>
+            <Text style={{ fontSize: settings.textSize }}>
+              {vocabWordsArr[0].definition} {"\n"}
+            </Text>
+          </ScrollView>
+          <Pressable
+            style={[styles.choices, { backgroundColor: getStyle(0, activeButton, answersArr[0]) }]}
+            onPress={() => { setActiveButton(0); }}>
+            <Text style={styles.subtext}>
+              A. {answersArr[0].word}
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.choices, { backgroundColor: getStyle(1, activeButton, answersArr[1]) }]}
+            onPress={() => { setActiveButton(1); }}>
+            <Text style={styles.subtext}>
+              B. {answersArr[1].word}
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.choices, { backgroundColor: getStyle(2, activeButton, answersArr[2]) }]}
+            onPress={() => { setActiveButton(2); }}>
+            <Text style={styles.subtext}>
+              C. {answersArr[2].word}
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.choices, { backgroundColor: getStyle(3, activeButton, answersArr[3]) }]}
+            onPress={() => { setActiveButton(3); }}>
+            <Text style={styles.subtext}>
+              D. {answersArr[3].word}
+            </Text>
+          </Pressable>
 
-            <TouchableOpacity style={styles.nextButton}
-                onPress={() => {
-                    if (activeButton < 4) {
-                        //check if correct
-                        if (answersArr[activeButton].correct) {
-
-                        }
-                        setActiveButton(activeButton + 4);
-                    }
-                    else if (vocabWordsArr.length > 1 && activeButton < 8) {
-                        setActiveButton(-1);
-                        let newArr = vocabWordsArr.slice(1);
-                        //console.log(newArr);
-                        setVocabWordsArr(newArr);
-                        setAnswersArr(newArr[0].answers);
-                    }
-                }}>
-                <Text style={styles.nextButtonText}>Next</Text>
-            </TouchableOpacity>
         </View>
-    );
+      }
+      {doneReviewing == true &&
+        <View style={styles.content}>
+          <Text style={{ fontSize: settings.textSize }}>
+            Congrats! You have finished reviewing!
+          </Text>
+        </View>
+      }
+
+      <TouchableOpacity style={styles.nextButton}
+        onPress={async () => {
+          if (!doneReviewing) {
+            if (activeButton < 4) {
+              setActiveButton(activeButton + 4);
+            }
+            else {
+              //update user
+              const user = await getUserLocal();
+              //check if correct
+              if (answersArr[activeButton - 4].correct) {
+                //correct, remove from review array
+                if (vocabWordsArr[0].cooldown != 3) {  //got right the first time we met it
+                  vocabWordsArr[0].cooldown = 14;
+                }
+                //put the word back in wordBank
+                addWordtoBank(vocabWordsArr[0], user);
+                //give coins to user
+                user.coinNum += 1;
+              }
+              else {
+                //got wrong, push to end of review array
+                vocabWordsArr[0].cooldown = 3;
+                vocabWordsArr[0].answers = await generateAnswers(vocabWordsArr[0].word);
+                vocabWordsArr.push(vocabWordsArr[0]);
+                setVocabWordsArr(vocabWordsArr);
+              }
+              //update page
+              if (vocabWordsArr.length > 1) {
+                setActiveButton(-1);
+                let newArr = vocabWordsArr.slice(1);
+                user.reviewToday = newArr;
+                setVocabWordsArr(newArr);
+                setAnswersArr(newArr[0].answers);
+              }
+              else {
+                user.reviewToday = [];
+                setDoneReviewing(true);
+              }
+              console.log(user, user.reviewToday);
+              await storeUserLocal(user);
+            }
+          }
+        }}>
+        <Text style={styles.nextButtonText}>Next</Text>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    homeContainer: {
-        width: '100%',
-        height: '80%',
-        flex: 1,
-        alignItems: 'center'
+  homeContainer: {
+    width: '100%',
+    height: '80%',
+    flex: 1,
+    alignItems: 'center'
+  },
+  nextButtonText: {
+    color: '#ffffff',
+    fontSize: 30,
+    fontWeight: "400",
+    textAlign: 'center',
+  },
+  nextButton: {
+    backgroundColor: '#009e81',
+    width: '50%',
+    position: 'absolute',
+    bottom: '10%',
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
-    nextButtonText: {
-        color: '#ffffff',
-        fontSize: 30,
-        fontWeight: "400",
-        textAlign: 'center',
-    },
-    nextButton: {
-        backgroundColor: '#009e81',
-        width: '50%',
-        position: 'absolute',
-        bottom: '10%',
-        padding: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-    },
-    subtext: {
-        fontSize: 20,
-        textAlign: 'center',
-    },
-    content: {
-        position: 'absolute',
-        top: '10%',
-        bottom: '30%',
-        alignContent: 'center',
-        alignItems: 'center'
-    },
-    choices: {
-        borderWidth: 2,
-        borderColor: '#CCCCCC',
-        borderRadius: 10,
-        paddingLeft: 5,
-        paddingRight: 5,
-        margin: 10,
-        width: '50%',
-    },
-    scrollView: {
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  subtext: {
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  content: {
+    position: 'absolute',
+    top: '10%',
+    bottom: '30%',
+    alignContent: 'center',
+    alignItems: 'center'
+  },
+  choices: {
+    borderWidth: 2,
+    borderColor: '#CCCCCC',
+    borderRadius: 10,
+    paddingLeft: 5,
+    paddingRight: 5,
+    margin: 10,
+    width: '50%',
+  },
+  scrollView: {
 
-    }
+  }
 });
 
 export default LearningScreen;

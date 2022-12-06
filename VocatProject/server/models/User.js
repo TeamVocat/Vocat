@@ -24,13 +24,32 @@ const userSchema = new Schema({
         required: false,
     },
     wordBank: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "VocabWord",
-        required: false,
+        type: [{
+            word: String,
+            definition: String,
+            part_of_speech: String,
+            example: String
+        }],
+        required: true,
+        default: [{
+            word: "null",
+            definition: "null",
+            part_of_speech: "null",
+            example: "null",
+        }]
+    },
+    wordBankProgress: {
+        type: Number,
+        required: true,
+        default: 0,
     },
     lastLogInDate: {
-        type: String,
-        required: false,
+        type: [{
+            dateString: String,
+            numWords: Number
+        }],
+        required: true,
+        default: []
     },
     studiedWordsNum: {
         type: Number,
@@ -55,7 +74,21 @@ const userSchema = new Schema({
         type: Number,
         required: true,
         default: 5,
-    }
+    },
+    wordsToday: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "VocabWord",
+        default: null,
+    },
+    reviewToday: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "VocabWord",
+        default: [],
+    },
+    doneLearningToday: {
+        type: Boolean,
+        default: false,
+    },
 })
 
 // create mongoose Model
