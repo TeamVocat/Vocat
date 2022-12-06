@@ -12,7 +12,7 @@ import {
   Pressable,
   ScrollView
 } from "react-native";
-import { review, getStyle, generateAnswers, storeUserLocal, getUserLocal, addWordtoBank } from './Functions.js';
+import { getSettings, review, getStyle, generateAnswers, storeUserLocal, getUserLocal, addWordtoBank } from './Functions.js';
 
 const LearningScreen = ({ navigation, route }) => {
   const [vocabWordsArr, setVocabWordsArr] = useState([1, 2, 3, 4]);
@@ -20,12 +20,12 @@ const LearningScreen = ({ navigation, route }) => {
   const [activeButton, setActiveButton] = useState(-1);
   const [doneReviewing, setDoneReviewing] = useState(false);
   const [settings, setSettings] = useState({ textSize: 20 })
+  const [user, setUser] = useState({})
 
   useEffect(() => {
     async function fetchMessage() {
       setDoneReviewing(false);
       try {
-        const user = await getUserLocal();
         if (user.reviewToday.length > 0) {
           const newArray = user.reviewToday;
           setVocabWordsArr(newArray);
@@ -47,8 +47,7 @@ const LearningScreen = ({ navigation, route }) => {
       }
     };
 
-
-    const fetchSettings = async () => {
+    const fetchSettingsUser = async () => {
       console.log(`Fetching Settings from local storage...`);
       try {
         let temp_settings = await getSettings();
@@ -56,12 +55,18 @@ const LearningScreen = ({ navigation, route }) => {
           console.log('new settings:', temp_settings);
           setSettings(temp_settings);
         }
+        let temp_user = await getUserLocal();
+        if (temp_user) {
+          console.log('new user:', temp_user);
+          setUser(temp_user);
+        }
       } catch (error) {
         console.log(error);
       }
     };
-    fetchMessage();
-    fetchSettings();
+    fetchSettingsUser().then(() => {
+      fetchMessage();
+    });
   }, []);
 
   return (
@@ -119,8 +124,6 @@ const LearningScreen = ({ navigation, route }) => {
               setActiveButton(activeButton + 4);
             }
             else {
-              //update user
-              const user = await getUserLocal();
               //check if correct
               if (answersArr[activeButton - 4].correct) {
                 //correct, remove from review array
@@ -151,7 +154,7 @@ const LearningScreen = ({ navigation, route }) => {
                 user.reviewToday = [];
                 setDoneReviewing(true);
               }
-              console.log(user.reviewToday);
+              console.log(user, user.reviewToday);
               await storeUserLocal(user);
             }
           }

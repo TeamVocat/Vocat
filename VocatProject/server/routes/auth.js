@@ -67,12 +67,15 @@ router.get("/getDate", async (req, res) => {
     // console.log(req.body);
     try {
         const dateObj = new Date();
-        const year = dateObj.getFullYear();
+        // const year = dateObj.getFullYear();
         const month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
         const date = ("0" + dateObj.getDate()).slice(-2);
 
         res.json({
-            currentDate: month + "/" + date + "/" + year,
+            obj: {
+                date: month + "/" + date,
+                numWords: 0,
+            }
         });
     } catch (err) {
         console.log(err);

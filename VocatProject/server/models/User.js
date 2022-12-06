@@ -40,13 +40,16 @@ const userSchema = new Schema({
     },
     wordBankProgress: {
         type: Number,
-        required: false,
+        required: true,
         default: 0,
     },
     lastLogInDate: {
-        type: [String],
-        required: false,
-        default: [],
+        type: [{
+            dateString: String,
+            numWords: Number
+        }],
+        required: true,
+        default: []
     },
     studiedWordsNum: {
         type: Number,

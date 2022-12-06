@@ -45,7 +45,7 @@ const HomeScreen = props => {
       }
       let temp_user = await getUserLocal();
       if (temp_user) {
-        console.log('new user:', temp_user);
+        console.log('new user:', temp_user, temp_user.lastLogInDate.date);
         setUser(temp_user);
       }
     } catch (error) {

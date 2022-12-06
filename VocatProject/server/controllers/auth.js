@@ -91,10 +91,12 @@ export const signin = async (req, res) => {
         });
         user.password = undefined;
         user.secret = undefined;
-        user.lastLogInDate = date;
         return res.json({
             token,
-            user,
+            user: {
+                ...user,
+                lastLogInDate: user.lastLogInDate.concat(date),
+            },
         });
     } catch (err) {
         console.log(err);
@@ -115,7 +117,7 @@ export const updateUser = async (req, res) => {
         if (existingUser) {
             await User.updateOne({ _id: user._id }, user);
             return res.json({
-                success: "User last login date updated.",
+                success: "User updated in database.",
             });
         } else {
             return res.json({
