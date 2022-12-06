@@ -94,7 +94,7 @@ export const signin = async (req, res) => {
         return res.json({
             token,
             user: {
-                ...user,
+                ...user._doc,
                 lastLogInDate: user.lastLogInDate.concat(date),
             },
         });

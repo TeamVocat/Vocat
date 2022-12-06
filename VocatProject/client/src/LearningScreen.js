@@ -19,14 +19,19 @@ const LearningScreen = ({ navigation, route }) => {
   const [settings, setSettings] = useState({ textSize: 20 });
   const [vocabWordsArr, setVocabWordsArr] = useState([{ word: 'null', definition: 'lalal', part_of_speech: 'foo', example: 'bar' }]);
   const [doneLearning, setDoneLearning] = useState(false);
-  const [user, setUser] = useState({});
+  // const [user, setUser] = useState({ lastLogInDate: [] });
+  let user;
   //const learnedArr;
-
   useEffect(() => {
-    console.log(user.lastLogInDate, user);
     async function fetchMessage() {
       try {
         let newArray;
+        user = await getUserLocal();
+        // //several lines to clear wordbanks for testing
+        // user.wordsToday = await learnNew();
+        // user.wordBank = [];
+        // user.wordBankProgress = 0;
+        // user.reviewToday = [];
 
         //log progress
         const date = new Date();
@@ -63,27 +68,7 @@ const LearningScreen = ({ navigation, route }) => {
         console.log(error);
       }
     };
-
-    const fetchSettingsUser = async () => {
-      console.log(`Fetching Settings from local storage...`);
-      try {
-        let temp_settings = await getSettings();
-        if (temp_settings) {
-          console.log('new settings:', temp_settings);
-          setSettings(temp_settings);
-        }
-        let temp_user = await getUserLocal();
-        if (temp_user) {
-          console.log('new user:', temp_user);
-          setUser(temp_user);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchSettingsUser().then(() => {
-      fetchMessage();
-    });
+    fetchMessage();
   }, []);
   return (
     <View style={styles.homeContainer}>
@@ -109,6 +94,7 @@ const LearningScreen = ({ navigation, route }) => {
           if (!doneLearning) {
             //update user.wordsToday, progress number
             if (vocabWordsArr.length > 1) {
+              user = await getUserLocal();
               user.wordBankProgress++;
               user.coinNum += 5;
               await addWordtoBank(vocabWordsArr[0], user);
@@ -118,6 +104,7 @@ const LearningScreen = ({ navigation, route }) => {
               await storeUserLocal(user);
             }
             else {
+              user = await getUserLocal();
               //show done page
               setDoneLearning(true);
               user.wordBankProgress++;
