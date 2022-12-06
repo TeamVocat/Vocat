@@ -17,10 +17,34 @@ import {Images} from '../assets/';
 import {Shadow} from 'react-native-shadow-2';
 
 const StoreScreen = ({navigation, route}) => {
+  const [user, setUser] = useState({});
+
+  const fetchSettingsUser = async () => {
+    console.log(
+        `Fetching Settings and User from local storage...`,
+    );
+    try {
+        let temp_settings = await getSettings();
+        if (temp_settings) {
+            // console.log("new settings:", temp_settings);
+            setSettings(temp_settings);
+            setFinalSize(temp_settings.textSize);
+        }
+        let temp_user = await getUserLocal();
+        if (temp_user) {
+            // console.log("new user:", temp_user);
+            setUser(temp_user);
+        };
+    } catch (error) {
+        console.log(error);
+    }
+};
   const [settings, setSettings] = useState({textSize: 30});
+  const [coins, Setcoins] = useState(user.coinNum);
   const foods = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
   const toys = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
-  const coins = 1150;
+
+  const buyItem = () => Setcoins(user.coinNum - 20);
 
   return (
     <View style={styles.storeContainer}>
@@ -41,7 +65,7 @@ const StoreScreen = ({navigation, route}) => {
               width: 55,
             }}
             resizeMode="contain"></Image>
-          <Text style={{fontSize: 30, margin: 5}}>{coins}</Text>
+          <Text style={{fontSize: 30, margin: 5}}>{user.coinNum}</Text>
         </View>
       </View>
       <View id="contents" style={styles.contents}>
@@ -52,13 +76,14 @@ const StoreScreen = ({navigation, route}) => {
           <View id="Foods" style={styles.imgContainer}>
             {foods.map((x, i) => (
               <View key={i} style={styles.imgItemWrap}>
+                <TouchableOpacity onPress={buyItem}>
                 <Image
                   source={Images.foods[x]}
                   style={{
                     height: 110,
                     width: 110,
                   }}
-                  resizeMode="contain"></Image>
+                  resizeMode="contain"></Image></TouchableOpacity>
                 <Text style={styles.text}>{Images.foodtitles[x]}</Text>
               </View>
             ))}
@@ -69,13 +94,14 @@ const StoreScreen = ({navigation, route}) => {
           <View id="Toys" style={styles.imgContainer}>
             {toys.map((x, i) => (
               <View key={i} style={styles.imgItemWrap}>
+                <TouchableOpacity onPress={buyItem}>
                 <Image
                   source={Images.foods[x]}
                   style={{
                     height: 110,
                     width: 110,
                   }}
-                  resizeMode="contain"></Image>
+                  resizeMode="contain"></Image></TouchableOpacity>
                 <Text style={styles.text}>{Images.foodtitles[x]}</Text>
               </View>
             ))}
