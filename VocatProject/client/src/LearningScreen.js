@@ -156,6 +156,7 @@ const LearningScreen = ({ props, navigation, route }) => {
               user = await getUserLocal();
               user.wordBankProgress++;
               user.coinNum += 5;
+              setUser(user);
               await addWordtoBank(vocabWordsArr[0], user);
               let newArr = vocabWordsArr.slice(1);
               user.wordsToday = newArr;
@@ -170,6 +171,7 @@ const LearningScreen = ({ props, navigation, route }) => {
               user.wordsToday = [];
               user.doneLearningToday = true;
               user.coinNum += 5;
+              setUser(user);
               await addWordtoBank(vocabWordsArr[0], user);
               await storeUserLocal(user);
             }
