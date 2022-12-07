@@ -33,7 +33,7 @@ const LearningScreen = ({ props, navigation, route }) => {
       // user.wordBank = [];
       // user.wordBankProgress = 0;
       // user.reviewToday = [];
-
+      console.log("WORDS TODAY: " + user.wordsToday);
       //log progress
       const date = new Date();
       const progress = new Progress(date, user.wordBankProgress + user.wordsToday);

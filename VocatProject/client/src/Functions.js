@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 async function review(user) {
   //get words that finished
   user.reviewToday = [];
-  if (user.wordBank.length > 0){
+  if (user.wordBank.length > 0) {
     while (user.wordBank[0].cooldown <= 0) {
       console.log(`should review ${user.wordBank[0].word}, whose cd is ${user.wordBank[0].cooldown}`);
       const newWord = user.wordBank[0];
@@ -53,8 +53,8 @@ function getStyle(button, state, answer) {
 async function learnNew() {  //from db into user wordbank
   const user = await getUserLocal();
   const newWords = [];
-  for (let i = 0; i < user.wordsPerDay; i++){
-    const result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`, { params: { id: user._id, progress: /*user.wordBankProgress*/i } });
+  for (let i = 0; i < user.wordsPerDay; i++) {
+    const result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`, { id: "learning", wordBank: user.wordBank, progress: /*user.wordBankProgress*/i });
     const newWord = new UserWord(result.data.word.word, result.data.word.definition, result.data.word.part_of_speech, result.data.word.example);
     newWords.push(newWord);
   }
@@ -90,8 +90,8 @@ class UserWord {
   }
 }
 
-class Progress{
-  constructor(date, numWords){
+class Progress {
+  constructor(date, numWords) {
     const month = ("0" + (date.getMonth() + 1)).slice(-2);
     const dateNum = ("0" + date.getDate()).slice(-2);
     this.dateString = `${month}/${dateNum}`;
@@ -101,18 +101,18 @@ class Progress{
 }
 
 
-function compare(dateString, date){
+function compare(dateString, date) {
   const month = ("0" + (date.getMonth() + 1)).slice(-2);
   const dateNum = ("0" + date.getDate()).slice(-2);
   return (dateString == `${month}/${dateNum}`);
 }
 
-async function addWordtoBank(word,user) {
-  if (!user.wordBank[0]){
+async function addWordtoBank(word, user) {
+  if (!user.wordBank[0]) {
     console.log('initializing wordBank');
     user.wordBank = [word];
   }
-  else{
+  else {
     let bank = user.wordBank;
     for (let j = 0; j < bank.length; j++) {
       if (bank[j].cooldown > word.cooldown) {
@@ -126,7 +126,7 @@ async function addWordtoBank(word,user) {
   console.log(`added ${word.word} to bank`);
 }
 
-async function updateWordsPerDay(newNumber){
+async function updateWordsPerDay(newNumber) {
   const user = await getUserLocal();
   user.wordsPerDay = newNumber;
   await storeUserLocal(user);
