@@ -67,7 +67,7 @@ const LogInScreen = ({ navigation, route }) => {
         alert(statusJSON.data.error);
       } else {
         await storeUserLocal(statusJSON.data.user);
-        navigation.navigate('Welcome');
+        navigation.navigate('MainApp');
         alert("Signin Successful!");
       }
     } catch (error) {
