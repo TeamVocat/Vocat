@@ -7,9 +7,9 @@
  */
 
 import React from 'react';
-import type {Node} from 'react';
-import {View, Text, useColorScheme} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import type { Node } from 'react';
+import { View, Text, useColorScheme } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import {
   Sofa,
   Book,
@@ -18,8 +18,8 @@ import {
   ProfileCircled,
 } from 'iconoir-react-native';
 
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -44,7 +44,7 @@ import UserScreen from './src/UserScreen';
 
 function Home() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName='LogIn'>
       <Stack.Screen name="Welcome" component={HomeScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="LogIn" component={LogInScreen} />
@@ -66,7 +66,7 @@ function User() {
 
 function Cat() {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="CatHouse" component={CatHouseScreen} />
       <Stack.Screen name="Store" component={StoreScreen} />
     </Stack.Navigator>
@@ -107,7 +107,7 @@ const App: () => Node = () => {
           name="Home"
           component={Home}
           options={{
-            tabBarIcon: ({focused}) => (
+            tabBarIcon: ({ focused }) => (
               <View
                 style={{
                   alignItems: 'center',
@@ -140,7 +140,7 @@ const App: () => Node = () => {
           name="Learning"
           component={LearningScreen}
           options={{
-            tabBarIcon: ({focused}) => (
+            tabBarIcon: ({ focused }) => (
               <View
                 style={{
                   alignItems: 'center',
@@ -172,7 +172,7 @@ const App: () => Node = () => {
           name="Reviewing"
           component={Reviewing}
           options={{
-            tabBarIcon: ({focused}) => (
+            tabBarIcon: ({ focused }) => (
               <View
                 style={{
                   alignItems: 'center',
@@ -205,7 +205,7 @@ const App: () => Node = () => {
           name="My Cat"
           component={Cat}
           options={{
-            tabBarIcon: ({focused}) => (
+            tabBarIcon: ({ focused }) => (
               <View
                 style={{
                   alignItems: 'center',
@@ -238,7 +238,7 @@ const App: () => Node = () => {
           name="User"
           component={UserScreen}
           options={{
-            tabBarIcon: ({focused}) => (
+            tabBarIcon: ({ focused }) => (
               <View
                 style={{
                   alignItems: 'center',

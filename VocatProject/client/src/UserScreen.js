@@ -426,7 +426,8 @@ const UserScreen = ({ navigation, route }) => {
                   { backgroundColor: '#D9D9D9', margin: 10 },
                 ]}
                 onPress={() => {
-                  navigation.navigate('Home');
+                  clearUserLocal();
+                  navigation.navigate('LogIn');
                 }}>
                 <Text style={{ fontSize: 23 }}>Sign Out</Text>
               </TouchableOpacity>
