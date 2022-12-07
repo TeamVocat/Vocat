@@ -62,13 +62,13 @@ const LogInScreen = ({ navigation, route }) => {
         statusJSON = await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/signin`,
           { email: userText, password: passText, date })
       });
-      console.log("Lastlogindate: ", statusJSON.data.user);
+      // console.log("Lastlogindate: ", statusJSON.data.user);
       if (statusJSON.data.error) {
         alert(statusJSON.data.error);
       } else {
         await storeUserLocal(statusJSON.data.user);
+        navigation.navigate('MainApp');
         alert("Signin Successful!");
-        navigation.navigate('Home');
       }
     } catch (error) {
       alert(error);
@@ -83,9 +83,22 @@ const LogInScreen = ({ navigation, route }) => {
     } catch (error) {
       alert(error);
     }
-  }
+  };
+
+  const fetchUser = async () => {
+    console.log(`Fetching Settings and User from local storage...`);
+    try {
+      let temp_user = await getUserLocal();
+      if (temp_user) {
+        navigation.navigate('MainApp');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
+    fetchUser();
     const show1 = Keyboard.addListener('keyboardWillShow', event => {
       //setTextLocHeight(-20);
     });
@@ -120,7 +133,7 @@ const LogInScreen = ({ navigation, route }) => {
       hide1.remove();
       hide2.remove();
     };
-  }, []);
+  }, [navigation]);
 
   return (
     <View style={styles.logInContainer}>

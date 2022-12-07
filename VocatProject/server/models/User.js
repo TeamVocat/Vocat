@@ -76,13 +76,21 @@ const userSchema = new Schema({
         default: 5,
     },
     wordsToday: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "VocabWord",
-        default: null,
+        type: [{
+            word: String,
+            definition: String,
+            part_of_speech: String,
+            example: String
+        }],
+        default: [],
     },
     reviewToday: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "VocabWord",
+        type: [{
+            word: String,
+            definition: String,
+            part_of_speech: String,
+            example: String
+        }],
         default: [],
     },
     doneLearningToday: {
