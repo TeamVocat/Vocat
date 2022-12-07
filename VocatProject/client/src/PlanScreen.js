@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Slider from '@react-native-community/slider';
 import {
   TouchableOpacity,
@@ -11,13 +11,13 @@ import {
   View,
   TextInput,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 
-const PlanScreen = ({props, navigation, route}) => {
+const PlanScreen = ({ props, navigation, route }) => {
   // const [finalSize, setFinalSize] = useState(route.params.settings.textSize);
   const [settings, setSettings] = useState({});
 
-  let data = [{value: 'book1'}];
+  let data = [{ value: 'book1' }];
   //let newWords = 20;
   //let reviewWords = 30;
   const [newWords, numNewWords] = React.useState('20');
@@ -47,12 +47,12 @@ const PlanScreen = ({props, navigation, route}) => {
         onPress={() => {
           navigation.navigate('Progress');
         }}>
-        <Text style={{fontSize: 30}}>Study Progress</Text>
+        <Text style={{ fontSize: 30 }}>Study Progress</Text>
       </TouchableOpacity>
       <Text style={styles.buttonLabel}>Current Book: </Text>
       <Picker
         selectedValue={selectedValue}
-        style={{height: 50, width: 150}}
+        // style={{height: 50, width: 150}}
         onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
         style={styles.picker}>
         <Picker.Item label="Book1" value="Book1" />
@@ -87,7 +87,7 @@ const PlanScreen = ({props, navigation, route}) => {
         onPress={() => {
           navigation.navigate('Home');
         }}>
-        <Text style={{fontSize: 30}}>Home</Text>
+        <Text style={{ fontSize: 30 }}>Home</Text>
       </TouchableOpacity>
     </View>
   );

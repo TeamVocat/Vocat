@@ -62,13 +62,13 @@ const LogInScreen = ({ navigation, route }) => {
         statusJSON = await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/signin`,
           { email: userText, password: passText, date })
       });
-      console.log("Lastlogindate: ", statusJSON.data.user);
+      // console.log("Lastlogindate: ", statusJSON.data.user);
       if (statusJSON.data.error) {
         alert(statusJSON.data.error);
       } else {
         await storeUserLocal(statusJSON.data.user);
+        navigation.navigate('Welcome');
         alert("Signin Successful!");
-        navigation.navigate('Home');
       }
     } catch (error) {
       alert(error);

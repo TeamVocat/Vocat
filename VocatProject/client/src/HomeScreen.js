@@ -14,11 +14,7 @@ import {
 import catPile from './../assets/cat_pile.png';
 import axios from 'react-native-axios';
 import { REACT_APP_SERVER_HOSTNAME } from '@env';
-import {
-  getSettings,
-  getUserLocal,
-  clearUserLocal,
-} from './Functions.js';
+import { getSettings, getUserLocal, clearUserLocal, } from './Functions.js';
 
 const HomeScreen = props => {
   // const isFocused = useIsFocused();
@@ -45,7 +41,7 @@ const HomeScreen = props => {
       }
       let temp_user = await getUserLocal();
       if (temp_user) {
-        console.log('new user:', temp_user);
+        // console.log('new user:', temp_user);
         setUser(temp_user);
       }
     } catch (error) {
@@ -82,7 +78,7 @@ const HomeScreen = props => {
             }}>
             <Text style={styles.headerButtonText}>Log In/Sign Up</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[
               styles.button,
               {
@@ -92,7 +88,7 @@ const HomeScreen = props => {
               },
             ]}>
             <Text style={styles.headerButtonText}>?</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={[
               styles.button,
@@ -108,7 +104,7 @@ const HomeScreen = props => {
           </TouchableOpacity>
         </View>
         <View id="center_content" style={[styles.content]}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.button]}
             onPress={() => {
               props.navigation.navigate('Signup');
@@ -139,7 +135,7 @@ const HomeScreen = props => {
               setUser({});
             }}>
             <Text style={styles.headerButtonText}>Signout</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Text style={[styles.message, { fontSize: settings.textSize }]}>
             {user.username
               ? message + ', ' + user.username + '!'
@@ -151,7 +147,7 @@ const HomeScreen = props => {
               width: 300,
               height: 300,
             }}></Image>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[
               styles.button,
               {
@@ -206,7 +202,7 @@ const HomeScreen = props => {
               props.navigation.navigate('CatHouse', { settings: settings });
             }}>
             <Text style={styles.buttonText}>My Cats</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </View>

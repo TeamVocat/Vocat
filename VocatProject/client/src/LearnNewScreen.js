@@ -42,7 +42,7 @@ const LearningScreen = ({ navigation, route }) => {
             },
           ]}
           onPress={() => {
-            navigation.navigate("Home", { settings: route.params.settings });
+            navigation.navigate("Welcome");
           }}
         >
           <Text style={{ fontSize: 30 }}>Home</Text>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   TouchableOpacity,
@@ -16,34 +16,29 @@ import {
   TextInput,
 } from 'react-native';
 import axios from 'react-native-axios';
-import {REACT_APP_SERVER_HOSTNAME} from '@env';
+import { REACT_APP_SERVER_HOSTNAME } from '@env';
 import {
   storeSettings,
   getSettings,
   getUserLocal,
   clearUserLocal,
 } from './Functions.js';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import {Images} from '../assets/';
-import {LineChart} from 'react-native-chart-kit';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { Images } from '../assets/';
+import { LineChart } from 'react-native-chart-kit';
 import SettingsScreen from './SettingsScreen';
 import SelectDropdown from 'react-native-select-dropdown';
 import Slider from '@react-native-community/slider';
-import {FontSize, Language} from 'iconoir-react-native';
+import { FontSize, Language } from 'iconoir-react-native';
 
-const UserScreen = ({navigation, route}) => {
+const UserScreen = ({ navigation, route }) => {
   const layout = useWindowDimensions();
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    {key: 'progress', title: 'Progress'},
-    {key: 'settings', title: 'Settings'},
+    { key: 'progress', title: 'Progress' },
+    { key: 'settings', title: 'Settings' },
   ]);
-
-  const [user, setUser] = useState({});
-  const [settings, setSettings] = useState({textSize: 30, wordList: 'English'});
-
-  const username = 'username';
 
   const [labels, setLabels] = useState([
     '11.1',
@@ -97,6 +92,37 @@ const UserScreen = ({navigation, route}) => {
   //     fetchSettingsUser();
   //   }, []);
 
+  const [finalSize, setFinalSize] = useState();
+  const [settings, setSettings] = useState({});
+  const [user, setUser] = useState({});
+
+  const fetchSettingsUser = async () => {
+    console.log(`Fetching Settings and User from local storage...`);
+    try {
+      let temp_settings = await getSettings();
+      if (temp_settings) {
+        // console.log("new settings:", temp_settings);
+        setSettings(temp_settings);
+        setFinalSize(temp_settings.textSize);
+      }
+      let temp_user = await getUserLocal();
+      if (temp_user) {
+        // console.log("new user:", temp_user);
+        setUser(temp_user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchSettingsUser();
+      // alert('Refreshed');
+    });
+    return unsubscribe;
+  }, []);
+
   const ProgressRoute = () => (
     <View
       style={{
@@ -110,14 +136,14 @@ const UserScreen = ({navigation, route}) => {
         width={layout.width * 0.9}
         height={200}
         chartConfig={chartConfig}
-        style={{margin: 10, left: -10}}
+        style={{ margin: 10, left: -10 }}
       />
 
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row' }}>
         <Text
           style={[
             styles.text,
-            {alignSelf: 'flex-start', left: '10%', margin: 5, top: 4},
+            { alignSelf: 'flex-start', left: '10%', margin: 5, top: 4 },
           ]}>
           Number of words to learn per day:
         </Text>
@@ -138,7 +164,7 @@ const UserScreen = ({navigation, route}) => {
       <Text
         style={[
           styles.text,
-          {alignSelf: 'flex-start', left: '10%', margin: 5, top: -4},
+          { alignSelf: 'flex-start', left: '10%', margin: 5, top: -4 },
         ]}>
         Number of words learned: {500}
       </Text>
@@ -146,7 +172,7 @@ const UserScreen = ({navigation, route}) => {
       <Text
         style={[
           styles.text,
-          {alignSelf: 'flex-start', left: '10%', margin: 5, top: -4},
+          { alignSelf: 'flex-start', left: '10%', margin: 5, top: -4 },
         ]}>
         Number of words to be learned: {300}
       </Text>
@@ -162,33 +188,26 @@ const UserScreen = ({navigation, route}) => {
         onPress={() => {
           if (wordNum == '') {
             Alert.alert('Invalid Input', 'Please enter a number', [
-              {text: 'OK', onPress: () => console.log('OK Pressed')},
+              { text: 'OK', onPress: () => console.log('OK Pressed') },
             ]);
           } else if (isNaN(wordNum)) {
             Alert.alert('Invalid Input', 'Please enter a valid number', [
-              {text: 'OK', onPress: () => console.log('OK Pressed')},
+              { text: 'OK', onPress: () => console.log('OK Pressed') },
             ]);
           } else if (wordNum < 0) {
             Alert.alert('Invalid Input', 'Please enter a valid number (>0)', [
-              {text: 'OK', onPress: () => console.log('OK Pressed')},
+              { text: 'OK', onPress: () => console.log('OK Pressed') },
             ]);
           } else {
             console.log(`saving...Your Word study plan is ${wordNum} per day.`);
           }
         }}>
-        <Text style={{color: 'white'}}>OK</Text>
+        <Text style={{ color: 'white' }}>OK</Text>
       </TouchableOpacity>
     </View>
   );
 
   const SettingsRoute = () => {
-    const [finalSize, setFinalSize] = useState();
-    const [settings, setSettings] = useState({});
-    const [user, setUser] = useState({});
-
-    useEffect(() => {
-      fetchSettingsUser();
-    }, []);
 
     const handleSync = async () => {
       setSettings({
@@ -196,49 +215,35 @@ const UserScreen = ({navigation, route}) => {
         textSize: finalSize,
       });
       try {
-        await storeSettings(settings);
+        await storeSettings({
+          ...settings,
+          textSize: finalSize,
+        });
       } catch (err) {
         console.log('Settings could not be stored locally', err);
       }
       try {
-        console.log(user);
-        await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/updateUser`, {user});
+        // console.log(user);
+        await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/updateUser`, { user });
         alert('Successfully Synced User to Database');
       } catch (err) {
         console.log('Could not update user', err);
       }
     };
 
-    const fetchSettings = async () => {
-      console.log(`Fetching Settings from local storage...`);
+    const handleSettings = async () => {
+      setSettings({
+        ...settings,
+        textSize: finalSize,
+      });
       try {
-        let temp_settings = await getSettings();
-        if (temp_settings) {
-          // console.log("new settings:", temp_settings);
-          setSettings(temp_settings);
-          setFinalSize(temp_settings.textSize);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchSettingsUser = async () => {
-      console.log(`Fetching Settings and User from local storage...`);
-      try {
-        let temp_settings = await getSettings();
-        if (temp_settings) {
-          // console.log("new settings:", temp_settings);
-          setSettings(temp_settings);
-          setFinalSize(temp_settings.textSize);
-        }
-        let temp_user = await getUserLocal();
-        if (temp_user) {
-          // console.log("new user:", temp_user);
-          setUser(temp_user);
-        }
-      } catch (error) {
-        console.log(error);
+        await storeSettings({
+          ...settings,
+          textSize: finalSize,
+        });
+        alert("Changed settings!");
+      } catch (err) {
+        console.log('Settings could not be stored locally', err);
       }
     };
 
@@ -261,7 +266,7 @@ const UserScreen = ({navigation, route}) => {
           alignItems: 'center',
           backgroundColor: 'white',
         }}>
-        <ScrollView style={{width: '100%', heigh: '100%'}}>
+        <ScrollView style={{ width: '100%', heigh: '100%' }}>
           <View
             style={{
               flex: 1,
@@ -287,7 +292,7 @@ const UserScreen = ({navigation, route}) => {
                   left: 15,
                   top: 20,
                 }}>
-                <Text style={{color: '#AAAAAA', fontSize: 14}}>
+                <Text style={{ color: '#AAAAAA', fontSize: 14 }}>
                   Personalize
                 </Text>
               </View>
@@ -305,15 +310,15 @@ const UserScreen = ({navigation, route}) => {
                   color="black"
                   height={25}
                   width={25}
-                  style={{marginHorizontal: 10, top: 2, left: 10}}
+                  style={{ marginHorizontal: 10, top: 2, left: 10 }}
                 />
-                <Text style={{fontSize: 20, color: 'black', left: 10}}>
+                <Text style={{ fontSize: 20, color: 'black', left: 10 }}>
                   Font Size
                 </Text>
                 <TouchableOpacity
-                  style={[styles.button, {left: 180}]}
-                  onPress={handleSync}>
-                  <Text style={{fontSize: 20}}>Done</Text>
+                  style={[styles.button, { left: 180 }]}
+                  onPress={handleSettings}>
+                  <Text style={{ fontSize: 20 }}>Done</Text>
                 </TouchableOpacity>
               </View>
               <Slider
@@ -346,7 +351,7 @@ const UserScreen = ({navigation, route}) => {
             </View>
             <View
               class={'language menu'}
-              style={{flex: 1, width: '100%', marginBottom: 20}}>
+              style={{ flex: 1, width: '100%', marginBottom: 20 }}>
               <View
                 style={{
                   width: '100%',
@@ -354,7 +359,7 @@ const UserScreen = ({navigation, route}) => {
                   left: 15,
                   top: 20,
                 }}>
-                <Text style={{color: '#AAAAAA', fontSize: 14}}>Learning</Text>
+                <Text style={{ color: '#AAAAAA', fontSize: 14 }}>Learning</Text>
               </View>
               <View
                 style={{
@@ -370,9 +375,9 @@ const UserScreen = ({navigation, route}) => {
                   color="black"
                   height={25}
                   width={25}
-                  style={{marginHorizontal: 10, top: 1, left: 10}}
+                  style={{ marginHorizontal: 10, top: 1, left: 10 }}
                 />
-                <Text style={{fontSize: 20, color: 'black', top: -1, left: 10}}>
+                <Text style={{ fontSize: 20, color: 'black', top: -1, left: 10 }}>
                   Language
                 </Text>
               </View>
@@ -407,22 +412,23 @@ const UserScreen = ({navigation, route}) => {
               <TouchableOpacity
                 style={[
                   styles.bigButton,
-                  {backgroundColor: '#2A9D8F', margin: 10},
+                  { backgroundColor: '#2A9D8F', margin: 10 },
                 ]}
-                onPress={() => {
-                  navigation.navigate('Home');
+                onPress={async () => {
+                  await handleSync();
+                  // navigation.navigate('Welcome');
                 }}>
-                <Text style={{fontSize: 23, color: 'white'}}>Sync</Text>
+                <Text style={{ fontSize: 23, color: 'white' }}>Sync</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[
                   styles.bigButton,
-                  {backgroundColor: '#D9D9D9', margin: 10},
+                  { backgroundColor: '#D9D9D9', margin: 10 },
                 ]}
                 onPress={() => {
                   navigation.navigate('Home');
                 }}>
-                <Text style={{fontSize: 23}}>Sign Out</Text>
+                <Text style={{ fontSize: 23 }}>Sign Out</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -439,8 +445,8 @@ const UserScreen = ({navigation, route}) => {
   const renderTabBar = props => (
     <TabBar
       {...props}
-      renderLabel={({route, focused, color}) => (
-        <Text style={{color: '#2A9D8F', fontSize: 16, margin: 4}}>
+      renderLabel={({ route, focused, color }) => (
+        <Text style={{ color: '#2A9D8F', fontSize: 16, margin: 4 }}>
           {route.title}
         </Text>
       )}
@@ -451,12 +457,12 @@ const UserScreen = ({navigation, route}) => {
         backgroundColor: '#2A9D8F',
         height: 2,
       }}
-      indicatorContainerStyle={{width: '50%', left: '13%', right: '13%'}}
+      indicatorContainerStyle={{ width: '50%', left: '13%', right: '13%' }}
     />
   );
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           flex: 0.4,
@@ -474,13 +480,13 @@ const UserScreen = ({navigation, route}) => {
           }}
           resizeMode="contain"
         />
-        <Text style={{fontSize: 25, color: '#EFEFEF'}}>{username}</Text>
+        <Text style={{ fontSize: 25, color: '#EFEFEF' }}>{user.username}</Text>
       </View>
       <TabView
-        navigationState={{index, routes}}
+        navigationState={{ index, routes }}
         renderScene={renderScene}
         onIndexChange={setIndex}
-        initialLayout={{width: layout.width}}
+        initialLayout={{ width: layout.width }}
         renderTabBar={renderTabBar}
       />
     </View>
