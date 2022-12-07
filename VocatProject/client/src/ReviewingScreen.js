@@ -10,7 +10,8 @@ import {
   useColorScheme,
   View,
   Pressable,
-  ScrollView
+  ScrollView,
+  Header
 } from "react-native";
 import { getSettings, review, getStyle, generateAnswers, storeUserLocal, getUserLocal, addWordtoBank } from './Functions.js';
 
@@ -31,7 +32,6 @@ const LearningScreen = ({ navigation, route }) => {
         setAnswersArr(newArray[0].answers);
       }
       else {
-        console.log("REVIEW() CALLED", user);
         await review(user);
         if (user.reviewToday.length > 0) { //first time here today
           const newArray = user.reviewToday;
@@ -71,11 +71,16 @@ const LearningScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.homeContainer}>
+    <View id="center_content" style={styles.header}>
+      <Text style={styles.headerTitle}>
+        Reviewing
+      </Text>
+    </View>
       {doneReviewing == false &&
         <View id="center_content" style={styles.content}>
-          <ScrollView style={styles.scrollView}>
-            <Text style={{ fontSize: settings.textSize }}>
-              {vocabWordsArr[0].definition} {"\n"}
+          <ScrollView style={[]}>
+            <Text style={{fontSize: settings.textSize}}>
+              {vocabWordsArr[0].definition}
             </Text>
           </ScrollView>
           <Pressable
@@ -111,7 +116,7 @@ const LearningScreen = ({ navigation, route }) => {
       }
       {doneReviewing == true &&
         <View style={styles.content}>
-          <Text style={{ fontSize: settings.textSize }}>
+          <Text style={[{ fontSize: settings.textSize },{top: '30%'}]}>
             Congrats! You have finished reviewing!
           </Text>
         </View>
@@ -168,6 +173,12 @@ const LearningScreen = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
+  Word:  {
+    textAlign: 'center',
+    bottom: 0,
+    borderBottomColor: '#95C3BE',
+    borderBottomWidth:  10,
+  },
   homeContainer: {
     width: '100%',
     height: '80%',
@@ -201,22 +212,38 @@ const styles = StyleSheet.create({
   },
   content: {
     position: 'absolute',
+    width: '100%',
     top: '10%',
     bottom: '30%',
     alignContent: 'center',
     alignItems: 'center'
   },
   choices: {
-    borderWidth: 2,
-    borderColor: '#CCCCCC',
     borderRadius: 10,
-    paddingLeft: 5,
-    paddingRight: 5,
+    padding: 5,
     margin: 10,
-    width: '50%',
+    width: '60%',
+    shadowColor: "#000",
+    shadowOffset: {
+    	width: 0,
+    	height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   scrollView: {
-
+  },
+  header: {
+    position: 'absolute',
+    width: '100%',
+    height: '10%',
+    alignContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2A9D8F'
+  },
+  headerTitle: {
+    fontSize: 40,
   }
 });
 
