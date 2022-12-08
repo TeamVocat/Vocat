@@ -31,12 +31,7 @@ const userSchema = new Schema({
             example: String
         }],
         required: true,
-        default: [{
-            word: "null",
-            definition: "null",
-            part_of_speech: "null",
-            example: "null",
-        }]
+        default: []
     },
     wordBankProgress: {
         type: Number,
@@ -76,13 +71,21 @@ const userSchema = new Schema({
         default: 5,
     },
     wordsToday: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "VocabWord",
-        default: null,
+        type: [{
+            word: String,
+            definition: String,
+            part_of_speech: String,
+            example: String
+        }],
+        default: [],
     },
     reviewToday: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "VocabWord",
+        type: [{
+            word: String,
+            definition: String,
+            part_of_speech: String,
+            example: String
+        }],
         default: [],
     },
     doneLearningToday: {

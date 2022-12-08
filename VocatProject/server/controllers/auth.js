@@ -105,7 +105,7 @@ export const signin = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-    console.log("Signup Hit");
+    console.log("Updating User");
     try {
         const { user } = req.body;
         if (!user._id) {

@@ -33,22 +33,6 @@ const SettingsScreen = ({ navigation }) => {
         }
     };
 
-    const fetchSettings = async () => {
-        console.log(
-            `Fetching Settings from local storage...`,
-        );
-        try {
-            let temp_settings = await getSettings();
-            if (temp_settings) {
-                // console.log("new settings:", temp_settings);
-                setSettings(temp_settings);
-                setFinalSize(temp_settings.textSize);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
     const fetchSettingsUser = async () => {
         console.log(
             `Fetching Settings and User from local storage...`,

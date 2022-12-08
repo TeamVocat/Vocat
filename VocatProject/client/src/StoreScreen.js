@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Slider from '@react-native-community/slider';
 import {
   Image,
@@ -12,51 +12,79 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import {Row, Rows, Table, TableWrapper} from 'react-native-table-component';
-import {Images} from '../assets/';
-import {Shadow} from 'react-native-shadow-2';
+import { Row, Rows, Table, TableWrapper } from 'react-native-table-component';
+import { Images } from '../assets/';
+import { Shadow } from 'react-native-shadow-2';
 import { getSettings, getUserLocal, storeUserLocal } from './Functions.js';
 
-const StoreScreen = ({navigation, route}) => {
+const StoreScreen = ({ navigation, route }) => {
   const [user, setUser] = useState({});
+  const [coins, setCoins] = useState(user.coinNum);
+  const foods = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
+  const toys = ['toy1', 'toy2', 'toy3', 'toy4', 'toy5', 'toy6'];
 
-  const fetchSettingsUser = async () => {
-    console.log(`Fetching Settings and User from local storage...`);
+  const fetchUser = async () => {
+    console.log(`Fetching User from local storage...`);
     try {
-      let temp_settings = await getSettings();
-      if (temp_settings) {
-        // console.log("new settings:", temp_settings);
-        setSettings(temp_settings);
-        setFinalSize(temp_settings.textSize);
-      }
       let temp_user = await getUserLocal();
       if (temp_user) {
         // console.log("new user:", temp_user);
         setUser(temp_user);
+        setCoins(temp_user.coinNum);
       }
     } catch (error) {
       console.log(error);
     }
   };
-  const [settings, setSettings] = useState({textSize: 30});
-  const [coins, Setcoins] = useState(user.coinNum);
-  const foods = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
-  const toys = ['toy1', 'toy2', 'toy3', 'toy4', 'toy5', 'toy6'];
 
-  const buyItem = () => Setcoins(user.coinNum - 20);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchUser();
+      // alert('Refreshed');
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  const buyItem = (item, index) => {
+    if (coins > 20) {
+      console.log("Buying " + item + " " + index);
+      let temp_arr;
+      if (item === 'food') {
+        temp_arr = user.foods;
+        temp_arr[index]++;
+        storeUserLocal({
+          ...user,
+          foods: temp_arr
+        });
+      } else {
+        temp_arr = user.toys;
+        temp_arr[index]++;
+        storeUserLocal({
+          ...user,
+          toys: temp_arr
+        });
+      }
+      let newCoins = coins - 20;
+      storeUserLocal({
+        ...user,
+        coinNum: newCoins
+      });
+      setCoins(newCoins);
+    }
+  }
 
   return (
     <View style={styles.storeContainer}>
       <View id="header" style={styles.header}>
         <TouchableOpacity
-          style={[styles.button, {left: -25, top: -10, margin: 10}]}
+          style={[styles.button, { left: -25, top: -10, margin: 10 }]}
           onPress={() => {
-            navigation.navigate('CatHouse', {settings: settings});
+            navigation.navigate('CatHouse');
           }}>
-          <Text style={{fontSize: 30}}>{'👈Back'}</Text>
+          <Text style={{ fontSize: 30 }}>{'👈Back'}</Text>
         </TouchableOpacity>
 
-        <View id="coins" style={[styles.coinsContainer, {left: 60, top: 5}]}>
+        <View id="coins" style={[styles.coinsContainer, { left: 60, top: 5 }]}>
           <Image
             source={Images.general.catcoin}
             style={{
@@ -64,18 +92,20 @@ const StoreScreen = ({navigation, route}) => {
               width: 55,
             }}
             resizeMode="contain"></Image>
-          <Text style={{fontSize: 30, margin: 5}}>{user.coinNum}</Text>
+          <Text style={{ fontSize: 30, margin: 5 }}>{coins}</Text>
         </View>
       </View>
       <View id="contents" style={styles.contents}>
-        <ScrollView style={{height: 100}}>
+        <ScrollView style={{ height: 100 }}>
           <View id="Foodtitle">
             <Text style={styles.titleText}>Foods</Text>
           </View>
           <View id="Foods" style={styles.imgContainer}>
             {foods.map((x, i) => (
               <View key={i} style={styles.imgItemWrap}>
-                <TouchableOpacity onPress={buyItem}>
+                <TouchableOpacity onPress={() => {
+                  buyItem('food', i);
+                }}>
                   <Image
                     source={Images.foods[x]}
                     style={{
@@ -94,7 +124,9 @@ const StoreScreen = ({navigation, route}) => {
           <View id="Toys" style={styles.imgContainer}>
             {toys.map((x, i) => (
               <View key={i} style={styles.imgItemWrap}>
-                <TouchableOpacity onPress={buyItem}>
+                <TouchableOpacity onPress={() => {
+                  buyItem('toy', i);
+                }}>
                   <Image
                     source={Images.toys[x]}
                     style={{
@@ -115,7 +147,7 @@ const StoreScreen = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
   storeContainer: {
-    backgroundColor: '#FEFAE0',
+    backgroundColor: '#2A9D8F',
     width: '100%',
     height: '100%',
     flex: 1,
@@ -126,7 +158,7 @@ const styles = StyleSheet.create({
   header: {
     width: '90%',
     marginTop: 10,
-    backgroundColor: '#FEFAE0',
+    backgroundColor: '#2A9D8F',
     flexDirection: 'row',
     flex: 1,
     justifyContent: 'flex-start',

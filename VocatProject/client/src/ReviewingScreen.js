@@ -26,6 +26,7 @@ const LearningScreen = ({ navigation, route }) => {
     setDoneReviewing(false);
     try {
       const user = await getUserLocal();
+      console.log(user);
       if (user.reviewToday.length > 0) {
         const newArray = user.reviewToday;
         setVocabWordsArr(newArray);
@@ -71,15 +72,15 @@ const LearningScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.homeContainer}>
-    <View id="center_content" style={styles.header}>
-      <Text style={styles.headerTitle}>
-        Reviewing
-      </Text>
-    </View>
+      <View id="center_content" style={styles.header}>
+        <Text style={styles.headerTitle}>
+          Reviewing
+        </Text>
+      </View>
       {doneReviewing == false &&
         <View id="center_content" style={styles.content}>
           <ScrollView style={[]}>
-            <Text style={{fontSize: settings.textSize}}>
+            <Text style={{ fontSize: settings.textSize }}>
               {vocabWordsArr[0].definition}
             </Text>
           </ScrollView>
@@ -116,7 +117,7 @@ const LearningScreen = ({ navigation, route }) => {
       }
       {doneReviewing == true &&
         <View style={styles.content}>
-          <Text style={[{ fontSize: settings.textSize },{top: '30%'}]}>
+          <Text style={[{ fontSize: settings.textSize }, { top: '30%' }]}>
             Congrats! You have finished reviewing!
           </Text>
         </View>
@@ -173,11 +174,11 @@ const LearningScreen = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
-  Word:  {
+  Word: {
     textAlign: 'center',
     bottom: 0,
     borderBottomColor: '#95C3BE',
-    borderBottomWidth:  10,
+    borderBottomWidth: 10,
   },
   homeContainer: {
     width: '100%',
@@ -225,8 +226,8 @@ const styles = StyleSheet.create({
     width: '60%',
     shadowColor: "#000",
     shadowOffset: {
-    	width: 0,
-    	height: 2,
+      width: 0,
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
