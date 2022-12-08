@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Slider from '@react-native-community/slider';
 import {
   Animated,
@@ -15,16 +15,16 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import Svg, {Path} from 'react-native-svg';
-import {Iconoir, User, Lock, Mail} from 'iconoir-react-native';
+import Svg, { Path } from 'react-native-svg';
+import { Iconoir, User, Lock, Mail } from 'iconoir-react-native';
 
-import {Images} from '../assets/';
+import { Images } from '../assets/';
 
-import {REACT_APP_SERVER_HOSTNAME} from '@env';
+import { REACT_APP_SERVER_HOSTNAME } from '@env';
 import axios from 'react-native-axios';
-import {getUserLocal, storeUserLocal} from './Functions.js';
+import { getUserLocal, storeUserLocal } from './Functions.js';
 
-const LogInScreen = ({navigation, route}) => {
+const LogInScreen = ({ navigation, route }) => {
   const cyan = '#2a9d8f';
   const [userText, setUserText] = React.useState('');
   const [passText, setpassText] = React.useState('');
@@ -61,7 +61,7 @@ const LogInScreen = ({navigation, route}) => {
         console.log('DATE: ', date);
         statusJSON = await axios.post(
           `${REACT_APP_SERVER_HOSTNAME}/api/signin`,
-          {email: userText, password: passText, date},
+          { email: userText, password: passText, date },
         );
       });
       // console.log("Lastlogindate: ", statusJSON.data.user);
@@ -93,7 +93,7 @@ const LogInScreen = ({navigation, route}) => {
     console.log(`Fetching Settings and User from local storage...`);
     try {
       let temp_user = await getUserLocal();
-      if (temp_user) {
+      if (temp_user.username) {
         navigation.navigate('MainApp');
       }
     } catch (error) {
@@ -141,8 +141,8 @@ const LogInScreen = ({navigation, route}) => {
 
   return (
     <View style={styles.logInContainer}>
-      <View class="header" style={[styles.header, {flex: 1.4}]}>
-        <View class="logo_login" style={{flex: 3}}>
+      <View class="header" style={[styles.header, { flex: 1.4 }]}>
+        <View class="logo_login" style={{ flex: 3 }}>
           <Animated.Image
             source={Images.logos.logo_titled_transparent}
             style={{
@@ -153,7 +153,7 @@ const LogInScreen = ({navigation, route}) => {
           />
         </View>
 
-        <View class="title_login" style={{flex: 1.8}}>
+        <View class="title_login" style={{ flex: 1.8 }}>
           <View
             style={{
               margin: 0,
@@ -165,7 +165,7 @@ const LogInScreen = ({navigation, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            <View style={{flex: 1, height: 1, backgroundColor: cyan}} />
+            <View style={{ flex: 1, height: 1, backgroundColor: cyan }} />
             <View>
               <Text
                 style={{
@@ -178,12 +178,12 @@ const LogInScreen = ({navigation, route}) => {
                 Log In
               </Text>
             </View>
-            <View style={{flex: 1, height: 1, backgroundColor: cyan}} />
+            <View style={{ flex: 1, height: 1, backgroundColor: cyan }} />
           </View>
         </View>
       </View>
 
-      <View class="contents" style={[styles.contents, {flex: 2}]}>
+      <View class="contents" style={[styles.contents, { flex: 2 }]}>
         <View
           class="inputfields"
           style={{
@@ -202,7 +202,7 @@ const LogInScreen = ({navigation, route}) => {
               color="#AAAAAA"
               height={25}
               width={25}
-              style={{position: 'relative', left: 45, top: 23, zIndex: 10}}
+              style={{ position: 'relative', left: 45, top: 23, zIndex: 10 }}
             />
             <TextInput
               style={[styles.input]}
@@ -221,7 +221,7 @@ const LogInScreen = ({navigation, route}) => {
               color="#AAAAAA"
               height={25}
               width={25}
-              style={{position: 'relative', left: 45, top: 23, zIndex: 10}}
+              style={{ position: 'relative', left: 45, top: 23, zIndex: 10 }}
             />
             <TextInput
               style={styles.input}
@@ -243,7 +243,7 @@ const LogInScreen = ({navigation, route}) => {
           }}>
           <TouchableOpacity
             onPress={handleSubmit}
-            style={[styles.button, {width: 300, height: 50}]}>
+            style={[styles.button, { width: 300, height: 50 }]}>
             <Text
               style={{
                 textAlign: 'center',
@@ -262,7 +262,7 @@ const LogInScreen = ({navigation, route}) => {
             Don't have an account?
           </Text>
           <Text
-            style={{textAlign: 'center', fontSize: 13, color: cyan}}
+            style={{ textAlign: 'center', fontSize: 13, color: cyan }}
             onPress={() => navigation.navigate('Register')}>
             Sign up here.
           </Text>
