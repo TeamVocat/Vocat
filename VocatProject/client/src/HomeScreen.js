@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   TouchableOpacity,
@@ -11,15 +11,15 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import catPile from './../assets/cat_pile.png';
 import axios from 'react-native-axios';
-import { REACT_APP_SERVER_HOSTNAME } from '@env';
-import { getSettings, getUserLocal, clearUserLocal, } from './Functions.js';
+import {REACT_APP_SERVER_HOSTNAME} from '@env';
+import {getSettings, getUserLocal, clearUserLocal} from './Functions.js';
+import {Images} from '../assets/';
 
 const HomeScreen = props => {
   // const isFocused = useIsFocused();
   const [user, setUser] = useState({});
-  const [settings, setSettings] = useState({ textSize: 30, wordList: 'English' });
+  const [settings, setSettings] = useState({textSize: 30, wordList: 'English'});
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -64,19 +64,22 @@ const HomeScreen = props => {
   return (
     <View style={styles.homeContainer}>
       <ScrollView>
-        <View id="header" style={styles.headerContainer}>
-        </View>
+        <View id="header" style={styles.headerContainer}></View>
         <View id="center_content" style={[styles.content]}>
-          <Text style={[styles.message, { fontSize: settings.textSize }]}>
-            {user.username
-              ? message + ', ' + user.username + '!'
-              : message + '!'}
-          </Text>
+          <View id="messageView" style={{width: '80%', top: 50}}>
+            <Text style={[styles.message, {fontSize: settings.textSize}]}>
+              {user.username
+                ? message + ', ' + user.username + '!'
+                : message + '!'}
+            </Text>
+          </View>
           <Image
-            source={catPile}
+            source={Images.general.welcome_larger}
             style={{
-              width: 300,
-              height: 300,
+              width: 500,
+              height: 750,
+              resizeMode: 'contain',
+              top: -170,
             }}></Image>
         </View>
       </ScrollView>
@@ -108,6 +111,7 @@ const styles = StyleSheet.create({
   },
   message: {
     marginTop: '30%',
+    alignSelf: 'center',
   },
   content: {
     flex: 1,
