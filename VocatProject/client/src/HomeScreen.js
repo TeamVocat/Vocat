@@ -67,7 +67,7 @@ const HomeScreen = props => {
     <View style={styles.homeContainer}>
       <View id="header" style={styles.headerContainer}></View>
       <View id="center_content" style={[styles.content]}>
-        <View id="messageView" style={{width: '80%', top: 50}}>
+        <View id="messageContainer" style={[styles.messageContainer]}>
           <Text style={[styles.message, {fontSize: settings.textSize}]}>
             {user.username
               ? message + ', \n' + user.username + '!'
@@ -112,12 +112,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   message: {
-    marginTop: '30%',
-    alignSelf: 'center',
     fontWeight: 'bold',
     color: '#274160',
     fontFamily: 'sans-serif',
     textAlign: 'center',
+    textAlignVertical: 'center',
+  },
+  messageContainer: {
+    width: '80%',
+    height: '30%',
+    top: 80,
+    // backgroundColor: '#EFEFEF',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    textAlignVertical: 'center',
   },
   content: {
     flex: 1,
