@@ -21,6 +21,7 @@ import {
   getSettings,
   getUserLocal,
   userCoins,
+  storeUserLocal,
 } from './Functions.js';
 
 const CatHouseScreen = ({ navigation, route }) => {
@@ -59,7 +60,7 @@ const CatHouseScreen = ({ navigation, route }) => {
   };
 
   const [ItemState, setItemState] = useState('foods');
-  const [Item, setItem] = useState('food1');
+  const [Item, setItem] = useState('');
   const [user, setUser] = useState({ toys: [], foods: [] });
   const foods = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
   const toys = ['toy1', 'toy2', 'toy3', 'toy4', 'toy5', 'toy6'];
@@ -100,6 +101,10 @@ const CatHouseScreen = ({ navigation, route }) => {
         foods: temp_arr,
       })
       setItem(x);
+      storeUserLocal({
+        ...user,
+        foods: temp_arr,
+      });
     } else if (user.toys[i] > 0) {
       temp_arr = user.toys;
       temp_arr[i]--;
@@ -108,6 +113,10 @@ const CatHouseScreen = ({ navigation, route }) => {
         toys: temp_arr,
       })
       setItem(x);
+      storeUserLocal({
+        ...user,
+        toys: temp_arr,
+      });
     } else {
       alert('You do not own ' + x + '\nGo buy it at the store!');
     }

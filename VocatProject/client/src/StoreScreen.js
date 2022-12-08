@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Slider from '@react-native-community/slider';
 import {
   Image,
@@ -12,13 +12,13 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import {Row, Rows, Table, TableWrapper} from 'react-native-table-component';
-import {Images} from '../assets/';
-import {Shadow} from 'react-native-shadow-2';
-import {getSettings, getUserLocal, storeUserLocal} from './Functions.js';
-import {NavArrowLeft} from 'iconoir-react-native';
+import { Row, Rows, Table, TableWrapper } from 'react-native-table-component';
+import { Images } from '../assets/';
+import { Shadow } from 'react-native-shadow-2';
+import { getSettings, getUserLocal, storeUserLocal } from './Functions.js';
+import { NavArrowLeft } from 'iconoir-react-native';
 
-const StoreScreen = ({navigation, route}) => {
+const StoreScreen = ({ navigation, route }) => {
   const [user, setUser] = useState({});
   const [coins, setCoins] = useState(user.coinNum);
   const foods = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
@@ -47,7 +47,7 @@ const StoreScreen = ({navigation, route}) => {
   }, [navigation]);
 
   const buyItem = (item, index) => {
-    if (coins > 20) {
+    if (coins >= 20) {
       console.log('Buying ' + item + ' ' + index);
       let temp_arr;
       if (item === 'food') {
@@ -91,10 +91,10 @@ const StoreScreen = ({navigation, route}) => {
           {/* <Text style={{fontSize: 30}}>{'👈Back'}</Text> */}
           <NavArrowLeft color="black" height={25} width={25} style={{}} />
         </TouchableOpacity>
-        <Text style={{fontSize: 35, color: 'white', left: -40, top: -1}}>
+        <Text style={{ fontSize: 35, color: 'white', left: -40, top: -1 }}>
           Store
         </Text>
-        <View id="coins" style={[styles.coinsContainer, {left: 30, top: 12}]}>
+        <View id="coins" style={[styles.coinsContainer, { left: 30, top: 12 }]}>
           <Image
             source={Images.general.catcoin}
             style={{
@@ -102,11 +102,11 @@ const StoreScreen = ({navigation, route}) => {
               width: 55,
             }}
             resizeMode="contain"></Image>
-          <Text style={{fontSize: 30, margin: 5, top: 2}}>{coins}</Text>
+          <Text style={{ fontSize: 30, margin: 5, top: 2 }}>{coins}</Text>
         </View>
       </View>
       <View id="contents" style={styles.contents}>
-        <ScrollView style={{height: 100}}>
+        <ScrollView style={{ height: 100 }}>
           <View id="Foodtitle">
             <Text style={styles.titleText}>Foods</Text>
           </View>
