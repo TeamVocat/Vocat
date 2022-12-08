@@ -61,28 +61,30 @@ const HomeScreen = props => {
     }
   };
 
+  let topvalue = user.username ? '-200' : '-170';
+
   return (
     <View style={styles.homeContainer}>
-      <ScrollView>
-        <View id="header" style={styles.headerContainer}></View>
-        <View id="center_content" style={[styles.content]}>
-          <View id="messageView" style={{width: '80%', top: 50}}>
-            <Text style={[styles.message, {fontSize: settings.textSize}]}>
-              {user.username
-                ? message + ', ' + user.username + '!'
-                : message + '!'}
-            </Text>
-          </View>
-          <Image
-            source={Images.general.welcome_larger}
-            style={{
-              width: 500,
-              height: 750,
-              resizeMode: 'contain',
-              top: -170,
-            }}></Image>
+      <View id="header" style={styles.headerContainer}></View>
+      <View id="center_content" style={[styles.content]}>
+        <View id="messageView" style={{width: '80%', top: 50}}>
+          <Text style={[styles.message, {fontSize: settings.textSize}]}>
+            {user.username
+              ? message + ', \n' + user.username + '!'
+              : message + '!'}
+          </Text>
         </View>
-      </ScrollView>
+        <Image
+          source={Images.general.welcome_larger}
+          style={{
+            position: 'absolute',
+            width: 500,
+            height: 750,
+            resizeMode: 'contain',
+            top: -40,
+            zIndex: 10,
+          }}></Image>
+      </View>
     </View>
   );
 };
@@ -112,6 +114,10 @@ const styles = StyleSheet.create({
   message: {
     marginTop: '30%',
     alignSelf: 'center',
+    fontWeight: 'bold',
+    color: '#274160',
+    fontFamily: 'sans-serif',
+    textAlign: 'center',
   },
   content: {
     flex: 1,
