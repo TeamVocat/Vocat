@@ -45,9 +45,27 @@ const StoreScreen = ({ navigation, route }) => {
     return unsubscribe;
   }, [navigation]);
 
-  const buyItem = () => {
+  const buyItem = (item, index) => {
     if (coins > 20) {
+      console.log("Buying " + item + " " + index);
+      let temp_arr;
+      if (item === 'food') {
+        temp_arr = user.foods;
+        temp_arr[index]++;
+        storeUserLocal({
+          ...user,
+          foods: temp_arr
+        });
+      } else {
+        temp_arr = user.toys;
+        temp_arr[index]++;
+        storeUserLocal({
+          ...user,
+          toys: temp_arr
+        });
+      }
       let newCoins = coins - 20;
+      newCoins = 100;
       storeUserLocal({
         ...user,
         coinNum: newCoins
@@ -86,7 +104,9 @@ const StoreScreen = ({ navigation, route }) => {
           <View id="Foods" style={styles.imgContainer}>
             {foods.map((x, i) => (
               <View key={i} style={styles.imgItemWrap}>
-                <TouchableOpacity onPress={buyItem}>
+                <TouchableOpacity onPress={() => {
+                  buyItem('food', i);
+                }}>
                   <Image
                     source={Images.foods[x]}
                     style={{
@@ -105,7 +125,9 @@ const StoreScreen = ({ navigation, route }) => {
           <View id="Toys" style={styles.imgContainer}>
             {toys.map((x, i) => (
               <View key={i} style={styles.imgItemWrap}>
-                <TouchableOpacity onPress={buyItem}>
+                <TouchableOpacity onPress={() => {
+                  buyItem('toy', i);
+                }}>
                   <Image
                     source={Images.toys[x]}
                     style={{

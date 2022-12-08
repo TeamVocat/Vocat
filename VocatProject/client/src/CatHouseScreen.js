@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Image,
   TouchableOpacity,
@@ -12,10 +12,10 @@ import {
   ScrollView,
   Pressable,
 } from 'react-native';
-import {Row, Rows, Table, TableWrapper} from 'react-native-table-component';
-import {Images} from '../assets/';
-import {Shadow} from 'react-native-shadow-2';
-import {REACT_APP_SERVER_HOSTNAME} from '@env';
+import { Row, Rows, Table, TableWrapper } from 'react-native-table-component';
+import { Images } from '../assets/';
+import { Shadow } from 'react-native-shadow-2';
+import { REACT_APP_SERVER_HOSTNAME } from '@env';
 import {
   storeSettings,
   getSettings,
@@ -23,8 +23,8 @@ import {
   userCoins,
 } from './Functions.js';
 
-const CatHouseScreen = ({navigation, route}) => {
-  const [settings, setSettings] = useState({textSize: 30});
+const CatHouseScreen = ({ navigation, route }) => {
+  const [settings, setSettings] = useState({ textSize: 30 });
   const state = {
     tableHead: ['Food', 'Toys & Decorations'],
     tableData: [
@@ -60,6 +60,7 @@ const CatHouseScreen = ({navigation, route}) => {
 
   const [ItemState, setItemState] = useState('foods');
   const [Item, setItem] = useState('food1');
+  const [user, setUser] = useState({ toys: [], foods: [] });
   const foods = ['food1', 'food2', 'food3', 'food4', 'food5', 'food6'];
   const toys = ['toy1', 'toy2', 'toy3', 'toy4', 'toy5', 'toy6'];
 
@@ -140,6 +141,27 @@ const CatHouseScreen = ({navigation, route}) => {
     }
   };
 
+  const fetchUser = async () => {
+    console.log(`Fetching User from local storage...`);
+    try {
+      let temp_user = await getUserLocal();
+      if (temp_user) {
+        console.log("new user:", temp_user.foods, temp_user.toys);
+        setUser(temp_user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchUser();
+      // alert('Refreshed');
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <View style={styles.catsContainer}>
       <View id="header" style={styles.header}>
@@ -156,39 +178,39 @@ const CatHouseScreen = ({navigation, route}) => {
           }}
           offset={[-10, 13]}>
           <TouchableOpacity
-            style={[styles.button, {top: 10, right: 15}]}
+            style={[styles.button, { top: 10, right: 15 }]}
             onPress={() => {
-              navigation.navigate('Store', {settings: settings});
+              navigation.navigate('Store', { settings: settings });
             }}>
-            <Text style={{fontSize: 30, color: '#ffffff'}}>Store</Text>
+            <Text style={{ fontSize: 30, color: '#ffffff' }}>Store</Text>
           </TouchableOpacity>
         </Shadow>
       </View>
       <View id="content" style={[styles.content]}>
         <View
           id="cats"
-          style={{flex: 4, alignItems: 'center', justifyContent: 'center'}}>
+          style={{ flex: 4, alignItems: 'center', justifyContent: 'center' }}>
           {showCat()}
         </View>
-        <View id="item" style={{position: 'absolute', top: 185}}>
+        <View id="item" style={{ position: 'absolute', top: 185 }}>
           {showItem(Item)}
         </View>
-        <View id="controls" style={{flex: 0.8, flexDirection: 'row'}}>
+        <View id="controls" style={{ flex: 0.8, flexDirection: 'row' }}>
           <TouchableOpacity style={[styles.controlBotton]} onPress={sleepClick}>
-            <Text style={{fontSize: 20, color: '#ffffff'}}>Sleep</Text>
+            <Text style={{ fontSize: 20, color: '#ffffff' }}>Sleep</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.controlBotton]} onPress={waterClick}>
-            <Text style={{fontSize: 20, color: '#ffffff'}}>Water</Text>
+            <Text style={{ fontSize: 20, color: '#ffffff' }}>Water</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.controlBotton]} onPress={foodClick}>
-            <Text style={{fontSize: 20, color: '#ffffff'}}>Foods</Text>
+            <Text style={{ fontSize: 20, color: '#ffffff' }}>Foods</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.controlBotton]} onPress={toyClick}>
-            <Text style={{fontSize: 20, color: '#ffffff'}}>Toys</Text>
+            <Text style={{ fontSize: 20, color: '#ffffff' }}>Toys</Text>
           </TouchableOpacity>
         </View>
         <View id="table" style={[styles.tableContainer]}>
-          <ScrollView style={{height: 100}}>{showTable()}</ScrollView>
+          <ScrollView style={{ height: 100 }}>{showTable()}</ScrollView>
         </View>
       </View>
       {/* <View id="footer" style={[styles.footer]}>
