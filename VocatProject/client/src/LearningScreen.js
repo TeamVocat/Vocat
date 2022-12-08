@@ -312,13 +312,12 @@ const styles = StyleSheet.create({
     margin: 7,
     position: "relative",
     marginLeft: 120,
-    width: 110
   },
   coins: {
     fontSize: 20,
     alignSelf: 'center',
     textAlign: 'center',
-    width: 30
+    marginRight: 5,
   }
 });
 
