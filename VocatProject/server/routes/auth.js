@@ -9,7 +9,8 @@ const { signup, signin, updateUser } = require("../controllers/auth");
 
 router.get("/home", (req, res) => {
     try {
-        let message = "Welcome";
+        let messages = ["Welcome", "Hello", "Welcome Back", "Let's Study", "Hey There", "You Can Do It"];
+        let message = messages[Math.floor(Math.random() * messages.length)];
         res.json({
             message: message,
             status: "Success"
