@@ -72,7 +72,7 @@ const CatHouseScreen = ({ navigation, route }) => {
   };
 
   const showItem = () => {
-    console.log(Item);
+    // console.log(Item);
     const imageSauce =
       ItemState === 'foods' ? Images.foods[Item] : Images.toys[Item];
     if (catState === 'lying') {
@@ -89,6 +89,30 @@ const CatHouseScreen = ({ navigation, route }) => {
     }
   };
 
+  const handleItemClick = (item, x, i) => {
+    console.log(`${x} ${i} Pressed`);
+    let temp_arr;
+    if (item === 'foods' && user.foods[i] > 0) {
+      temp_arr = user.foods;
+      temp_arr[i]--;
+      setUser({
+        ...user,
+        foods: temp_arr,
+      })
+      setItem(x);
+    } else if (user.toys[i] > 0) {
+      temp_arr = user.toys;
+      temp_arr[i]--;
+      setUser({
+        ...user,
+        toys: temp_arr,
+      })
+      setItem(x);
+    } else {
+      alert('You do not own ' + x + '\nGo buy it at the store!');
+    }
+  }
+
   const showTable = () => {
     if (ItemState === 'foods') {
       return (
@@ -98,8 +122,7 @@ const CatHouseScreen = ({ navigation, route }) => {
               <TouchableOpacity
                 key={i}
                 onPress={() => {
-                  console.log(`${x} ${i} Pressed`);
-                  setItem(x);
+                  handleItemClick('foods', x, i);
                 }}>
                 <Image
                   id={x}
@@ -109,6 +132,12 @@ const CatHouseScreen = ({ navigation, route }) => {
                     width: 110,
                   }}
                   resizeMode="contain"></Image>
+                <Text style={{
+                  fontSize: 30,
+                  position: 'absolute',
+                }}>
+                  {user.foods[i]}
+                </Text>
               </TouchableOpacity>
             </View>
           ))}
@@ -122,8 +151,7 @@ const CatHouseScreen = ({ navigation, route }) => {
               <TouchableOpacity
                 key={i}
                 onPress={() => {
-                  console.log(`${x} ${i} Pressed`);
-                  setItem(x);
+                  handleItemClick('toys', x, i);
                 }}>
                 <Image
                   id={x}
@@ -133,6 +161,13 @@ const CatHouseScreen = ({ navigation, route }) => {
                     width: 110,
                   }}
                   resizeMode="contain"></Image>
+
+                <Text style={{
+                  fontSize: 30,
+                  position: 'absolute',
+                }}>
+                  {user.toys[i]}
+                </Text>
               </TouchableOpacity>
             </View>
           ))}
