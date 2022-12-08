@@ -30,15 +30,12 @@ const Stack = createNativeStackNavigator();
 import HomeScreen from './src/HomeScreen.js';
 import SettingsScreen from './src/SettingsScreen.js';
 import LearningScreen from './src/LearningScreen.js';
-import LearnNewScreen from './src/LearnNewScreen.js';
 import PlanScreen from './src/PlanScreen.js';
 import ProgressScreen from './src/ProgressScreen.js';
 import CatHouseScreen from './src/CatHouseScreen.js';
 import StoreScreen from './src/StoreScreen.js';
 import LogInScreen from './src/LogInScreen.js';
 import SignUpScreen from './src/SignUpScreen.js';
-import Signup from './src/SignUp';
-import Signin from './src/SignIn';
 import Reviewing from './src/ReviewingScreen';
 import UserScreen from './src/UserScreen';
 
@@ -47,8 +44,6 @@ function Home() {
     <Stack.Navigator initialRouteName='Welcome' screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Welcome" component={HomeScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="Signup" component={Signup} />
-      <Stack.Screen name="Signin" component={Signin} />
     </Stack.Navigator>
   );
 }
