@@ -23,6 +23,7 @@ import {
   getSettings,
   getUserLocal,
   clearUserLocal,
+  storeUserLocal,
 } from './Functions.js';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Images } from '../assets/';
@@ -41,15 +42,10 @@ const UserScreen = ({ navigation, route }) => {
     { key: 'settings', title: 'Settings' },
   ]);
 
-  const [user, setUser] = useState({});
-  const [settings, setSettings] = useState({textSize: 30, wordList: 'English'});
-
-  const [labels, setLabels] = useState(['11.1','11.2','11.3','11.4','11.5']);
-  const [progresses, setProgresses] = useState([1,2,3,4,5]);
+  const [labels, setLabels] = useState(['11.1', '11.2', '11.3', '11.4', '11.5']);
+  const [progresses, setProgresses] = useState([1, 2, 3, 4, 5]);
   const [wordsPerDay, setWordsPerDay] = useState('0');
   const [hasChart, setHasChart] = useState(false);
-
-  const username = 'username';
 
   let data = [{ value: 'book1' }];
   //let newWords = 20;
@@ -57,59 +53,58 @@ const UserScreen = ({ navigation, route }) => {
   const [newWords, numNewWords] = React.useState('0');
   const [oldWords, numOldWords] = React.useState('0');
   const chartConfig = {
-      backgroundGradientFrom: '#ffffff',
-      backgroundGradientTo: '#ffffff',
-      color: (opacity = 1) => 'black',
-      strokeWidth: 2, // optional, default 3
-      barPercentage: 0.5
+    backgroundGradientFrom: '#ffffff',
+    backgroundGradientTo: '#ffffff',
+    color: (opacity = 1) => 'black',
+    strokeWidth: 2, // optional, default 3
+    barPercentage: 0.5
   };
   const screenWidth = Dimensions.get("window").width;
   const chartData = {
-      labels: labels,
-      datasets: [
-          {
-              data: progresses,
-              color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-              strokeWidth: 2 // optional
-          }
-      ],
-      legend: ["Words Learned"] // optional
+    labels: labels,
+    datasets: [
+      {
+        data: progresses,
+        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+        strokeWidth: 2 // optional
+      }
+    ],
+    legend: ["Words Learned"] // optional
   };
 
-  useEffect(() => {
-      async function fetchMessage() {
-          try {
-            console.log('called');
-            const user = await getUserLocal();
-            const progressArray = [];
-            const dateArray = [];
-            setWordsPerDay(user.wordsPerDay);
-            console.log(wordsPerDay);
-            //5 days
-            user.lastLogInDate = [{"dateString": "12/01", "numWords": 5},{"dateString": "12/02", "numWords": 10},
-            {"dateString": "12/03", "numWords": 15},{"dateString": "12/04", "numWords": 20},
-            {"dateString": "12/05", "numWords": 25}]
-            //1 day
-            //user.lastLogInDate = [{"dateString": "12/01", "numWords": 5}];
-              for (let i = 0; i < 5;i++){
-                  console.log(user.lastLogInDate[user.lastLogInDate.length-1-i]);
-                  const dateObj = user.lastLogInDate[user.lastLogInDate.length-1-i];
-                  progressArray.unshift(dateObj.numWords);
-                  dateArray.unshift(dateObj.dateString);
-              }
-              setProgresses(progressArray);
-              setLabels(dateArray);
-              if (user.lastLogInDate.length >= 2){
-                setHasChart(true);
-              }
-          } catch (error) {
-              console.log(error);
-          }
-      };
-      fetchMessage();
-  }, []);
+  async function fetchMessage() {
+    try {
+      console.log('called');
+      const user = await getUserLocal();
+      const progressArray = [];
+      const dateArray = [];
+      setWordsPerDay(user.wordsPerDay);
+      console.log(wordsPerDay);
+      //5 days
+      user.lastLogInDate = [{ "dateString": "12/01", "numWords": 5 }, { "dateString": "12/02", "numWords": 10 },
+      { "dateString": "12/03", "numWords": 15 }, { "dateString": "12/04", "numWords": 20 },
+      { "dateString": "12/05", "numWords": 25 }]
+      //1 day
+      //user.lastLogInDate = [{"dateString": "12/01", "numWords": 5}];
+      for (let i = 0; i < 5; i++) {
+        console.log(user.lastLogInDate[user.lastLogInDate.length - 1 - i]);
+        const dateObj = user.lastLogInDate[user.lastLogInDate.length - 1 - i];
+        progressArray.unshift(dateObj.numWords);
+        dateArray.unshift(dateObj.dateString);
+      }
+      setProgresses(progressArray);
+      setLabels(dateArray);
+      if (user.lastLogInDate.length >= 2) {
+        setHasChart(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const [finalSize, setFinalSize] = useState();
+  const [user, setUser] = useState({});
+  const [settings, setSettings] = useState({});
 
   const fetchSettingsUser = async () => {
     console.log(`Fetching Settings and User from local storage...`);
@@ -133,53 +128,72 @@ const UserScreen = ({ navigation, route }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       fetchSettingsUser();
+      fetchMessage();
       // alert('Refreshed');
     });
     return unsubscribe;
-  }, []);
+  }, [navigation]);
 
   const ProgressRoute = () => (
     <ScrollView>
       <View style={styles.settingsContainer}>
-          <Text style={[styles.buttonLabel, {marginTop: 30}]}>Number of words per day:</Text>
-          <TextInput
-              style={[styles.input, {height:50, fontSize: 20
-                //height: route.params.settings.textSize, fontSize: route.params.settings.textSize-10
-              }]}
-              editable
-              placeholder= {wordsPerDay+''}
-              onChangeText= {
-                async (input) => {await updateWordsPerDay(input);}
-              }
-              maxLength={4}
-          />
+        <Text style={[styles.buttonLabel, { marginTop: 30 }]}>Number of words per day:</Text>
+        <TextInput
+          style={[styles.input, {
+            height: 50, fontSize: 20
+            //height: route.params.settings.textSize, fontSize: route.params.settings.textSize-10
+          }]}
+          editable
+          placeholder={wordsPerDay + ''}
+          onChangeText={(text) => {
+            setWordsPerDay(text);
+          }
+          }
+          maxLength={4}
+        />
+        <TouchableOpacity style={[styles.button, { backgroundColor: "#2A9D8F" }]}
+          onPress={async () => {
+            try {
+              let temp_user = {
+                ...user,
+                wordsPerDay: wordsPerDay
+              };
+              console.log(temp_user.wordsPerDay);
+              await storeUserLocal(temp_user);
+              setUser(temp_user);
+            } catch (error) {
+              console.log(error);
+            }
+          }}>
+          <Text style={{ color: "#ffffff" }}>OK</Text>
+        </TouchableOpacity>
 
-          <Text style={[styles.buttonLabel, {marginTop: 30}]}>Number of words learned:</Text>
-          <Text style={styles.buttonLabel}>{progresses[4]}</Text>
+        <Text style={[styles.buttonLabel, { marginTop: 30 }]}>Number of words learned:</Text>
+        <Text style={styles.buttonLabel}>{progresses[4]}</Text>
 
-          <Text style={[styles.buttonLabel, {marginTop: 30}]}>Number of words to be learned:</Text>
-          <Text style={styles.buttonLabel}>{1066-progresses[4]}</Text>
+        <Text style={[styles.buttonLabel, { marginTop: 30 }]}>Number of words to be learned:</Text>
+        <Text style={styles.buttonLabel}>{1066 - progresses[4]}</Text>
 
-          { hasChart == true &&
+        {hasChart == true &&
           <LineChart
-              style={{marginTop: 30}}
-              data={chartData}
-              width={screenWidth}
-              height={220}
-              chartConfig={chartConfig}
+            style={{ marginTop: 30 }}
+            data={chartData}
+            width={screenWidth}
+            height={220}
+            chartConfig={chartConfig}
           />
-          }
-          { hasChart == false &&
-          <Text style={[styles.buttonLabel, {marginTop: 30}]}>Words learned on {labels[0]}:</Text>
-          }
-          { hasChart == false &&
+        }
+        {hasChart == false &&
+          <Text style={[styles.buttonLabel, { marginTop: 30 }]}>Words learned on {labels[0]}:</Text>
+        }
+        {hasChart == false &&
           <Text style={styles.buttonLabel}>{progresses[0]}</Text>
-          }
-          { hasChart == false &&
+        }
+        {hasChart == false &&
           <Text style={styles.buttonLabel}>Learn more days to see progress chart!</Text>
-          }
+        }
       </View >
-      </ScrollView>
+    </ScrollView >
   );
 
   const SettingsRoute = () => {
@@ -292,7 +306,13 @@ const UserScreen = ({ navigation, route }) => {
                 </Text>
                 <TouchableOpacity
                   style={[styles.button, { left: 180 }]}
-                  onPress={handleSettings}>
+                  onPress={async () => {
+                    try {
+                      await handleSettings();
+                    } catch (err) {
+                      console.log(err);
+                    }
+                  }}>
                   <Text style={{ fontSize: 20 }}>Done</Text>
                 </TouchableOpacity>
               </View>
@@ -390,7 +410,11 @@ const UserScreen = ({ navigation, route }) => {
                   { backgroundColor: '#2A9D8F', margin: 10 },
                 ]}
                 onPress={async () => {
-                  await handleSync();
+                  try {
+                    await handleSync();
+                  } catch (err) {
+                    console.log(err);
+                  }
                   // navigation.navigate('Welcome');
                 }}>
                 <Text style={{ fontSize: 23, color: 'white' }}>Sync</Text>
@@ -400,9 +424,13 @@ const UserScreen = ({ navigation, route }) => {
                   styles.bigButton,
                   { backgroundColor: '#D9D9D9', margin: 10 },
                 ]}
-                onPress={() => {
-                  clearUserLocal();
-                  navigation.navigate('LogIn');
+                onPress={async () => {
+                  try {
+                    await clearUserLocal();
+                    navigation.navigate('LogIn');
+                  } catch (err) {
+                    console.log(err);
+                  }
                 }}>
                 <Text style={{ fontSize: 23 }}>Sign Out</Text>
               </TouchableOpacity>
