@@ -22,6 +22,7 @@ import {
   getSettings,
   getUserLocal,
   clearUserLocal,
+  storeUserLocal
 } from './Functions.js';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Images } from '../assets/';
@@ -69,29 +70,6 @@ const UserScreen = ({ navigation, route }) => {
   };
 
   const [wordNum, setWordNum] = useState('');
-
-  //   const fetchSettingsUser = async () => {
-  //     console.log(`Fetching Settings and User from local storage...`);
-  //     try {
-  //       let temp_settings = await getSettings();
-  //       if (temp_settings) {
-  //         console.log('new settings:', temp_settings);
-  //         setSettings(temp_settings);
-  //       }
-  //       let temp_user = await getUserLocal();
-  //       if (temp_user) {
-  //         console.log('new user:', temp_user);
-  //         setUser(temp_user);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   useEffect(() => {
-  //     fetchSettingsUser();
-  //   }, []);
-
   const [finalSize, setFinalSize] = useState();
   const [settings, setSettings] = useState({});
   const [user, setUser] = useState({});
@@ -158,7 +136,7 @@ const UserScreen = ({ navigation, route }) => {
           }}
           onChangeText={text => setWordNum(text)}
           value={wordNum}
-          placeholder="number"></TextInput>
+          placeholder={"" + user.wordsPerDay}></TextInput>
       </View>
 
       <Text
@@ -185,7 +163,7 @@ const UserScreen = ({ navigation, route }) => {
           borderRadius: 4,
           margin: 10,
         }}
-        onPress={() => {
+        onPress={async () => {
           if (wordNum == '') {
             Alert.alert('Invalid Input', 'Please enter a number', [
               { text: 'OK', onPress: () => console.log('OK Pressed') },
@@ -199,7 +177,20 @@ const UserScreen = ({ navigation, route }) => {
               { text: 'OK', onPress: () => console.log('OK Pressed') },
             ]);
           } else {
-            console.log(`saving...Your Word study plan is ${wordNum} per day.`);
+            try {
+              console.log(`saving...Your Word study plan is ${wordNum} per day.`);
+              await storeUserLocal({
+                ...user,
+                wordsPerDay: wordNum,
+              });
+              setUser({
+                ...user,
+                wordsPerDay: wordNum,
+              });
+              alert(`Your Word study plan has been set to ${wordNum} per day.`);
+            } catch (err) {
+              console.log(err);
+            }
           }
         }}>
         <Text style={{ color: 'white' }}>OK</Text>
@@ -215,15 +206,6 @@ const UserScreen = ({ navigation, route }) => {
         textSize: finalSize,
       });
       try {
-        await storeSettings({
-          ...settings,
-          textSize: finalSize,
-        });
-      } catch (err) {
-        console.log('Settings could not be stored locally', err);
-      }
-      try {
-        // console.log(user);
         await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/updateUser`, { user });
         alert('Successfully Synced User to Database');
       } catch (err) {
@@ -415,8 +397,11 @@ const UserScreen = ({ navigation, route }) => {
                   { backgroundColor: '#2A9D8F', margin: 10 },
                 ]}
                 onPress={async () => {
-                  await handleSync();
-                  // navigation.navigate('Welcome');
+                  try {
+                    await handleSync();
+                  } catch (err) {
+                    console.log(err);
+                  }
                 }}>
                 <Text style={{ fontSize: 23, color: 'white' }}>Sync</Text>
               </TouchableOpacity>
