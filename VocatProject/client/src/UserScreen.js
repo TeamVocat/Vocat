@@ -81,9 +81,9 @@ const UserScreen = ({navigation, route}) => {
             setWordsPerDay(user.wordsPerDay);
             console.log(wordsPerDay);
             //5 days
-            user.lastLogInDate = [{"dateString": "12/01", "numWords": 5},{"dateString": "12/02", "numWords": 10},
-            {"dateString": "12/03", "numWords": 15},{"dateString": "12/04", "numWords": 20},
-            {"dateString": "12/05", "numWords": 25}]
+            // user.lastLogInDate = [{"dateString": "12/01", "numWords": 5},{"dateString": "12/02", "numWords": 10},
+            // {"dateString": "12/03", "numWords": 15},{"dateString": "12/04", "numWords": 20},
+            // {"dateString": "12/05", "numWords": 25}]
             //1 day
             //user.lastLogInDate = [{"dateString": "12/01", "numWords": 5}];
               for (let i = 0; i < 5;i++){
