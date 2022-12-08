@@ -34,7 +34,7 @@ const LearningScreen = ({ props, navigation, route }) => {
       // user.wordBank = [];
       // user.wordBankProgress = 0;
       // user.reviewToday = [];
-      console.log("WORDS TODAY: " + user.wordsToday);
+      // console.log("WORDS TODAY: " + user.wordsToday);
       //log progress
       const date = new Date();
       const progress = new Progress(date, user.wordBankProgress + user.wordsToday);
@@ -45,7 +45,7 @@ const LearningScreen = ({ props, navigation, route }) => {
         user.lastLogInDate.push(progress);
       }
       //do nothing if last entry is the same
-      console.log(user.lastLogInDate);
+      // console.log(user.lastLogInDate);
       if (user.doneLearningToday == false && user.wordsToday.length <= 0) { //has not learned today
         console.log('has not learned today, innitialize wordsToday');
         //grab new words
@@ -67,7 +67,7 @@ const LearningScreen = ({ props, navigation, route }) => {
       setUser(user);
       await storeUserLocal(user);
       setVocabWordsArr(newArray);
-      console.log(user.wordBank);
+      // console.log(user.wordBank);
     } catch (error) {
       console.log(error);
     }
@@ -312,13 +312,12 @@ const styles = StyleSheet.create({
     margin: 7,
     position: "relative",
     marginLeft: 120,
-    width: 110
   },
   coins: {
     fontSize: 20,
     alignSelf: 'center',
     textAlign: 'center',
-    width: 30
+    marginRight: 5,
   }
 });
 
