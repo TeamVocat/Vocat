@@ -31,12 +31,7 @@ const userSchema = new Schema({
             example: String
         }],
         required: true,
-        default: [{
-            word: "null",
-            definition: "null",
-            part_of_speech: "null",
-            example: "null",
-        }]
+        default: []
     },
     wordBankProgress: {
         type: Number,

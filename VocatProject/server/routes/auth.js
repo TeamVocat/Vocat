@@ -38,7 +38,11 @@ router.get('/newVocab', async (req, res) => {
         //         })
         // })
         const { wordBank } = req.body;
-        const wordIds = wordBank.map(word => word._id);
+        console.log(req);
+        let wordIds;
+        if (wordBank.length >= 1) {
+            wordIds = wordBank.map(word => word._id);
+        };
         const words = await EnglishVocabWord.find({ _id: { $nin: wordIds } });
         words.count().exec(async function (err, count) {
             // Get a random entry

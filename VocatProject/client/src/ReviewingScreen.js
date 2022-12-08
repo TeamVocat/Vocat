@@ -26,6 +26,7 @@ const LearningScreen = ({ navigation, route }) => {
     setDoneReviewing(false);
     try {
       const user = await getUserLocal();
+      console.log(user);
       if (user.reviewToday.length > 0) {
         const newArray = user.reviewToday;
         setVocabWordsArr(newArray);

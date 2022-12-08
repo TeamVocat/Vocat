@@ -22,11 +22,12 @@ async function review(user) {
 }
 
 async function generateAnswers(word) {
+  const user = await getUserLocal();
   const answers = [];
   for (let i = 0; i < 4; i++) {
-    let result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`);
+    let result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`, { wordBank: user.wordBank });
     while (result.data.word.word == word) {
-      result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab/`);
+      result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab/`, { wordBank: user.wordBank });
     }
     answers.push(new Answer(result.data.word.word, false));
   }
