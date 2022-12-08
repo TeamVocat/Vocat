@@ -22,18 +22,19 @@ const LearningScreen = ({ props, navigation, route }) => {
   const [vocabWordsArr, setVocabWordsArr] = useState([{ word: 'null', definition: 'lalal', part_of_speech: 'foo', example: 'bar' }]);
   const [doneLearning, setDoneLearning] = useState(false);
   const [user1, setUser] = useState({});
+  let user;
   //const learnedArr;
 
   async function fetchMessage() {
     try {
       let newArray;
-      let user = await getUserLocal();
+      user = await getUserLocal();
       // //several lines to clear wordbanks for testing
       // user.wordsToday = await learnNew();
       // user.wordBank = [];
       // user.wordBankProgress = 0;
       // user.reviewToday = [];
-
+      console.log("WORDS TODAY: " + user.wordsToday);
       //log progress
       const date = new Date();
       const progress = new Progress(date, user.wordBankProgress + user.wordsToday);
@@ -66,6 +67,7 @@ const LearningScreen = ({ props, navigation, route }) => {
       setUser(user);
       await storeUserLocal(user);
       setVocabWordsArr(newArray);
+      console.log(user.wordBank);
     } catch (error) {
       console.log(error);
     }
