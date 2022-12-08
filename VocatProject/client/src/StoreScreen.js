@@ -65,7 +65,6 @@ const StoreScreen = ({ navigation, route }) => {
         });
       }
       let newCoins = coins - 20;
-      newCoins = 100;
       storeUserLocal({
         ...user,
         coinNum: newCoins
