@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'react-native-axios';
 import { REACT_APP_SERVER_HOSTNAME } from "@env";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+var qs = require('qs');
 
 async function review(user) {
   //get words that finished
@@ -25,9 +26,9 @@ async function generateAnswers(word) {
   const user = await getUserLocal();
   const answers = [];
   for (let i = 0; i < 4; i++) {
-    let result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`, { wordBank: user.wordBank });
+    let result = await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`, { wordBank: user.wordBank });
     while (result.data.word.word == word) {
-      result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab/`, { wordBank: user.wordBank });
+      result = await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab/`, { wordBank: user.wordBank });
     }
     answers.push(new Answer(result.data.word.word, false));
   }
@@ -53,9 +54,10 @@ function getStyle(button, state, answer) {
 
 async function learnNew() {  //from db into user wordbank
   const user = await getUserLocal();
+  console.log(user.wordBank);
   const newWords = [];
   for (let i = 0; i < user.wordsPerDay; i++) {
-    const result = await axios.get(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`, { id: "learning", wordBank: user.wordBank, progress: /*user.wordBankProgress*/i });
+    const result = await axios.post(`${REACT_APP_SERVER_HOSTNAME}/api/newVocab`, { wordBank: user.wordBank });
     const newWord = new UserWord(result.data.word.word, result.data.word.definition, result.data.word.part_of_speech, result.data.word.example);
     newWords.push(newWord);
   }

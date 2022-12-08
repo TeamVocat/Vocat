@@ -67,6 +67,7 @@ const LearningScreen = ({ props, navigation, route }) => {
       setUser(user);
       await storeUserLocal(user);
       setVocabWordsArr(newArray);
+      console.log(user.wordBank);
     } catch (error) {
       console.log(error);
     }

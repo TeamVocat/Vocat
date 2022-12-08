@@ -23,7 +23,7 @@ router.get("/home", (req, res) => {
     }
 });
 
-router.get('/newVocab', async (req, res) => {
+router.post('/newVocab', async (req, res) => {
     // if (req.body.id === "learning") {
     try {
         // await User.findOne({ id: `new ObjectId("${req.query.id}")` }).exec(function (err, result) {
@@ -38,20 +38,17 @@ router.get('/newVocab', async (req, res) => {
         //         })
         // })
         const { wordBank } = req.body;
-        console.log(req);
+        console.log(req.body);
         let wordIds;
         if (wordBank.length >= 1) {
             wordIds = wordBank.map(word => word._id);
         };
         const words = await EnglishVocabWord.find({ _id: { $nin: wordIds } });
-        words.count().exec(async function (err, count) {
-            // Get a random entry
-            var random = Math.floor(Math.random() * count)
-            // Again query all words but only fetch one offset by our random #
-            res.json({
-                word: words[random],
-                status: "Success"
-            });
+        var random = Math.floor(Math.random() * words.length)
+        // Again query all words but only fetch one offset by our random #
+        res.json({
+            word: words[random],
+            status: "Success"
         });
     } catch (error) {
         console.error(error)
