@@ -3,6 +3,8 @@ export default {
     catpile: require('./cat_pile.png'),
     catcake: require('./cat_cakes.png'),
     catcoin: require('./Coin2.png'),
+    welcome: require('./welcome_small_vocat_transparent.png'),
+    welcome_larger: require('./welcome_largerr_vocat_transparent.png'),
   },
   logos: {
     logo_transparent: require('./logo/vocat_logo_transparent.png'),
